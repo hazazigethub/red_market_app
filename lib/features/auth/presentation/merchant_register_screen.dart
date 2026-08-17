@@ -117,7 +117,6 @@ class _MerchantRegisterScreenState
           'full_name': _nameController.text.trim(),
           'phone_number': cleanPhone,
           'email_contact': _emailController.text.trim(),
-          'role': 'merchant',
           'is_banned': false,
           'is_subscription_active': false,
           'is_permanent_ban': false,

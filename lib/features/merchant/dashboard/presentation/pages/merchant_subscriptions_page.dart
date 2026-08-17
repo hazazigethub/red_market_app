@@ -367,7 +367,6 @@ class _MerchantSubscriptionsPageState
                                       await Supabase.instance.client
                                           .from('profiles')
                                           .update({
-                                        'role': 'merchant',
                                         'plan_id': plan['id'],
                                       }).eq('id', userId);
                                     }

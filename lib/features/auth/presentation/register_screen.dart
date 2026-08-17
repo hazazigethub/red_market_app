@@ -94,7 +94,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           'full_name': _nameController.text.trim(),
           'phone_number': cleanPhone,
           'email_contact': techEmail,
-          'role': 'customer',
           'gender': _selectedGender,
           'is_banned': false,
           'is_subscription_active': false,
