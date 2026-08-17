@@ -1,11 +1,11 @@
-plugins {
+﻿plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.example.RedOcean"
+    namespace = "sa.redmarket.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,7 +24,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.RedOcean"
+        applicationId = "sa.redmarket.app"
         
         // ✅ التعديل الهام: تحديد الحد الأدنى 21 لضمان عمل مكتبات الفيديو
         minSdk = flutter.minSdkVersion 
