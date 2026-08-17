@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // ✅ إضافة Riverpod
 import 'package:go_router/go_router.dart'; // ✅ إضافة GoRouter
-import 'package:RedOcean/main.dart'; // للوصول لـ merchantBalanceProvider
-import 'package:RedOcean/core/widgets/price_widget.dart';
+import 'package:red_market/main.dart'; // للوصول لـ merchantBalanceProvider
+import 'package:red_market/core/widgets/price_widget.dart';
 
 final merchantBalanceProvider = StateProvider<double>((ref) => 0.0);
 

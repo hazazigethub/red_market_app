@@ -1,6 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/models/product_model.dart'; // ✅ استيراد الموديل لضمان قراءة وقت التجهيز
+import 'package:red_market/core/models/product_model.dart'; // ✅ استيراد الموديل لضمان قراءة وقت التجهيز
 
 // ✅ مزود لجلب قائمة المنتجات الخاصة بالتاجر الحالي من السيرفر
 // تم تحويله ليستخدم ProductModel بدلاً من Map لضمان ظهور وقت التجهيز

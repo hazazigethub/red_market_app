@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/core/utils/category_icons.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/core/utils/category_icons.dart';
 
 class CategoryGrid extends StatelessWidget {
   final List<Map<String, dynamic>> categories;

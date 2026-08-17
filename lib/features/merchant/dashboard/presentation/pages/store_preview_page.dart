@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/widgets/price_widget.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/products_page.dart';
+import 'package:red_market/core/widgets/price_widget.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/products_page.dart';
 
 class StorePreviewPage extends StatefulWidget {
   final String merchantId;

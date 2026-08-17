@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:RedOcean/core/config/app_colors.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:red_market/core/config/app_colors.dart';
 
 class OnboardingPage2 extends StatelessWidget {
   const OnboardingPage2({super.key});

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/routing/route_paths.dart'; // ✅ استيراد المسارات لضمان التوافق
+import 'package:red_market/core/routing/route_paths.dart'; // ✅ استيراد المسارات لضمان التوافق
 
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});

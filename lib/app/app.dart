@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:RedOcean/core/config/app_theme.dart';
-import 'package:RedOcean/core/routing/app_router.dart';
+import 'package:red_market/core/config/app_theme.dart';
+import 'package:red_market/core/routing/app_router.dart';
 import 'package:flutter/services.dart';
 
 // ✅ provider الثيم المستمر مع SharedPreferences

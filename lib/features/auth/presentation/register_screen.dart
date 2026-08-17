@@ -1,11 +1,11 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/interests_selection_screen.dart';
-import 'package:RedOcean/app/app_providers.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/features/customer/home/presentation/pages/interests_selection_screen.dart';
+import 'package:red_market/app/app_providers.dart';
 
 bool isRegisteringInProgress = false;
 

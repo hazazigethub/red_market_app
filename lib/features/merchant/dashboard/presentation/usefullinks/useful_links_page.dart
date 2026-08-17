@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:RedOcean/features/admin/presentation/screens/merchant_terms_page.dart'; // ✅ استيراد صفحة شروط التاجر
+﻿import 'package:flutter/material.dart';
+import 'package:red_market/features/admin/presentation/screens/merchant_terms_page.dart'; // ✅ استيراد صفحة شروط التاجر
 import 'about_us_page.dart';
 import 'contact_us_page.dart';
 import 'faq_page.dart';
 import 'privacy_policy_page.dart';
-import 'package:RedOcean/features/admin/presentation/screens/merchant_terms_page.dart';
+import 'package:red_market/features/admin/presentation/screens/merchant_terms_page.dart';
 import 'acceptable_use_page.dart';
 
 class UsefulLinksPage extends StatelessWidget {

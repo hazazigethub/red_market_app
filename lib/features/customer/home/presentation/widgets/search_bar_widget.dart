@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/models/product_model.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/sub_categories_screen.dart';
-import 'package:RedOcean/core/widgets/price_widget.dart';
+import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/features/customer/home/presentation/pages/sub_categories_screen.dart';
+import 'package:red_market/core/widgets/price_widget.dart';
 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});

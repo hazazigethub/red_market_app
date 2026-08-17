@@ -1,22 +1,22 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/app/app.dart';
-import 'package:RedOcean/main.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/app/app.dart';
+import 'package:red_market/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ✅ الموديلات والصفحات
-import 'package:RedOcean/core/models/merchant_model.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/store_details_page.dart';
+import 'package:red_market/core/models/merchant_model.dart';
+import 'package:red_market/features/customer/home/presentation/pages/store_details_page.dart';
 
 // ✅ صفحات الداشبورد
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/merchant_reports_page.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/products_page.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/store_settings_page.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/manage_reels_page.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/merchant_subscriptions_page.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/usefullinks/useful_links_page.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/merchant_reports_page.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/products_page.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/store_settings_page.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/manage_reels_page.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/merchant_subscriptions_page.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/usefullinks/useful_links_page.dart';
 
 final themeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
 

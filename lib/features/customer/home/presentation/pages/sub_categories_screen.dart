@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/core/models/product_model.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/core/models/product_model.dart';
 import '../widgets/product_card.dart';
-import 'package:RedOcean/core/utils/category_icons.dart';
+import 'package:red_market/core/utils/category_icons.dart';
 
 class SubCategoriesScreen extends StatefulWidget {
   final String parentId;

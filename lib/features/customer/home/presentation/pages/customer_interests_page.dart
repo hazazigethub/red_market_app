@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
+import 'package:red_market/core/routing/route_paths.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomerInterestsPage extends StatefulWidget {

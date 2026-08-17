@@ -1,17 +1,17 @@
-import 'dart:math' as math;
+﻿import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 // ══════════════════════════════════════════════════════
 //  Red Ocean — Promo Banner Widget
-//  Usage: RedOceanBanner() أو RedOceanBanner.compact()
+//  Usage: RedMarketBanner() أو RedMarketBanner.compact()
 // ══════════════════════════════════════════════════════
 
-class RedOceanBanner extends StatefulWidget {
+class RedMarketBanner extends StatefulWidget {
   final String? imagePath; // مسار صورة الحوت في assets
   final VoidCallback? onTap;
   final bool compact; // نسخة مصغّرة للموبايل
 
-  const RedOceanBanner({
+  const RedMarketBanner({
     super.key,
     this.imagePath,
     this.onTap,
@@ -19,17 +19,17 @@ class RedOceanBanner extends StatefulWidget {
   });
 
   /// نسخة مضغوطة للشاشات الصغيرة
-  const RedOceanBanner.compact({
+  const RedMarketBanner.compact({
     super.key,
     this.imagePath,
     this.onTap,
   }) : compact = true;
 
   @override
-  State<RedOceanBanner> createState() => _RedOceanBannerState();
+  State<RedMarketBanner> createState() => _RedMarketBannerState();
 }
 
-class _RedOceanBannerState extends State<RedOceanBanner>
+class _RedMarketBannerState extends State<RedMarketBanner>
     with TickerProviderStateMixin {
   late AnimationController _whaleController;
   late AnimationController _badge1Controller;

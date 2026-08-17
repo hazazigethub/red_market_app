@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/app/app.dart';
+import 'package:red_market/app/app.dart';
 import 'package:go_router/go_router.dart'; // ✅ أضفنا هذا للتنقل
-import 'package:RedOcean/core/routing/route_paths.dart'; // ✅ أضفنا هذا للمسارات
+import 'package:red_market/core/routing/route_paths.dart'; // ✅ أضفنا هذا للمسارات
 
 class CustomerTermsPage extends ConsumerStatefulWidget {
   // ✅ التغيير الأول: إضافة البارامترات لاستقبال البيانات من الـ Router

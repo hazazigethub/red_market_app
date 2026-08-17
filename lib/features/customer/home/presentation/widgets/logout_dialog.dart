@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/app/app.dart';
-import 'package:RedOcean/main.dart';
+import 'package:red_market/app/app.dart';
+import 'package:red_market/main.dart';
 
 Future<void> showLogoutDialog(
     BuildContext context, WidgetRef ref, VoidCallback onLoggedOut) async {

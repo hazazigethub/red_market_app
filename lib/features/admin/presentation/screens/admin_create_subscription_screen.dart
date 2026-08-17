@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
-import 'package:RedOcean/features/admin/presentation/screens/discount_codes_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/discount_codes_screen.dart';
 
 class AdminCreateSubscriptionScreen extends StatefulWidget {
   const AdminCreateSubscriptionScreen({super.key});

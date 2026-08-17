@@ -1,16 +1,16 @@
-import 'dart:math';
+﻿import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/models/reel_model.dart';
-import 'package:RedOcean/core/models/merchant_model.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/core/widgets/comments_sheet.dart';
-import 'package:RedOcean/core/widgets/price_widget.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/reels_search_page.dart';
+import 'package:red_market/core/models/reel_model.dart';
+import 'package:red_market/core/models/merchant_model.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/core/widgets/comments_sheet.dart';
+import 'package:red_market/core/widgets/price_widget.dart';
+import 'package:red_market/features/customer/home/presentation/pages/reels_search_page.dart';
 import 'package:flutter/services.dart';
 
 class PhoneIcon extends StatelessWidget {

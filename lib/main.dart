@@ -1,4 +1,4 @@
-import 'dart:io' show Platform;
+﻿import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,10 +7,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:RedOcean/app/app.dart';
-import 'package:RedOcean/core/routing/app_router.dart';
+import 'package:red_market/app/app.dart';
+import 'package:red_market/core/routing/app_router.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:RedOcean/app/notifications_observer.dart';
+import 'package:red_market/app/notifications_observer.dart';
 import 'package:flutter/services.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

@@ -1,8 +1,8 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:RedOcean/core/models/product_model.dart';
+import 'package:red_market/core/models/product_model.dart';
 import '../widgets/product_card.dart';
 
 class RecentlyViewedPage extends StatefulWidget {

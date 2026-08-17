@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/merchant_dashboard_screen.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/merchant_dashboard_screen.dart';
 
 // --- الصفحة الرئيسية: الإحصائيات ---
 class AdminMerchantsScreen extends StatefulWidget {

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:RedOcean/core/models/reel_model.dart';
+import 'package:red_market/core/models/reel_model.dart';
 
 class ReviewReelsPage extends StatefulWidget {
   final ReelModel reel;

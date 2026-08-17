@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/models/merchant_model.dart';
-import 'package:RedOcean/core/models/product_model.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/product_details_page.dart';
+import 'package:red_market/core/models/merchant_model.dart';
+import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market/features/customer/home/presentation/pages/product_details_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:RedOcean/features/auth/presentation/login_screen.dart';
+import 'package:red_market/features/auth/presentation/login_screen.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:RedOcean/core/widgets/price_widget.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/merchant_reels_page.dart';
+import 'package:red_market/core/widgets/price_widget.dart';
+import 'package:red_market/features/customer/home/presentation/pages/merchant_reels_page.dart';
 
 class StoreDetailsPage extends ConsumerStatefulWidget {
   final String merchantId;
@@ -37,7 +37,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
   List<ProductModel> _filteredProducts = [];
   bool _isLoading = true;
 
-  final Color redOceanPrimary = const Color(0xFFC21815);
+  final Color redMarketPrimary = const Color(0xFFC21815);
 
   @override
   void initState() {
@@ -129,7 +129,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                   setModalState,
                   Icons.security_update_warning_rounded,
                   "اشتباه احتيال",
-                  redOceanPrimary,
+                  redMarketPrimary,
                   "نشاط مريب أو محاولة خداع"),
               const SizedBox(height: 15),
               TextField(
@@ -151,7 +151,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: redOceanPrimary,
+                      backgroundColor: redMarketPrimary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12))),
                   onPressed: () async {
@@ -192,7 +192,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
           style: const TextStyle(
               fontWeight: FontWeight.bold, fontFamily: 'Cairo', fontSize: 14)),
       trailing: isSelected
-          ? Icon(Icons.check_circle, color: redOceanPrimary)
+          ? Icon(Icons.check_circle, color: redMarketPrimary)
           : Icon(Icons.circle_outlined, color: Colors.grey.shade300),
     );
   }
@@ -344,7 +344,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                    color: redOceanPrimary.withOpacity(0.4), width: 1.5)),
+                    color: redMarketPrimary.withOpacity(0.4), width: 1.5)),
             child: CircleAvatar(
               radius: 32,
               backgroundColor: const Color(0xFFF7F8FA),
@@ -352,7 +352,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                   ? NetworkImage(_merchant!.logoUrl)
                   : null,
               child: _merchant!.logoUrl.isEmpty
-                  ? Icon(Icons.store, color: redOceanPrimary, size: 28)
+                  ? Icon(Icons.store, color: redMarketPrimary, size: 28)
                   : null,
             ),
           ),
@@ -419,7 +419,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: redOceanPrimary.withOpacity(0.3)),
+                border: Border.all(color: redMarketPrimary.withOpacity(0.3)),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(9),
@@ -473,12 +473,12 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                         const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? redOceanPrimary
+                          ? redMarketPrimary
                           : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                           color: isSelected
-                              ? redOceanPrimary
+                              ? redMarketPrimary
                               : Colors.grey.shade300),
                     ),
                     alignment: Alignment.center,
@@ -529,7 +529,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: redOceanPrimary.withOpacity(0.5)),
+                  border: Border.all(color: redMarketPrimary.withOpacity(0.5)),
                   boxShadow: [
                     BoxShadow(
                         color: Colors.black.withOpacity(0.04),
@@ -574,7 +574,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                                         fontSize: 12, fontFamily: 'Cairo')),
                                 const SizedBox(width: 4),
                                 Icon(Icons.favorite_rounded,
-                                    color: redOceanPrimary, size: 14),
+                                    color: redMarketPrimary, size: 14),
                               ]),
                             ],
                           ),
@@ -582,7 +582,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                           PriceWidget(
                               price: product.price,
                               fontSize: 14,
-                              color: redOceanPrimary),
+                              color: redMarketPrimary),
                           if (product.oldPrice != null &&
                               product.oldPrice! > product.price)
                             Row(children: [

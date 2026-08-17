@@ -1,9 +1,9 @@
-import 'package:overlay_support/overlay_support.dart';
+﻿import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/routing/app_router.dart';
-import 'package:RedOcean/main.dart'; // للوصول لـ appTypeProvider
+import 'package:red_market/core/routing/app_router.dart';
+import 'package:red_market/main.dart'; // للوصول لـ appTypeProvider
 
 final notificationsObserverProvider =
     Provider((ref) => NotificationsObserver(ref));

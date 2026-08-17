@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,21 +8,21 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:RedOcean/features/customer/home/presentation/widgets/red_ocean_banner.dart';
-import 'package:RedOcean/app/app.dart';
-import 'package:RedOcean/main.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/core/models/merchant_model.dart';
-import 'package:RedOcean/core/models/product_model.dart';
-import 'package:RedOcean/core/providers/favorites_provider.dart';
-import 'package:RedOcean/features/customer/home/presentation/providers/recently_viewed_provider.dart';
+import 'package:red_market/features/customer/home/presentation/widgets/red_ocean_banner.dart';
+import 'package:red_market/app/app.dart';
+import 'package:red_market/main.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/core/models/merchant_model.dart';
+import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market/core/providers/favorites_provider.dart';
+import 'package:red_market/features/customer/home/presentation/providers/recently_viewed_provider.dart';
 
-import 'package:RedOcean/features/customer/home/presentation/pages/reels_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/profile_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/favourites_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/notifications_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/store_details_page.dart';
-import 'package:RedOcean/features/auth/presentation/login_screen.dart';
+import 'package:red_market/features/customer/home/presentation/pages/reels_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/profile_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/favourites_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/notifications_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/store_details_page.dart';
+import 'package:red_market/features/auth/presentation/login_screen.dart';
 
 import '../widgets/logout_dialog.dart';
 import '../widgets/search_bar_widget.dart';
@@ -732,7 +732,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 12),
             MainWideBanner(bannerController: _bannerPageController),
-            RedOceanBanner.compact(
+            RedMarketBanner.compact(
               imagePath: 'assets/images/whale.png',
               onTap: () {},
             ),

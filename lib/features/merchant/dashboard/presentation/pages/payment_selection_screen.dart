@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/app/app.dart' as app_internal;
-import 'package:RedOcean/app/app_providers.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/app/app.dart' as app_internal;
+import 'package:red_market/app/app_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/widgets/price_widget.dart';
+import 'package:red_market/core/widgets/price_widget.dart';
 
 class PaymentSelectionScreen extends ConsumerStatefulWidget {
   final double amount;

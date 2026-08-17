@@ -1,65 +1,65 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/app/app.dart' hide userRoleProvider;
-import 'package:RedOcean/app/app_providers.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/app/app.dart' hide userRoleProvider;
+import 'package:red_market/app/app_providers.dart';
 
-import 'package:RedOcean/features/customer/home/presentation/pages/home_screen.dart'
+import 'package:red_market/features/customer/home/presentation/pages/home_screen.dart'
     as customer;
-import 'package:RedOcean/features/merchant/dashboard/presentation/merchant_dashboard_screen.dart'
+import 'package:red_market/features/merchant/dashboard/presentation/merchant_dashboard_screen.dart'
     as merchant;
 
 import '../../features/merchant/dashboard/presentation/pages/payment_selection_screen.dart';
-import 'package:RedOcean/features/splash/presentation/splash_screen.dart';
-import 'package:RedOcean/core/models/merchant_model.dart';
-import 'package:RedOcean/core/models/product_model.dart';
+import 'package:red_market/features/splash/presentation/splash_screen.dart';
+import 'package:red_market/core/models/merchant_model.dart';
+import 'package:red_market/core/models/product_model.dart';
 
-import 'package:RedOcean/features/auth/presentation/login_screen.dart';
-import 'package:RedOcean/features/auth/presentation/register_screen.dart';
-import 'package:RedOcean/features/auth/presentation/merchant_register_screen.dart';
-import 'package:RedOcean/features/auth/presentation/otp_screen.dart';
-import 'package:RedOcean/core/utils/payment_args.dart';
+import 'package:red_market/features/auth/presentation/login_screen.dart';
+import 'package:red_market/features/auth/presentation/register_screen.dart';
+import 'package:red_market/features/auth/presentation/merchant_register_screen.dart';
+import 'package:red_market/features/auth/presentation/otp_screen.dart';
+import 'package:red_market/core/utils/payment_args.dart';
 
-import 'package:RedOcean/features/customer/home/presentation/pages/interests_selection_screen.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/store_details_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/notifications_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/personal_information_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/customer_service_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/Product_Details_Page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/interests_selection_screen.dart';
+import 'package:red_market/features/customer/home/presentation/pages/store_details_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/notifications_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/personal_information_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/customer_service_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/Product_Details_Page.dart';
 
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/store_settings_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/faq_page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/Privacy_Policy_Page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/Delete_Account_Page.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/sub_categories_screen.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/customer_interests_page.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/store_settings_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/faq_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/Privacy_Policy_Page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/Delete_Account_Page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/sub_categories_screen.dart';
+import 'package:red_market/features/customer/home/presentation/pages/customer_interests_page.dart';
 
-import 'package:RedOcean/features/admin/presentation/screens/admin_dashboard_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_settings_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_products_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_banners_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_notifications_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_categories_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_customer_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_merchants_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/customer_terms_page.dart';
-import 'package:RedOcean/features/admin/presentation/screens/merchant_terms_page.dart';
-import 'package:RedOcean/features/admin/presentation/screens/customer_profile_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_create_subscription_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_settings_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_products_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_banners_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_notifications_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_categories_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_customer_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_merchants_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/customer_terms_page.dart';
+import 'package:red_market/features/admin/presentation/screens/merchant_terms_page.dart';
+import 'package:red_market/features/admin/presentation/screens/customer_profile_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_create_subscription_screen.dart';
 
-import 'package:RedOcean/features/admin/presentation/screens/admin_analytics_customer_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_analytics_merchants_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_analytics_visits_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_analytics_products_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_analytics_merchant_categories_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_analytics_product_categories_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_reports_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/maintenance_screen.dart';
-import 'package:RedOcean/features/admin/presentation/screens/admin_announcements_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_analytics_customer_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_analytics_merchants_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_analytics_visits_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_analytics_products_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_analytics_merchant_categories_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_analytics_product_categories_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_reports_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/maintenance_screen.dart';
+import 'package:red_market/features/admin/presentation/screens/admin_announcements_screen.dart';
 
 // ✅ يجب أن يكون هذا الكلاس قبل routerProvider
 class _RouterRefreshNotifier extends ChangeNotifier {

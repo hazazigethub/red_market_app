@@ -1,13 +1,13 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/features/auth/presentation/register_screen.dart';
-import 'package:RedOcean/app/app_providers.dart';
-import 'package:RedOcean/features/merchant/dashboard/presentation/pages/store_settings_page.dart';
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/features/auth/presentation/register_screen.dart';
+import 'package:red_market/app/app_providers.dart';
+import 'package:red_market/features/merchant/dashboard/presentation/pages/store_settings_page.dart';
 
 class MerchantRegisterScreen extends ConsumerStatefulWidget {
   const MerchantRegisterScreen({super.key});

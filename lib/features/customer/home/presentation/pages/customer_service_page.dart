@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart'; // ✅ إضافة سوبابيس
-import 'package:RedOcean/core/routing/route_paths.dart';
+import 'package:red_market/core/routing/route_paths.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomerServicePage extends StatefulWidget {

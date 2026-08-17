@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/routing/route_paths.dart'; // ✅ استيراد المسارات
+import 'package:red_market/core/routing/route_paths.dart'; // ✅ استيراد المسارات
 
 class FAQPage extends StatefulWidget {
   const FAQPage({super.key});

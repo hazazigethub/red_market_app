@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/store_details_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/store_details_page.dart';
 
 class AdminReportsScreen extends StatelessWidget {
   const AdminReportsScreen({super.key});

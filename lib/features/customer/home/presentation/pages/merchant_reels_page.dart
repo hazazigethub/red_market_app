@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:RedOcean/features/customer/home/presentation/pages/reels_page.dart';
-import 'package:RedOcean/core/models/reel_model.dart';
+import 'package:red_market/features/customer/home/presentation/pages/reels_page.dart';
+import 'package:red_market/core/models/reel_model.dart';
 
 class MerchantReelsPage extends StatefulWidget {
   final String merchantId;

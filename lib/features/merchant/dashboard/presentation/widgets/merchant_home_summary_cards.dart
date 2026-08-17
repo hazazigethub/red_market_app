@@ -1,9 +1,9 @@
-// lib/features/merchant/dashboard/presentation/widgets/merchant_home_summary_cards.dart
+﻿// lib/features/merchant/dashboard/presentation/widgets/merchant_home_summary_cards.dart
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:RedOcean/core/widgets/price_widget.dart';
+import 'package:red_market/core/widgets/price_widget.dart';
 
 class MerchantHomeSummaryCards extends StatelessWidget {
   const MerchantHomeSummaryCards({super.key});

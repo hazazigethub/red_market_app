@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // ✅ إضافة ريفربود
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
-import 'package:RedOcean/main.dart'; // ✅ للوصول لمزود نوع التطبيق
+import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/main.dart'; // ✅ للوصول لمزود نوع التطبيق
 
 class DeleteAccountPage extends ConsumerStatefulWidget {
   const DeleteAccountPage({super.key});

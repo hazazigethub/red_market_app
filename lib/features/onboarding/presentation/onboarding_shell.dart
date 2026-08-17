@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:RedOcean/core/config/app_colors.dart';
-import 'package:RedOcean/core/routing/route_paths.dart';
+import 'package:red_market/core/config/app_colors.dart';
+import 'package:red_market/core/routing/route_paths.dart';
 
 // استدعاء الصفحات الثلاث
 import 'onboarding_page_1.dart';
