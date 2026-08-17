@@ -132,7 +132,6 @@ class _MerchantRegisterScreenState
           'store_name': _nameController.text.trim(),
           'phone_number': cleanPhone,
           'email_contact': _emailController.text.trim(),
-          'password': password,
           'cr_number': _crNumberController.text.trim(),
           'cr_image_url': imageUrl,
           'store_category_id': _selectedStoreCategory,

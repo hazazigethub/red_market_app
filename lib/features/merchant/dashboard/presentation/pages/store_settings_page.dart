@@ -106,7 +106,6 @@ class _StoreSettingsPageState extends State<StoreSettingsPage> {
               _formatImageUrl(merchantData['cr_image_url'], 'merchants_docs');
           _phoneController.text = merchantData['phone_number'] ?? "";
           _crNumberController.text = merchantData['cr_number'] ?? "";
-          _passwordController.text = merchantData['password'] ?? "";
           _storeUrlController.text = merchantData['store_url'] ?? "";
           _categoryName = categoryName;
           _emailController.text = merchantData['email_contact'] ?? "";
@@ -555,7 +554,6 @@ class _StoreSettingsPageState extends State<StoreSettingsPage> {
                 'store_description': _descriptionController.text.trim(),
                 'phone_number': _phoneController.text.trim(),
                 'cr_number': _crNumberController.text.trim(),
-                'password': _passwordController.text.trim(),
                 'store_url': _storeUrlController.text.trim(),
                 'email_contact': _emailController.text.trim(),
               }),
@@ -565,7 +563,6 @@ class _StoreSettingsPageState extends State<StoreSettingsPage> {
                 'store_description': _descriptionController.text.trim(),
                 'phone_number': _phoneController.text.trim(),
                 'cr_number': _crNumberController.text.trim(),
-                'password': _passwordController.text.trim(),
                 'store_url': _storeUrlController.text.trim(),
               }),
             ]);
