@@ -1,0 +1,892 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:RedOcean/features/customer/home/presentation/widgets/red_ocean_banner.dart';
+import 'package:RedOcean/app/app.dart';
+import 'package:RedOcean/main.dart';
+import 'package:RedOcean/core/routing/route_paths.dart';
+import 'package:RedOcean/core/models/merchant_model.dart';
+import 'package:RedOcean/core/models/product_model.dart';
+import 'package:RedOcean/core/providers/favorites_provider.dart';
+import 'package:RedOcean/features/customer/home/presentation/providers/recently_viewed_provider.dart';
+
+import 'package:RedOcean/features/customer/home/presentation/pages/reels_page.dart';
+import 'package:RedOcean/features/customer/home/presentation/pages/profile_page.dart';
+import 'package:RedOcean/features/customer/home/presentation/pages/favourites_page.dart';
+import 'package:RedOcean/features/customer/home/presentation/pages/notifications_page.dart';
+import 'package:RedOcean/features/customer/home/presentation/pages/store_details_page.dart';
+import 'package:RedOcean/features/auth/presentation/login_screen.dart';
+
+import '../widgets/logout_dialog.dart';
+import '../widgets/search_bar_widget.dart';
+import '../widgets/main_wide_banner.dart';
+import '../widgets/small_banners_row.dart';
+import '../widgets/category_grid.dart';
+import '../widgets/product_card.dart';
+import '../widgets/merchant_circle_list.dart';
+import '../widgets/new_arrivals_page.dart';
+import '../widgets/infinite_products_grid.dart';
+
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  static bool _isSessionLogged = false;
+  final supabase = Supabase.instance.client;
+  int _bottomNavIndex = 0;
+  String? _cachedRole;
+
+  final PageController _bannerPageController =
+      PageController(viewportFraction: 0.93);
+  final PageController _smallBannerPageController =
+      PageController(viewportFraction: 0.48);
+  final ScrollController _scrollController = ScrollController();
+
+  List<Map<String, dynamic>> _realCategories = [];
+  List<MerchantModel> _merchantsList = [];
+  List<ProductModel> _flashSaleProducts = [];
+  List<ProductModel> _newArrivals = [];
+  List<ProductModel> _infiniteProducts = [];
+
+  bool _isInfiniteLoading = false;
+  int _currentOffset = 0;
+  String? _merchantStoreName;
+  final int _pageSize = 10;
+  bool _isDataLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchHomeData();
+    _initCachedRole();
+    _loadRecentlyViewed();
+    _loadMerchantName();
+    _startAutoPlay();
+    _checkAndShowAnnouncements();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _sendLogVisit();
+      _checkTermsVersion();
+    });
+  }
+
+  Future<void> _checkAndShowAnnouncements() async {
+    final user = supabase.auth.currentUser;
+    if (user == null) return;
+    try {
+      final userProfile = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
+      final String role = userProfile?['role']?.toString() ?? 'customer';
+
+      final announcements = await supabase
+          .from('announcements')
+          .select()
+          .eq('is_active', true)
+          .or('target_role.eq.all,target_role.eq.$role')
+          .order('created_at', ascending: true);
+
+      for (final ann in (announcements as List)) {
+        final viewRes = await supabase
+            .from('announcement_views')
+            .select()
+            .eq('announcement_id', ann['id'])
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+        final int viewsCount = viewRes?['views_count'] ?? 0;
+        final int maxViews = ann['max_views'] ?? 1;
+
+        if (viewsCount < maxViews) {
+          if (viewRes == null) {
+            await supabase.from('announcement_views').insert({
+              'announcement_id': ann['id'],
+              'user_id': user.id,
+              'views_count': 1,
+            });
+          } else {
+            await supabase
+                .from('announcement_views')
+                .update({
+                  'views_count': viewsCount + 1,
+                  'last_viewed_at': DateTime.now().toIso8601String(),
+                })
+                .eq('announcement_id', ann['id'])
+                .eq('user_id', user.id);
+          }
+
+          if (mounted) {
+            _showAnnouncementDialog(ann);
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Announcement Error: $e");
+    }
+  }
+
+  void _showAnnouncementDialog(Map<String, dynamic> ann) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: Color(0xFFC21815), width: 2),
+          ),
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (ann['image_url'] != null)
+                    ClipRRect(
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(20)),
+                      child: Image.network(
+                        ann['image_url'],
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.75,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  else
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 48,
+                      height: MediaQuery.of(context).size.width - 48,
+                    ),
+                  if (ann['image_url'] == null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                      child: Column(
+                        children: [
+                          if ((ann['title'] ?? '').isNotEmpty)
+                            Text(ann['title'],
+                                style: const TextStyle(
+                                    fontFamily: 'Cairo',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                                textAlign: TextAlign.center),
+                          if ((ann['message'] ?? '').isNotEmpty) ...[
+                            const SizedBox(height: 10),
+                            Text(ann['message'],
+                                style: const TextStyle(
+                                    fontFamily: 'Cairo',
+                                    fontSize: 14,
+                                    color: Colors.grey),
+                                textAlign: TextAlign.center),
+                          ],
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              // ✅ زر الإغلاق في الأعلى
+              Positioned(
+                top: 8,
+                left: 8,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFC21815),
+                      shape: BoxShape.circle,
+                    ),
+                    child:
+                        const Icon(Icons.close, color: Colors.white, size: 18),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _checkTermsVersion() async {
+    final user = supabase.auth.currentUser;
+    if (user == null) return;
+    try {
+      final userData = await supabase
+          .from('profiles')
+          .select('role, accepted_terms_version')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (userData != null) {
+        final String role = userData['role']?.toString() ?? 'customer';
+        final int userVersion =
+            (userData['accepted_terms_version'] as num?)?.toInt() ?? 0;
+
+        final latestTerms = await supabase
+            .from('terms_content')
+            .select('version, content')
+            .eq('type', role.trim().toLowerCase())
+            .maybeSingle();
+
+        if (latestTerms != null) {
+          final int serverVersion =
+              int.tryParse(latestTerms['version']?.toString() ?? '0') ?? 0;
+          if (userVersion < serverVersion) {
+            if (!mounted) return;
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => WillPopScope(
+                onWillPop: () async => false,
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    title: const Text("تحديث الشروط والأحكام",
+                        style: TextStyle(
+                            fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                    content: const Text(
+                        "لقد قمنا بتحديث الشروط والأحكام الخاصة بنا. يرجى مراجعتها والموافقة عليها للمتابعة.",
+                        style: TextStyle(fontFamily: 'Cairo')),
+                    actions: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFC21815),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          context.push(
+                              role == 'merchant'
+                                  ? RoutePaths.merchantTerms
+                                  : RoutePaths.customerTerms,
+                              extra: {
+                                'content': latestTerms['content'],
+                                'version': serverVersion
+                              });
+                        },
+                        child: const Text("مراجعة وتحديث",
+                            style: TextStyle(
+                                fontFamily: 'Cairo', color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Terms Error: $e");
+    }
+  }
+
+  Future<void> _sendLogVisit() async {
+    if (isAppVisitLogged) return;
+    try {
+      final user = supabase.auth.currentUser;
+      String platformName =
+          kIsWeb ? 'web' : (Platform.isAndroid ? 'android' : 'ios');
+      await supabase.from('analytics_visits').insert({
+        'page_name': 'app_launch',
+        'platform': platformName,
+        'user_id': user?.id,
+        'visited_at': DateTime.now().toIso8601String(),
+      });
+      if (user != null) {
+        await supabase.from('profiles').update({
+          'last_sign_in_at': DateTime.now().toIso8601String(),
+        }).eq('id', user.id);
+      }
+      isAppVisitLogged = true;
+    } catch (e) {
+      debugPrint("Analytics Error: $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    _bannerPageController.dispose();
+    _smallBannerPageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _startAutoPlay() {
+    Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (_bannerPageController.hasClients) {
+        _bannerPageController.animateToPage(
+            (_bannerPageController.page!.toInt() + 1),
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeInOut);
+      }
+      if (_smallBannerPageController.hasClients) {
+        _smallBannerPageController.animateToPage(
+            (_smallBannerPageController.page!.toInt() + 1),
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeInOut);
+      }
+    });
+  }
+
+  Future<void> _fetchHomeData() async {
+    if (!mounted) return;
+    setState(() => _isDataLoading = true);
+    try {
+      final catData = await supabase
+          .from('store_categories')
+          .select()
+          .eq('is_visible', true);
+      final activeProfiles = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('role', 'merchant')
+          .eq('is_subscription_active', true);
+      final List<String> activeMerchantIds =
+          (activeProfiles as List).map((p) => p['id'].toString()).toList();
+      final merchData = await supabase.from('merchants').select('*');
+      final allProducts =
+          await supabase.from('products').select('merchant_id, image_url');
+
+      final flashData = activeMerchantIds.isEmpty
+          ? []
+          : await supabase
+              .from('products')
+              .select()
+              .eq('is_flash_sale', true)
+              .or('is_banned.eq.false,is_banned.is.null')
+              .gt('flash_sale_expiry', DateTime.now().toIso8601String())
+              .inFilter('merchant_id', activeMerchantIds)
+              .limit(10);
+
+      final fiveDaysAgo =
+          DateTime.now().subtract(const Duration(days: 5)).toIso8601String();
+      final newData = activeMerchantIds.isEmpty
+          ? []
+          : await supabase
+              .from('products')
+              .select()
+              .eq('is_available', true)
+              .or('is_banned.eq.false,is_banned.is.null')
+              .gte('created_at', fiveDaysAgo)
+              .inFilter('merchant_id', activeMerchantIds)
+              .order('created_at', ascending: false)
+              .limit(10);
+
+      if (mounted) {
+        setState(() {
+          _realCategories = List<Map<String, dynamic>>.from(catData);
+          _merchantsList = (merchData as List)
+              .where((m) => activeMerchantIds.contains(m['id']?.toString()))
+              .map((m) {
+            final merchant = MerchantModel.fromJson(m);
+            final List merchantProducts = (allProducts as List)
+                .where((p) => p['merchant_id'] == merchant.id)
+                .toList();
+            final List<String> images = merchantProducts
+                .map((p) => p['image_url']?.toString() ?? '')
+                .where((url) => url.isNotEmpty)
+                .take(3)
+                .toList();
+            return merchant.copyWith(showcaseImages: images);
+          }).where((merchant) {
+            return (allProducts as List)
+                .any((p) => p['merchant_id'] == merchant.id);
+          }).toList();
+
+          _flashSaleProducts =
+              (flashData as List).map((p) => ProductModel.fromJson(p)).toList();
+          _newArrivals =
+              (newData as List).map((p) => ProductModel.fromJson(p)).toList();
+          _isDataLoading = false;
+        });
+        _loadInfiniteProducts();
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isDataLoading = false);
+    }
+  }
+
+  Future<void> _loadInfiniteProducts() async {
+    if (_isInfiniteLoading) return;
+    setState(() => _isInfiniteLoading = true);
+    try {
+      final randomProducts = await supabase
+          .from('products')
+          .select()
+          .range(_currentOffset, _currentOffset + _pageSize - 1);
+      if (mounted) {
+        setState(() {
+          _infiniteProducts.addAll((randomProducts as List)
+              .map((p) => ProductModel.fromJson(p))
+              .toList());
+          _currentOffset += _pageSize;
+          _isInfiniteLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isInfiniteLoading = false);
+    }
+  }
+
+  Future<void> _loadRecentlyViewed() async {
+    try {
+      final userId = supabase.auth.currentUser?.id;
+
+      // ✅ مسجل دخول — جلب من السوبابيس
+      if (userId != null) {
+        final fiveDaysAgo =
+            DateTime.now().subtract(const Duration(days: 5)).toIso8601String();
+
+        final data = await supabase
+            .from('user_recently_viewed')
+            .select('product_id, visited_at, products(*)')
+            .eq('user_id', userId)
+            .gte('visited_at', fiveDaysAgo)
+            .order('visited_at', ascending: false)
+            .limit(20);
+
+        if (mounted) {
+          final List<ProductModel> products = (data as List)
+              .where((e) => e['products'] != null)
+              .map((e) => ProductModel.fromJson(e['products']))
+              .toList();
+          ref.read(recentlyViewedProvider.notifier).state = products;
+        }
+        return;
+      }
+
+      // ✅ غير مسجل — جلب من SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final String raw = prefs.getString('recently_viewed_data') ?? '[]';
+
+      List<Map<String, dynamic>> items = List<Map<String, dynamic>>.from(
+          (jsonDecode(raw) as List).map((e) => Map<String, dynamic>.from(e)));
+
+      final now = DateTime.now();
+      items = items.where((e) {
+        final visitedAt = DateTime.tryParse(e['visited_at'] ?? '');
+        return visitedAt != null && now.difference(visitedAt).inDays < 5;
+      }).toList();
+
+      await prefs.setString('recently_viewed_data', jsonEncode(items));
+
+      final List<String> recentIds =
+          items.map((e) => e['id'] as String).toList();
+
+      if (recentIds.isNotEmpty) {
+        final data = await supabase
+            .from('products')
+            .select()
+            .filter('id', 'in', recentIds)
+            .limit(20);
+
+        if (mounted) {
+          final List<ProductModel> products =
+              (data as List).map((p) => ProductModel.fromJson(p)).toList();
+          final sorted = recentIds
+              .map((id) => products.firstWhere(
+                    (p) => p.id == id,
+                    orElse: () => null as ProductModel,
+                  ))
+              .whereType<ProductModel>()
+              .toList();
+          ref.read(recentlyViewedProvider.notifier).state = sorted;
+        }
+      }
+    } catch (e) {
+      debugPrint("Error loading recently viewed: $e");
+    }
+  }
+
+  Future<void> _initCachedRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('user_role');
+    if (role != null && mounted) {
+      setState(() => _cachedRole = role);
+    }
+  }
+
+  Future<void> _loadMerchantName() async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return;
+    try {
+      final data = await supabase
+          .from('merchants')
+          .select('store_name')
+          .eq('id', userId)
+          .maybeSingle();
+      if (data != null && mounted) {
+        setState(() => _merchantStoreName = data['store_name']?.toString());
+      }
+    } catch (e) {
+      debugPrint("Error loading merchant name: $e");
+    }
+  }
+
+  Future<void> _handleLogout() async {
+    await showLogoutDialog(context, ref, () {
+      setState(() => _bottomNavIndex = 0);
+    });
+  }
+
+  void _protectedAction(VoidCallback onSuccess) {
+    if (supabase.auth.currentUser != null) {
+      onSuccess();
+    } else {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const LoginScreen(isBottomSheet: true),
+      ).then((value) {
+        if (value == true && mounted) {
+          setState(() {});
+          onSuccess();
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final recentlyViewedItems = ref.watch(recentlyViewedProvider);
+    final userRole = ref.watch(userRoleProvider);
+    if (userRole != null) _cachedRole = userRole;
+    final String? effectiveRole = userRole ?? _cachedRole;
+
+    if (effectiveRole == null &&
+        Supabase.instance.client.auth.currentUser != null) {
+      // ✅ timeout: إذا لم يُحدَّث الدور خلال 3 ثوانٍ نجلبه من DB مباشرة
+      Future.delayed(const Duration(seconds: 3), () async {
+        if (mounted && ref.read(userRoleProvider) == null) {
+          final userId = supabase.auth.currentUser?.id;
+          if (userId != null) {
+            final data = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', userId)
+                .maybeSingle();
+            if (data != null && mounted) {
+              ref.read(userRoleProvider.notifier).state =
+                  data['role']?.toString();
+            }
+          }
+        }
+      });
+      return Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/images/logo.png',
+                    height: 60,
+                    errorBuilder: (c, e, s) => const Icon(Icons.store,
+                        color: Color(0xFFC21815), size: 60)),
+                const SizedBox(height: 20),
+                const CircularProgressIndicator(color: Color(0xFFC21815)),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    final bool isAdmin = effectiveRole == 'super_admin';
+    final bool isMerchant = effectiveRole == 'merchant';
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: SafeArea(
+          child: _isDataLoading
+              ? const Center(
+                  child: CircularProgressIndicator(color: Color(0xFFC21815)))
+              : _buildCurrentPage(isAdmin, isMerchant, recentlyViewedItems),
+        ),
+        floatingActionButton: (isAdmin || isMerchant) ? null : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: _buildBottomNavBar(isAdmin, isMerchant),
+      ),
+    );
+  }
+
+  Widget _buildCurrentPage(
+      bool isAdmin, bool isMerchant, List<ProductModel> recentlyViewedItems) {
+    switch (_bottomNavIndex) {
+      case 0:
+        return _buildHomeContent(recentlyViewedItems);
+      case 1:
+        return const FavouritesPage();
+      case 2:
+        return const ReelsPage();
+      case 3:
+        return const NotificationsPage();
+      case 4:
+        return const ProfilePage();
+      default:
+        return _buildHomeContent(recentlyViewedItems);
+    }
+  }
+
+  Widget _buildBottomNavBar(bool isAdmin, bool isMerchant) {
+    return BottomAppBar(
+      color: _bottomNavIndex == 2
+          ? Colors.black
+          : Theme.of(context).colorScheme.surface,
+      shape: null,
+      notchMargin: 0,
+      elevation: 20,
+      height: 60,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        height: 60,
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildNavItem(0, Icons.home_filled, "الرئيسية"),
+            _buildNavItem(1, Icons.bookmark_border_rounded, "المفضلة"),
+            _buildNavItem(2, Icons.play_circle_outline, "ريلز"),
+            _buildNavItem(3, Icons.notifications_none, "الإشعارات"),
+            if (!isAdmin && !isMerchant)
+              _buildNavItem(4, Icons.person_outline, "حسابي"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(int index, IconData icon, String label) {
+    bool isSelected = _bottomNavIndex == index;
+    return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: () {
+        if (index == 0)
+          setState(() => _bottomNavIndex = 0);
+        else
+          _protectedAction(() => setState(() => _bottomNavIndex = index));
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon,
+              color: isSelected ? const Color(0xFFC21815) : Colors.grey,
+              size: 24),
+          Text(label,
+              style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 9,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? const Color(0xFFC21815) : Colors.grey)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHomeContent(List<ProductModel> recentlyViewedItems) {
+    return RefreshIndicator(
+      color: const Color(0xFFC21815),
+      onRefresh: _fetchHomeData,
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSmartHeader(),
+            // ✅ SearchBarWidget مستقل
+            const SearchBarWidget(),
+            const SizedBox(height: 12),
+            CategoryGrid(
+              categories: _realCategories,
+              onCategoryTap: (category) {
+                context.push(
+                  RoutePaths.subCategories,
+                  extra: {
+                    'parentId': category['id'],
+                    'categoryName': category['name'],
+                  },
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            MainWideBanner(bannerController: _bannerPageController),
+            RedOceanBanner.compact(
+              imagePath: 'assets/images/whale.png',
+              onTap: () {},
+            ),
+            const SizedBox(height: 20),
+            if (_flashSaleProducts.isNotEmpty)
+              _buildSection("عروض الـ 24 ساعة", _flashSaleProducts),
+            SmallBannersRow(smallBannerController: _smallBannerPageController),
+            if (_merchantsList.isNotEmpty)
+              MerchantCircleList(merchants: _merchantsList),
+            if (_newArrivals.isNotEmpty)
+              _buildSection("مضافة حديثاً", _newArrivals),
+            if (recentlyViewedItems.isNotEmpty)
+              _buildSection("شاهدتهـا مؤخـراً", recentlyViewedItems),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 25, 16, 10),
+              child: Text("اكتشف المزيد",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Cairo')),
+            ),
+            InfiniteProductsGrid(scrollController: _scrollController),
+            const SizedBox(height: 100),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSmartHeader() {
+    final user = supabase.auth.currentUser;
+    final userRole = ref.watch(userRoleProvider);
+    final bool isLoggedIn =
+        user != null || (userRole != null && userRole != 'customer_guest');
+    final bool isAdmin = userRole == 'super_admin';
+    final bool isMerchant = userRole == 'merchant';
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      child: Row(
+        children: [
+          Image.asset('assets/images/logo.png',
+              height: 35,
+              errorBuilder: (c, e, s) =>
+                  const Icon(Icons.store, color: Color(0xFFC21815))),
+          const SizedBox(width: 8),
+          const Text("Red Ocean",
+              style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Color(0xFFC21815))),
+          const Spacer(),
+          GestureDetector(
+            onTap: () {
+              final current = ref.read(appThemeModeProvider);
+              ref.read(appThemeModeProvider.notifier).state =
+                  current == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+            },
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFC21815).withOpacity(0.08),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                ref.watch(appThemeModeProvider) == ThemeMode.dark
+                    ? Icons.light_mode_rounded
+                    : Icons.dark_mode_rounded,
+                color: const Color(0xFFC21815),
+                size: 22,
+              ),
+            ),
+          ),
+          if (isAdmin || isMerchant) ...[
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: () {
+                if (isAdmin)
+                  context.push(RoutePaths.adminDashboard);
+                else if (isMerchant) context.push(RoutePaths.merchantHome);
+              },
+              child: Icon(
+                isAdmin
+                    ? Icons.admin_panel_settings
+                    : Icons.dashboard_customize,
+                color: const Color(0xFFC21815),
+                size: 28,
+              ),
+            ),
+          ],
+          const SizedBox(width: 8),
+          InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () => isLoggedIn ? _handleLogout() : _protectedAction(() {}),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text("مرحباً",
+                        style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 11,
+                            color: Colors.grey,
+                            height: 1)),
+                    Text(
+                      isLoggedIn && user != null
+                          ? (isMerchant && _merchantStoreName != null
+                              ? _merchantStoreName!
+                              : (user.userMetadata?['full_name'] ?? "المستخدم"))
+                          : "تسجيل الدخول",
+                      style: const TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                Icon(isLoggedIn ? Icons.logout_rounded : Icons.person_outline,
+                    color: const Color(0xFFC21815), size: 28),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection(String title, List<ProductModel> products) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Text(title,
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Cairo')),
+        ),
+        SizedBox(
+          height: 230,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemBuilder: (context, index) =>
+                ProductCard(product: products[index], width: 140),
+          ),
+        ),
+      ],
+    );
+  }
+}
