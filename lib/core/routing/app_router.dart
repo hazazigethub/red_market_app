@@ -1,4 +1,5 @@
 ﻿import 'dart:async';
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -61,6 +62,33 @@ import 'package:red_market/features/admin/presentation/screens/admin_reports_scr
 import 'package:red_market/features/admin/presentation/screens/maintenance_screen.dart';
 import 'package:red_market/features/admin/presentation/screens/admin_announcements_screen.dart';
 
+// كاش وضع الصيانة: يمنع استعلام قاعدة البيانات عند كل تنقل
+bool? _maintenanceCache;
+DateTime? _maintenanceCachedAt;
+const Duration _maintenanceTtl = Duration(minutes: 1);
+
+Future<bool> _isMaintenanceOn() async {
+  final now = DateTime.now();
+  if (_maintenanceCache != null &&
+      _maintenanceCachedAt != null &&
+      now.difference(_maintenanceCachedAt!) < _maintenanceTtl) {
+    return _maintenanceCache!;
+  }
+  try {
+    final data = await Supabase.instance.client
+        .from('system_settings')
+        .select('is_maintenance')
+        .eq('id', 1)
+        .maybeSingle();
+    _maintenanceCache = (data?['is_maintenance'] as bool?) ?? false;
+  } catch (_) {
+    // فشل الاستعلام لا يوقف التنقل
+    _maintenanceCache ??= false;
+  }
+  _maintenanceCachedAt = now;
+  return _maintenanceCache!;
+}
+
 // ✅ يجب أن يكون هذا الكلاس قبل routerProvider
 class _RouterRefreshNotifier extends ChangeNotifier {
   _RouterRefreshNotifier(Ref ref) {
@@ -87,24 +115,21 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: RoutePaths.splash,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: !kReleaseMode,
     refreshListenable: notifier,
     redirect: (context, state) async {
-      // ✅ ref.read بدل ref.watch
       final userRole = ref.read(userRoleProvider);
-
       final session = Supabase.instance.client.auth.currentSession;
       final bool isLoggedIn = session != null;
       final String loc = state.matchedLocation;
 
-      if (loc == RoutePaths.home) return null;
-      if (loc == RoutePaths.home || loc == '/') return null;
+      // شاشة الصيانة نفسها مستثناة دائماً لتفادي حلقة إعادة توجيه
       if (loc == RoutePaths.maintenance) return null;
-      if (loc == RoutePaths.customerTerms ||
-          loc == RoutePaths.merchantTerms ||
-          loc == RoutePaths.interestsSelection ||
-          loc == RoutePaths.storeSettings) {
-        return null;
+
+      // فحص وضع الصيانة (مع كاش) قبل أي شيء آخر
+      final bool isMaintenance = await _isMaintenanceOn();
+      if (isMaintenance && userRole != 'super_admin') {
+        return RoutePaths.maintenance;
       }
 
       if (!isLoggedIn) {
@@ -115,7 +140,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             loc == RoutePaths.merchantRegister ||
             loc == RoutePaths.otp ||
             loc == RoutePaths.splash ||
-            loc == RoutePaths.searchResults ||
+            loc == RoutePaths.customerTerms ||
+            loc == RoutePaths.merchantTerms ||
             loc == RoutePaths.subCategories ||
             loc.contains('/product-details') ||
             loc.contains('/merchant-store/') ||
@@ -125,40 +151,39 @@ final routerProvider = Provider<GoRouter>((ref) {
         return RoutePaths.login;
       }
 
-      if (isLoggedIn) {
-        if (userRole == null) return null;
+      // مستخدم مسجّل بدور غير محمّل بعد: يُسمح بالمسارات العامة فقط
+      if (userRole == null) {
+        final bool isSensitive = loc.startsWith('/admin') ||
+            loc.startsWith('/merchant-dashboard') ||
+            loc == RoutePaths.adminDashboard ||
+            loc == RoutePaths.merchantHome ||
+            loc == RoutePaths.storeSettings;
+        return isSensitive ? RoutePaths.home : null;
+      }
 
-        final maintenanceData = await Supabase.instance.client
-            .from('system_settings')
-            .select('is_maintenance')
-            .eq('id', 1)
-            .maybeSingle();
-        final bool isMaintenance = maintenanceData?['is_maintenance'] ?? false;
-        if (isMaintenance && userRole != 'super_admin') {
-          return RoutePaths.maintenance;
-        }
+      if (loc == RoutePaths.splash ||
+          loc == RoutePaths.login ||
+          loc == RoutePaths.otp) {
+        return RoutePaths.home;
+      }
 
-        if (loc == RoutePaths.splash ||
-            loc == RoutePaths.login ||
-            loc == RoutePaths.otp) {
-          return RoutePaths.home;
-        }
+      if (loc == RoutePaths.register || loc == RoutePaths.merchantRegister) {
+        return null;
+      }
 
-        if (loc == RoutePaths.register || loc == RoutePaths.merchantRegister) {
-          return null;
-        }
-        if (loc == RoutePaths.storeSettings) {
-          return null;
-        }
-        // ✅ حماية مسارات الإدارة
-        final bool isAdminPath =
-            loc.startsWith('/admin') || loc == RoutePaths.adminDashboard;
-        if (isAdminPath && userRole != 'super_admin') return RoutePaths.home;
+      // ✅ حماية مسارات الإدارة
+      final bool isAdminPath =
+          loc.startsWith('/admin') || loc == RoutePaths.adminDashboard;
+      if (isAdminPath && userRole != 'super_admin') return RoutePaths.home;
 
-        // ✅ حماية مسارات التجار
-        final bool isMerchantPath = loc.startsWith('/merchant-dashboard') ||
-            loc == RoutePaths.merchantHome;
-        if (isMerchantPath && userRole != 'merchant') return RoutePaths.home;
+      // ✅ حماية مسارات التجار (بما فيها إعدادات المتجر)
+      final bool isMerchantPath = loc.startsWith('/merchant-dashboard') ||
+          loc == RoutePaths.merchantHome ||
+          loc == RoutePaths.storeSettings;
+      if (isMerchantPath &&
+          userRole != 'merchant' &&
+          userRole != 'super_admin') {
+        return RoutePaths.home;
       }
 
       return null;
@@ -179,11 +204,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.otp,
         builder: (context, state) {
-          final Map<String, dynamic> extra =
-              state.extra as Map<String, dynamic>;
+          final extra = state.extra;
+          if (extra is! Map<String, dynamic> ||
+              extra['phoneNumber'] is! String) {
+            return const LoginScreen();
+          }
           return OtpScreen(
             phoneNumber: extra['phoneNumber'] as String,
-            isMerchant: extra['isMerchant'] as bool,
+            isMerchant: (extra['isMerchant'] as bool?) ?? false,
           );
         },
       ),
@@ -364,8 +392,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/customer-profile/:userId',
         name: 'customer-profile',
         builder: (context, state) {
-          final userId = state.pathParameters['userId']!;
-          final userData = state.extra as Map<String, dynamic>;
+          final userId = state.pathParameters['userId'] ?? '';
+          final extra = state.extra;
+          final userData =
+              extra is Map<String, dynamic> ? extra : <String, dynamic>{};
           return CustomerProfileScreen(userId: userId, userData: userData);
         },
       ),
