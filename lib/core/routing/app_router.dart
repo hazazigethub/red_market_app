@@ -29,12 +29,12 @@ import 'package:red_market/features/customer/home/presentation/pages/store_detai
 import 'package:red_market/features/customer/home/presentation/pages/notifications_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/personal_information_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/customer_service_page.dart';
-import 'package:red_market/features/customer/home/presentation/pages/Product_Details_Page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/product_details_page.dart';
 
 import 'package:red_market/features/merchant/dashboard/presentation/pages/store_settings_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/faq_page.dart';
-import 'package:red_market/features/customer/home/presentation/pages/Privacy_Policy_Page.dart';
-import 'package:red_market/features/customer/home/presentation/pages/Delete_Account_Page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/privacy_policy_page.dart';
+import 'package:red_market/features/customer/home/presentation/pages/delete_account_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/sub_categories_screen.dart';
 import 'package:red_market/features/customer/home/presentation/pages/customer_interests_page.dart';
 
