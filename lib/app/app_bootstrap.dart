@@ -11,8 +11,8 @@ class AppBootstrap {
     // التأكد من تهيئة روابط Flutter قبل أي عملية أخرى
     WidgetsFlutterBinding.ensureInitialized();
 
-    // 1. تهيئة SharedPreferences (ضروري لحفظ الجلسات وإعدادات الأدمن)
-    final prefs = await SharedPreferences.getInstance();
+    // 1. تهيئة SharedPreferences (تسخين الـ singleton قبل إطلاق التطبيق)
+    await SharedPreferences.getInstance();
 
     // 2. إنشاء حاوية Riverpod مع التعديلات (Overrides)
     final container = ProviderContainer(

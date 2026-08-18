@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/app_router.dart';
 import 'package:red_market/main.dart'; // للوصول لـ appTypeProvider
+import 'package:red_market/core/routing/route_paths.dart';
+import 'dart:async';
 
 final notificationsObserverProvider =
     Provider((ref) => NotificationsObserver(ref));
@@ -12,6 +14,7 @@ class NotificationsObserver {
   final Ref ref;
   final _supabase = Supabase.instance.client;
   bool _isListening = false; // لمنع التكرار
+  StreamSubscription<List<Map<String, dynamic>>>? _sub;
 
   NotificationsObserver(this.ref);
 
@@ -23,10 +26,7 @@ class NotificationsObserver {
 
     _isListening = true;
 
-    // ملاحظة: أضفنا فلترة للوقت لكي لا يظهر الإشعارات القديمة عند تشغيل التطبيق
-    final now = DateTime.now().toIso8601String();
-
-    _supabase
+    _sub = _supabase
         .from('notifications_log')
         .stream(primaryKey: ['id'])
         // فلترة مباشرة من السوبابيس لجلب الإشعارات المرسلة فقط
@@ -38,13 +38,16 @@ class NotificationsObserver {
             final notification = data.first;
 
             // التحقق من الوقت (لضمان عدم ظهور إشعارات قديمة جداً عند تشغيل التطبيق)
-            final createdAt = DateTime.parse(notification['created_at']);
+            final createdAt =
+                DateTime.tryParse(notification['created_at']?.toString() ?? '');
+            if (createdAt == null) return;
             if (createdAt.isBefore(
                 DateTime.now().subtract(const Duration(seconds: 30)))) return;
 
-            final String targetType = notification['target_type'];
-            final String? targetId = notification['target_id'];
-            final String? segment = notification['segment_filter'];
+            final String targetType =
+                notification['target_type']?.toString() ?? '';
+            final String? targetId = notification['target_id']?.toString();
+            final String? segment = notification['segment_filter']?.toString();
 
             bool shouldShow = false;
 
@@ -74,6 +77,13 @@ class NotificationsObserver {
         });
   }
 
+  /// إيقاف الاستماع وتحرير الاشتراك (يُستدعى عند تسجيل الخروج)
+  void stopListening() {
+    _sub?.cancel();
+    _sub = null;
+    _isListening = false;
+  }
+
   void _showTopNotification(Map<String, dynamic> data) {
     late OverlaySupportEntry entry;
 
@@ -86,11 +96,7 @@ class NotificationsObserver {
           // ✅ التعديل الجوهري: التوجه للمسار الصحيح حسب نوع المستخدم
           final appType = ref.read(appTypeProvider);
 
-          if (appType == AppType.customer) {
-            ref.read(routerProvider).push('/customer/notifications');
-          } else if (appType == AppType.merchant) {
-            ref.read(routerProvider).push('/merchant/notifications');
-          }
+          ref.read(routerProvider).push(RoutePaths.notifications);
 
           debugPrint("🚀 التوجه لصفحة إشعارات الـ ${appType.name}");
         },

@@ -17,23 +17,18 @@ class RecentlyViewedNotifier {
 
     try {
       final supabase = Supabase.instance.client;
-      final data = await supabase
-          .from('products')
-          .select()
-          .filter('id', 'in', ids.map((id) => int.parse(id)).toList());
+      final data =
+          await supabase.from('products').select().filter('id', 'in', ids);
 
-      if (data != null) {
-        final products =
-            (data as List).map((p) => ProductModel.fromJson(p)).toList();
+      final products =
+          (data as List).map((p) => ProductModel.fromJson(p)).toList();
 
-        List<ProductModel> sortedProducts = [];
-        for (var id in ids) {
-          final found = products.where((p) => p.id.toString() == id);
-          if (found.isNotEmpty) sortedProducts.add(found.first);
-        }
+      // خريطة بالمعرّفات لتفادي البحث المتكرر داخل الحلقة
+      final byId = {for (final p in products) p.id.toString(): p};
+      final sortedProducts =
+          ids.map((id) => byId[id]).whereType<ProductModel>().toList();
 
-        ref.read(recentlyViewedProvider.notifier).state = sortedProducts;
-      }
+      ref.read(recentlyViewedProvider.notifier).state = sortedProducts;
     } catch (e) {
       debugPrint("Error loading recently viewed: $e");
     }
