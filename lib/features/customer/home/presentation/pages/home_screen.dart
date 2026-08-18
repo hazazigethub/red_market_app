@@ -14,14 +14,12 @@ import 'package:red_market/main.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:red_market/core/models/merchant_model.dart';
 import 'package:red_market/core/models/product_model.dart';
-import 'package:red_market/core/providers/favorites_provider.dart';
 import 'package:red_market/features/customer/home/presentation/providers/recently_viewed_provider.dart';
 
 import 'package:red_market/features/customer/home/presentation/pages/reels_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/profile_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/favourites_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/notifications_page.dart';
-import 'package:red_market/features/customer/home/presentation/pages/store_details_page.dart';
 import 'package:red_market/features/auth/presentation/login_screen.dart';
 
 import '../widgets/logout_dialog.dart';
@@ -31,7 +29,6 @@ import '../widgets/small_banners_row.dart';
 import '../widgets/category_grid.dart';
 import '../widgets/product_card.dart';
 import '../widgets/merchant_circle_list.dart';
-import '../widgets/new_arrivals_page.dart';
 import '../widgets/infinite_products_grid.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -46,6 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final supabase = Supabase.instance.client;
   int _bottomNavIndex = 0;
   String? _cachedRole;
+  bool _roleTimeoutScheduled = false;
 
   final PageController _bannerPageController =
       PageController(viewportFraction: 0.93);
@@ -572,23 +570,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (effectiveRole == null &&
         Supabase.instance.client.auth.currentUser != null) {
-      // ✅ timeout: إذا لم يُحدَّث الدور خلال 3 ثوانٍ نجلبه من DB مباشرة
-      Future.delayed(const Duration(seconds: 3), () async {
-        if (mounted && ref.read(userRoleProvider) == null) {
-          final userId = supabase.auth.currentUser?.id;
-          if (userId != null) {
-            final data = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', userId)
-                .maybeSingle();
-            if (data != null && mounted) {
-              ref.read(userRoleProvider.notifier).state =
-                  data['role']?.toString();
+      // ✅ timeout: يُجدوَل مرة واحدة فقط، لا مع كل إعادة بناء
+      if (!_roleTimeoutScheduled) {
+        _roleTimeoutScheduled = true;
+        Future.delayed(const Duration(seconds: 3), () async {
+          if (mounted && ref.read(userRoleProvider) == null) {
+            final userId = supabase.auth.currentUser?.id;
+            if (userId != null) {
+              final data = await supabase
+                  .from('profiles')
+                  .select('role')
+                  .eq('id', userId)
+                  .maybeSingle();
+              if (data != null && mounted) {
+                ref.read(userRoleProvider.notifier).state =
+                    data['role']?.toString();
+              }
             }
           }
-        }
-      });
+          if (mounted) _roleTimeoutScheduled = false;
+        });
+      }
       return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
@@ -792,7 +794,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: const Color(0xFFC21815).withOpacity(0.08),
+                color: const Color(0xFFC21815).withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(
