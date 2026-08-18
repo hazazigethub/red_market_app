@@ -61,11 +61,9 @@ class _RecentlyViewedPageState extends State<RecentlyViewedPage> {
           // ✅ ترتيب المنتجات حسب ترتيب الزيارة (الأحدث أولاً)
           final List<ProductModel> products =
               (data as List).map((p) => ProductModel.fromJson(p)).toList();
+          final byId = {for (final p in products) p.id: p};
           _recentProducts = recentIds
-              .map((id) => products.firstWhere(
-                    (p) => p.id == id,
-                    orElse: () => null as ProductModel,
-                  ))
+              .map((id) => byId[id])
               .whereType<ProductModel>()
               .toList();
           _isLoading = false;
