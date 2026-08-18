@@ -141,12 +141,7 @@ class ProfilePage extends ConsumerWidget {
                         () => context.push(RoutePaths.privacyPolicy)),
                     _buildSquareTile(
                         Icons.gavel_outlined, "الشروط", Colors.blueGrey, () {
-                      // ✅ توجيه ذكي: إذا كان عميلاً يذهب لشروط العميل، وإذا كان تاجراً يذهب لشروط التاجر
-                      if (appType == AppType.customer) {
-                        context.push(RoutePaths.customerTerms);
-                      } else {
-                        context.push(RoutePaths.merchantTerms);
-                      }
+                      context.push(RoutePaths.customerTerms);
                     }),
                     // تم نقل خانة حذف الحساب هنا لتكون متوافقة مع التصميم
                     _buildSquareTile(

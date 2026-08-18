@@ -297,19 +297,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                // ✅ استعادة الزر الملاحي للانتقال لصفحة التاجر
-                TextButton(
-                  onPressed: () => context.push(RoutePaths
-                      .merchantRegister), // تأكد من وجود هذا المسار في route_paths
-                  child: const Text(
-                    "هل أنت صاحب متجر؟ سجل كتاجر هنا",
-                    style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontWeight: FontWeight.bold,
-                        color: activeColor),
-                  ),
-                ),
-
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

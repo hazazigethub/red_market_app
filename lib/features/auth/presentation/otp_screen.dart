@@ -94,7 +94,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       // 2️⃣ توجيه تقني ذكي بناءً على نوع الحساب (تاجر أم عميل)
       if (widget.isMerchant) {
         ref.read(appTypeProvider.notifier).state = AppType.merchant;
-        context.go(RoutePaths.merchantHome);
+        context.go(RoutePaths.home);
       } else {
         ref.read(appTypeProvider.notifier).state = AppType.customer;
         context.go(RoutePaths.home);

@@ -141,9 +141,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         if (acceptedVersion < serverVersion) {
           if (!mounted) return;
-          final String targetPath = (userRole == 'merchant')
-              ? RoutePaths.merchantTerms
-              : RoutePaths.customerTerms;
+          const String targetPath = RoutePaths.customerTerms;
 
           context.go(targetPath, extra: {
             'content': latestTerms['content'],
@@ -157,9 +155,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Navigator.pop(context, true);
       } else {
         if (userRole == 'merchant') {
-          context.go(RoutePaths.merchantHome);
+          context.go(RoutePaths.home);
         } else if (userRole == 'super_admin') {
-          context.go(RoutePaths.adminDashboard);
+          context.go(RoutePaths.home);
         } else {
           context.go(RoutePaths.home);
         }

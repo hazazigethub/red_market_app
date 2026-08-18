@@ -271,9 +271,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                           context.push(
-                              role == 'merchant'
-                                  ? RoutePaths.merchantTerms
-                                  : RoutePaths.customerTerms,
+                              RoutePaths.customerTerms,
                               extra: {
                                 'content': latestTerms['content'],
                                 'version': serverVersion
@@ -806,23 +804,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
           ),
-          if (isAdmin || isMerchant) ...[
-            const SizedBox(width: 8),
-            GestureDetector(
-              onTap: () {
-                if (isAdmin)
-                  context.push(RoutePaths.adminDashboard);
-                else if (isMerchant) context.push(RoutePaths.merchantHome);
-              },
-              child: Icon(
-                isAdmin
-                    ? Icons.admin_panel_settings
-                    : Icons.dashboard_customize,
-                color: const Color(0xFFC21815),
-                size: 28,
-              ),
-            ),
-          ],
           const SizedBox(width: 8),
           InkWell(
             splashColor: Colors.transparent,
