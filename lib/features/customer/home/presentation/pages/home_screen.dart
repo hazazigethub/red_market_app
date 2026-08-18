@@ -501,11 +501,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (mounted) {
           final List<ProductModel> products =
               (data as List).map((p) => ProductModel.fromJson(p)).toList();
+          final byId = {for (final p in products) p.id: p};
           final sorted = recentIds
-              .map((id) => products.firstWhere(
-                    (p) => p.id == id,
-                    orElse: () => null as ProductModel,
-                  ))
+              .map((id) => byId[id])
               .whereType<ProductModel>()
               .toList();
           ref.read(recentlyViewedProvider.notifier).state = sorted;
