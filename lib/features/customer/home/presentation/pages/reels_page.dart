@@ -652,10 +652,10 @@ class _ReelsPageState extends State<ReelsPage>
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.45),
+                  color: Colors.black.withValues(alpha: 0.45),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: const Color(0xFFC21815).withOpacity(0.6)),
+                      color: const Color(0xFFC21815).withValues(alpha: 0.6)),
                 ),
                 child: Row(
                   children: [
@@ -680,9 +680,9 @@ class _ReelsPageState extends State<ReelsPage>
               decoration: BoxDecoration(
                 color: !_isGridView
                     ? const Color(0xFFC21815)
-                    : Colors.black.withOpacity(0.45),
+                    : Colors.black.withValues(alpha: 0.45),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white.withOpacity(0.15)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
               ),
               child:
                   const Center(child: PhoneIcon(size: 26, color: Colors.white)),
@@ -697,9 +697,9 @@ class _ReelsPageState extends State<ReelsPage>
               decoration: BoxDecoration(
                 color: _isGridView
                     ? const Color(0xFFC21815)
-                    : Colors.black.withOpacity(0.45),
+                    : Colors.black.withValues(alpha: 0.45),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white.withOpacity(0.15)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
               ),
               child: Center(
                 child: Column(
@@ -764,7 +764,7 @@ class _ReelsPageState extends State<ReelsPage>
                                   end: Alignment.bottomCenter,
                                   colors: [
                             Colors.transparent,
-                            Colors.black.withOpacity(0.7)
+                            Colors.black.withValues(alpha: 0.7)
                           ]))),
                       Positioned(
                         bottom: 8,
@@ -814,7 +814,8 @@ class _ReelsPageState extends State<ReelsPage>
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05), shape: BoxShape.circle),
+                color: Colors.white.withValues(alpha: 0.05),
+                shape: BoxShape.circle),
             child:
                 const Icon(Icons.videocam_off, size: 48, color: Colors.white24),
           ),
@@ -870,9 +871,9 @@ class _ReelsPageState extends State<ReelsPage>
           end: Alignment.bottomCenter,
           stops: const [0.0, 0.5, 1.0],
           colors: [
-            Colors.black.withOpacity(0.3),
+            Colors.black.withValues(alpha: 0.3),
             Colors.transparent,
-            Colors.black.withOpacity(0.85)
+            Colors.black.withValues(alpha: 0.85)
           ],
         ),
       ),
@@ -902,9 +903,10 @@ class _ReelsPageState extends State<ReelsPage>
               height: 46,
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.08))),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.08))),
               child: Icon(
                   _isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
                   color: _isMuted ? const Color(0xFFC21815) : Colors.white,
@@ -968,10 +970,10 @@ class _ReelsPageState extends State<ReelsPage>
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
                 border: Border.all(
-                    color: Colors.white.withOpacity(0.08), width: 1)),
+                    color: Colors.white.withValues(alpha: 0.08), width: 1)),
             child: Icon(icon, color: color, size: 22),
           ),
           if (count != null) ...[
@@ -998,15 +1000,14 @@ class _ReelsPageState extends State<ReelsPage>
           border: Border.all(color: const Color(0xFFC21815), width: 2),
           boxShadow: [
             BoxShadow(
-                color: const Color(0xFFC21815).withOpacity(0.3),
+                color: const Color(0xFFC21815).withValues(alpha: 0.3),
                 blurRadius: 8,
                 spreadRadius: 1)
           ],
         ),
         child: ClipOval(
-          child: (reel.merchantProfileImage != null &&
-                  reel.merchantProfileImage!.isNotEmpty)
-              ? Image.network(reel.merchantProfileImage!, fit: BoxFit.cover)
+          child: reel.merchantProfileImage.isNotEmpty
+              ? Image.network(reel.merchantProfileImage, fit: BoxFit.cover)
               : Container(
                   color: Colors.grey[900],
                   child:
@@ -1067,7 +1068,7 @@ class _ReelsPageState extends State<ReelsPage>
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                          color: const Color(0xFFC21815).withOpacity(0.4),
+                          color: const Color(0xFFC21815).withValues(alpha: 0.4),
                           blurRadius: 8,
                           offset: const Offset(0, 3))
                     ]),
@@ -1108,7 +1109,7 @@ class _ReelsPageState extends State<ReelsPage>
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 3, vertical: 1),
                               decoration: BoxDecoration(
-                                  color: Colors.green.withOpacity(0.8),
+                                  color: Colors.green.withValues(alpha: 0.8),
                                   borderRadius: BorderRadius.circular(4)),
                               child: Text(
                                   "${(((_productOldPrices[reel.productId]! - _productPrices[reel.productId]!) / _productOldPrices[reel.productId]!) * 100).round()}%",
@@ -1145,8 +1146,8 @@ class _ReelsPageState extends State<ReelsPage>
         decoration: BoxDecoration(
             color: const Color(0xFF1A1A1A),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            border:
-                Border(top: BorderSide(color: Colors.white.withOpacity(0.08)))),
+            border: Border(
+                top: BorderSide(color: Colors.white.withValues(alpha: 0.08)))),
         child: Row(
           children: [
             Expanded(
@@ -1157,7 +1158,7 @@ class _ReelsPageState extends State<ReelsPage>
                 decoration: InputDecoration(
                   hintText: "اكتب تعليقك هنا...",
                   hintStyle: GoogleFonts.cairo(color: Colors.white38),
-                  fillColor: Colors.white.withOpacity(0.07),
+                  fillColor: Colors.white.withValues(alpha: 0.07),
                   filled: true,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -1243,7 +1244,9 @@ class _GridVideoWidgetState extends State<GridVideoWidget> {
                 if (mounted) _controller.pause();
               });
             }
-          }).catchError((e) => debugPrint("Grid video error: $e"));
+          }).catchError((Object e) {
+            debugPrint("Grid video error: $e");
+          });
   }
 
   @override
@@ -1316,7 +1319,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               _controller.play();
             });
           }
-        }).catchError((error) => debugPrint("Player error: $error"));
+        }).catchError((Object error) {
+          debugPrint("Player error: $error");
+        });
     } catch (e) {
       debugPrint("Invalid URL: $e");
     }
