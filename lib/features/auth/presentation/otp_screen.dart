@@ -1,5 +1,6 @@
 ﻿import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -23,6 +24,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
 
   bool _isLoading = false;
+  bool _isResending = false;
   int _secondsRemaining = 30;
   Timer? _timer;
   final supabase = Supabase.instance.client;
@@ -33,6 +35,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     _startTimer();
     // ✅ فرض ثيم الـ Auth بمجرد دخول شاشة التحقق
     Future.microtask(() {
+      if (!mounted) return;
       ref.read(appTypeProvider.notifier).state = AppType.auth;
     });
   }
@@ -80,23 +83,28 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
         type: OtpType.sms,
       );
 
-      if (response.user != null) {
-        if (mounted) {
-          // 2️⃣ توجيه تقني ذكي بناءً على نوع الحساب (تاجر أم عميل)
-          if (widget.isMerchant) {
-            // تفعيل ثيم التاجر ونقله للوحة التحكم
-            ref.read(appTypeProvider.notifier).state = AppType.merchant;
-            context.go(RoutePaths.merchantHome);
-          } else {
-            // تفعيل ثيم العميل ونقله للرئيسية
-            ref.read(appTypeProvider.notifier).state = AppType.customer;
-            context.go(RoutePaths.home);
-          }
-        }
+      if (!mounted) return;
+
+      if (response.user == null) {
+        // لم يُرجع الخادم مستخدماً: فشل صامت سابقاً، الآن يُبلَّغ المستخدم
+        _showSnackBar("تعذر إتمام التحقق، حاول مجدداً");
+        return;
+      }
+
+      // 2️⃣ توجيه تقني ذكي بناءً على نوع الحساب (تاجر أم عميل)
+      if (widget.isMerchant) {
+        ref.read(appTypeProvider.notifier).state = AppType.merchant;
+        context.go(RoutePaths.merchantHome);
+      } else {
+        ref.read(appTypeProvider.notifier).state = AppType.customer;
+        context.go(RoutePaths.home);
       }
     } on AuthException catch (e) {
-      _showSnackBar("رمز غير صحيح أو منتهي الصلاحية");
-    } catch (e) {
+      debugPrint("OTP verify AuthException: ${e.message}");
+      _showSnackBar(
+          e.message.isNotEmpty ? e.message : "رمز غير صحيح أو منتهي الصلاحية");
+    } catch (e, st) {
+      debugPrint("OTP verify error: $e\n$st");
       _showSnackBar("فشل التحقق التقني، حاول مجدداً");
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -104,12 +112,23 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   }
 
   Future<void> _resendCode() async {
+    if (_isResending) return;
+    setState(() => _isResending = true);
     try {
       await supabase.auth.signInWithOtp(phone: widget.phoneNumber);
+      if (!mounted) return;
       _startTimer();
       _showSnackBar("تم إرسال رمز جديد لهاتفك");
     } on AuthException catch (e) {
-      _showSnackBar("لا يمكن إعادة الإرسال الآن، حاول لاحقاً");
+      debugPrint("OTP resend AuthException: ${e.message}");
+      _showSnackBar(e.message.isNotEmpty
+          ? e.message
+          : "لا يمكن إعادة الإرسال الآن، حاول لاحقاً");
+    } catch (e, st) {
+      debugPrint("OTP resend error: $e\n$st");
+      _showSnackBar("تعذر إرسال الرمز، تحقق من الاتصال");
+    } finally {
+      if (mounted) setState(() => _isResending = false);
     }
   }
 
@@ -132,7 +151,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => context.pop(),
+            onPressed: () =>
+                context.canPop() ? context.pop() : context.go(RoutePaths.login),
           ),
         ),
         body: SingleChildScrollView(
@@ -175,6 +195,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       focusNode: _focusNodes[index],
                       autofocus: index == 0,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       textAlign: TextAlign.center,
                       maxLength: 1,
                       style: const TextStyle(
@@ -250,7 +271,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               fontFamily: 'Cairo'),
                         )
                       : TextButton(
-                          onPressed: _resendCode,
+                          onPressed: _isResending ? null : _resendCode,
                           child: const Text("إعادة إرسال الآن",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
