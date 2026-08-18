@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_market/core/models/product_model.dart';
 import 'package:red_market/core/routing/route_paths.dart';
-import 'package:red_market/core/routing/route_paths.dart';
 import 'package:red_market/features/customer/home/presentation/pages/sub_categories_screen.dart';
 import 'package:red_market/core/widgets/price_widget.dart';
 
@@ -37,10 +36,11 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   : Colors.white,
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
-                  color: const Color(0xFFC21815).withOpacity(0.5), width: 1.2),
+                  color: const Color(0xFFC21815).withValues(alpha: 0.5),
+                  width: 1.2),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
+                    color: Colors.black.withValues(alpha: 0.03),
                     blurRadius: 10,
                     offset: const Offset(0, 4))
               ],
@@ -399,7 +399,7 @@ class _FilterButtonState extends State<_FilterButton> {
   }
 }
 
-class _SearchResultsDropdown extends StatelessWidget {
+class _SearchResultsDropdown extends StatefulWidget {
   final String query;
   final Map<String, dynamic> activeFilter;
 
@@ -407,6 +407,31 @@ class _SearchResultsDropdown extends StatelessWidget {
     required this.query,
     required this.activeFilter,
   });
+
+  @override
+  State<_SearchResultsDropdown> createState() => _SearchResultsDropdownState();
+}
+
+class _SearchResultsDropdownState extends State<_SearchResultsDropdown> {
+  late Future<List<dynamic>> _future;
+
+  String get query => widget.query;
+  Map<String, dynamic> get activeFilter => widget.activeFilter;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _fetchResults();
+  }
+
+  @override
+  void didUpdateWidget(covariant _SearchResultsDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.query != widget.query ||
+        oldWidget.activeFilter != widget.activeFilter) {
+      _future = _fetchResults();
+    }
+  }
 
   Future<List<dynamic>> _fetchResults() async {
     final minPrice = double.tryParse(activeFilter['minPrice'] ?? '');
@@ -445,14 +470,14 @@ class _SearchResultsDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _fetchResults(),
+      future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasError) return const SizedBox();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LinearProgressIndicator(
               minHeight: 2, color: Color(0xFFC21815));
         }
-        final results = snapshot.data as List? ?? [];
+        final results = snapshot.data ?? const [];
 
         return Container(
           margin: const EdgeInsets.only(top: 4),
@@ -477,9 +502,32 @@ class _SearchResultsDropdown extends StatelessWidget {
   }
 }
 
-class _NoResultsSuggestions extends StatelessWidget {
+class _NoResultsSuggestions extends StatefulWidget {
   final String query;
   const _NoResultsSuggestions({required this.query});
+
+  @override
+  State<_NoResultsSuggestions> createState() => _NoResultsSuggestionsState();
+}
+
+class _NoResultsSuggestionsState extends State<_NoResultsSuggestions> {
+  late Future<Map<String, dynamic>> _future;
+
+  String get query => widget.query;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _fetchSuggestions();
+  }
+
+  @override
+  void didUpdateWidget(covariant _NoResultsSuggestions oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.query != widget.query) {
+      _future = _fetchSuggestions();
+    }
+  }
 
   Future<Map<String, dynamic>> _fetchSuggestions() async {
     final categories = await Supabase.instance.client
@@ -527,8 +575,9 @@ class _NoResultsSuggestions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: _fetchSuggestions(),
+      future: _future,
       builder: (context, snapshot) {
+        if (snapshot.hasError) return const SizedBox();
         if (!snapshot.hasData) {
           return const Padding(
             padding: EdgeInsets.all(16),
@@ -538,8 +587,9 @@ class _NoResultsSuggestions extends StatelessWidget {
           );
         }
 
-        final List categories = snapshot.data!['categories'] as List;
-        final List products = snapshot.data!['products'] as List;
+        final data = snapshot.data ?? const <String, dynamic>{};
+        final List categories = (data['categories'] as List?) ?? const [];
+        final List products = (data['products'] as List?) ?? const [];
 
         // ✅ إذا ما فيه تصنيفات ولا منتجات — لا تعرض شيء
         if (categories.isEmpty && products.isEmpty) {
