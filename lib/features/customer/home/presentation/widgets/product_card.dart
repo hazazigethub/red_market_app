@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/models/product_model.dart';
-import 'package:red_market/core/providers/favorites_provider.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:red_market/features/customer/home/presentation/providers/recently_viewed_provider.dart';
 import 'package:red_market/core/widgets/price_widget.dart';
@@ -173,9 +172,6 @@ class _ProductCardState extends ConsumerState<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    final favoritesList = ref.watch(favoritesProvider);
-    final isFavorite = favoritesList.contains(widget.product.id);
-
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
