@@ -33,8 +33,7 @@ import 'package:red_market/features/customer/home/presentation/pages/privacy_pol
 import 'package:red_market/features/customer/home/presentation/pages/delete_account_page.dart';
 import 'package:red_market/features/customer/home/presentation/pages/sub_categories_screen.dart';
 import 'package:red_market/features/customer/home/presentation/pages/customer_interests_page.dart';
-
-
+import 'package:red_market/features/customer/maintenance_screen.dart';
 
 // كاش وضع الصيانة: يمنع استعلام قاعدة البيانات عند كل تنقل
 bool? _maintenanceCache;
@@ -49,13 +48,11 @@ Future<bool> _isMaintenanceOn() async {
     return _maintenanceCache!;
   }
   try {
-    final data = await Supabase.instance.client
-        .from('system_settings')
-        .select('is_maintenance')
-        .eq('id', 1)
-        .maybeSingle();
-    _maintenanceCache = (data?['is_maintenance'] as bool?) ?? false;
-  } catch (_) {
+    // دالة SECURITY DEFINER: تتجاوز RLS وترجع قيمة منطقية واحدة فقط
+    final result = await Supabase.instance.client.rpc('get_maintenance_status');
+    _maintenanceCache = (result as bool?) ?? false;
+  } catch (e) {
+    debugPrint('Maintenance check failed: $e');
     // فشل الاستعلام لا يوقف التنقل
     _maintenanceCache ??= false;
   }
@@ -86,6 +83,7 @@ class _RouterRefreshNotifier extends ChangeNotifier {
 final routerProvider = Provider<GoRouter>((ref) {
   // ✅ notifier بدل ref.watch لمنع إعادة إنشاء الـ router
   final notifier = _RouterRefreshNotifier(ref);
+  ref.onDispose(notifier.dispose);
 
   return GoRouter(
     initialLocation: RoutePaths.splash,
@@ -111,11 +109,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             loc == '/' ||
             loc == RoutePaths.login ||
             loc == RoutePaths.register ||
-            loc == RoutePaths.merchantRegister ||
             loc == RoutePaths.otp ||
             loc == RoutePaths.splash ||
             loc == RoutePaths.customerTerms ||
-            loc == RoutePaths.merchantTerms ||
             loc == RoutePaths.subCategories ||
             loc.contains('/product-details') ||
             loc.contains('/merchant-store/') ||
@@ -125,44 +121,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         return RoutePaths.login;
       }
 
-      // مستخدم مسجّل بدور غير محمّل بعد: يُسمح بالمسارات العامة فقط
-      if (userRole == null) {
-        final bool isSensitive = loc.startsWith('/admin') ||
-            loc.startsWith('/merchant-dashboard') ||
-            loc == RoutePaths.adminDashboard ||
-            loc == RoutePaths.merchantHome ||
-            loc == RoutePaths.storeSettings;
-        return isSensitive ? RoutePaths.home : null;
-      }
-
       if (loc == RoutePaths.splash ||
           loc == RoutePaths.login ||
           loc == RoutePaths.otp) {
         return RoutePaths.home;
       }
 
-      if (loc == RoutePaths.register || loc == RoutePaths.merchantRegister) {
-        return null;
-      }
-
-      // ✅ حماية مسارات الإدارة
-      final bool isAdminPath =
-          loc.startsWith('/admin') || loc == RoutePaths.adminDashboard;
-      if (isAdminPath && userRole != 'super_admin') return RoutePaths.home;
-
-      // ✅ حماية مسارات التجار (بما فيها إعدادات المتجر)
-      final bool isMerchantPath = loc.startsWith('/merchant-dashboard') ||
-          loc == RoutePaths.merchantHome ||
-          loc == RoutePaths.storeSettings;
-      if (isMerchantPath &&
-          userRole != 'merchant' &&
-          userRole != 'super_admin') {
-        return RoutePaths.home;
-      }
+      if (loc == RoutePaths.register) return null;
 
       return null;
     },
     routes: [
+      GoRoute(
+          path: RoutePaths.maintenance,
+          builder: (context, state) => const MaintenanceScreen()),
       GoRoute(
           path: RoutePaths.splash,
           builder: (context, state) => const SplashScreen()),
