@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
-import 'package:red_market/main.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -35,7 +34,7 @@ class ProfilePage extends ConsumerWidget {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(10))),
                 const SizedBox(height: 20),
                 const Text("اختر اللغة",
@@ -74,7 +73,6 @@ class ProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appType = ref.watch(appTypeProvider);
     final Color primaryAppColor = Theme.of(context).colorScheme.primary;
 
     final user = Supabase.instance.client.auth.currentUser;
@@ -87,9 +85,9 @@ class ProfilePage extends ConsumerWidget {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: Text(
-              appType == AppType.customer ? "إعدادات الحساب" : "إعدادات الحساب",
-              style: const TextStyle(
+          title: const Text(
+              "إعدادات الحساب",
+              style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Cairo')),
@@ -99,7 +97,6 @@ class ProfilePage extends ConsumerWidget {
         body: RefreshIndicator(
           color: brandRed,
           onRefresh: () async {
-            final user = Supabase.instance.client.auth.currentUser;
             await Supabase.instance.client.auth.refreshSession();
           },
           child: SingleChildScrollView(
@@ -121,9 +118,8 @@ class ProfilePage extends ConsumerWidget {
                     _buildSquareTile(Icons.person_outline, "المعلومات",
                         oceanBlue, () => context.push(RoutePaths.personalInfo)),
 
-                    if (appType == AppType.customer)
-                      _buildSquareTile(Icons.favorite_border, "الاهتمامات",
-                          brandRed, () => context.push(RoutePaths.interests)),
+                    _buildSquareTile(Icons.favorite_border, "الاهتمامات",
+                        brandRed, () => context.push(RoutePaths.interests)),
 
                     _buildSquareTile(Icons.help_outline, "الأسئلة الشائعة",
                         leafGreen, () => context.push(RoutePaths.faq)),
@@ -173,7 +169,7 @@ class ProfilePage extends ConsumerWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 4))
           ],
@@ -185,7 +181,7 @@ class ProfilePage extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                  color: color.withOpacity(0.1), shape: BoxShape.circle),
+                  color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
               child: Icon(icon, color: color, size: 28),
             ),
             const SizedBox(height: 12),
@@ -214,7 +210,7 @@ class ProfilePage extends ConsumerWidget {
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               border:
-                  Border.all(color: primaryColor.withOpacity(0.2), width: 4)),
+                  Border.all(color: primaryColor.withValues(alpha: 0.2), width: 4)),
           child: CircleAvatar(
             radius: 55,
             backgroundColor: const Color(0xFFF5F5F5),
@@ -234,28 +230,6 @@ class ProfilePage extends ConsumerWidget {
                 fontFamily: 'Cairo',
                 color: Colors.black)),
       ],
-    );
-  }
-
-  Widget _buildActionTile(
-      BuildContext context, IconData icon, String title, Color color,
-      {VoidCallback? onTap}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-          color: color.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.1))),
-      child: ListTile(
-        onTap: onTap,
-        leading: Icon(icon, color: color, size: 22),
-        title: Text(title,
-            style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                fontFamily: 'Cairo')),
-      ),
     );
   }
 }
