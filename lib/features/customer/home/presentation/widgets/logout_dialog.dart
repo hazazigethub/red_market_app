@@ -2,7 +2,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/app/app.dart';
-import 'package:red_market/main.dart';
 
 Future<void> showLogoutDialog(
     BuildContext context, WidgetRef ref, VoidCallback onLoggedOut) async {
@@ -35,7 +34,7 @@ Future<void> showLogoutDialog(
                       fontSize: 20,
                       fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
-              const Text("هل أنت متأكد أنك تريد مغادرة Red Ocean؟",
+              const Text("هل أنت متأكد أنك تريد تسجيل الخروج؟",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: 'Cairo', fontSize: 14)),
               const SizedBox(height: 24),
@@ -83,7 +82,6 @@ Future<void> showLogoutDialog(
     } catch (e) {
       debugPrint("خطأ في الشبكة، سيتم تسجيل الخروج محلياً: $e");
     }
-    ref.read(appTypeProvider.notifier).state = AppType.customer;
     ref.read(userRoleProvider.notifier).state = null;
     onLoggedOut();
   }

@@ -1,5 +1,4 @@
-﻿import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
+﻿import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -15,25 +14,6 @@ import 'package:flutter/services.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
-enum AppType { customer, merchant, auth }
-
-final appTypeProvider = StateProvider<AppType>((ref) => AppType.auth);
-final merchantBalanceProvider = StateProvider<double>((ref) => 0.0);
-
-final merchantProductsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) async {
-  final supabase = Supabase.instance.client;
-  final user = supabase.auth.currentUser;
-  if (user == null) return [];
-  try {
-    final response =
-        await supabase.from('products').select().eq('merchant_id', user.id);
-    return List<Map<String, dynamic>>.from(response);
-  } catch (e) {
-    return [];
-  }
-});
 
 Future<void> logVisit() async {
   if (isAppVisitLogged) return;
@@ -119,7 +99,6 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final appType = ref.watch(appTypeProvider);
     ref.watch(currentUserProfileProvider);
 
     // ✅ provider واحد للكل
@@ -226,8 +205,7 @@ class _TermsGuardState extends ConsumerState<TermsGuard> {
   Future<void> _checkTermsVersion() async {
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) return;
-    final appType = ref.read(appTypeProvider);
-    String targetType = (appType == AppType.merchant) ? 'merchant' : 'customer';
+    const String targetType = 'customer';
     try {
       final userData = await Supabase.instance.client
           .from('profiles')
@@ -262,11 +240,12 @@ class _TermsGuardState extends ConsumerState<TermsGuard> {
       final user = Supabase.instance.client.auth.currentUser;
       await Supabase.instance.client.from('profiles').update(
           {'accepted_terms_version': _latestVersion}).eq('id', user!.id);
-      if (mounted)
+      if (mounted) {
         setState(() {
           _showOverlay = false;
           _isLoading = false;
         });
+      }
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -284,7 +263,7 @@ class _TermsGuardState extends ConsumerState<TermsGuard> {
               child: GestureDetector(
                 onTap: () {},
                 child: Container(
-                  color: Colors.black.withOpacity(0.9),
+                  color: Colors.black.withValues(alpha: 0.9),
                   child: Center(
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 25),

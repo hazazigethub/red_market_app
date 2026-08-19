@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
-import 'package:red_market/main.dart';
 
 class OtpScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
@@ -33,11 +32,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   void initState() {
     super.initState();
     _startTimer();
-    // ✅ فرض ثيم الـ Auth بمجرد دخول شاشة التحقق
-    Future.microtask(() {
-      if (!mounted) return;
-      ref.read(appTypeProvider.notifier).state = AppType.auth;
-    });
   }
 
   void _startTimer() {
@@ -91,14 +85,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
         return;
       }
 
-      // 2️⃣ توجيه تقني ذكي بناءً على نوع الحساب (تاجر أم عميل)
-      if (widget.isMerchant) {
-        ref.read(appTypeProvider.notifier).state = AppType.merchant;
-        context.go(RoutePaths.home);
-      } else {
-        ref.read(appTypeProvider.notifier).state = AppType.customer;
-        context.go(RoutePaths.home);
-      }
+      context.go(RoutePaths.home);
     } on AuthException catch (e) {
       debugPrint("OTP verify AuthException: ${e.message}");
       _showSnackBar(

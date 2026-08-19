@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/app_router.dart';
-import 'package:red_market/main.dart'; // للوصول لـ appTypeProvider
 import 'package:red_market/core/routing/route_paths.dart';
 import 'dart:async';
 
@@ -57,15 +56,8 @@ class NotificationsObserver {
             } else if (targetType == 'specific' && targetId == userId) {
               shouldShow = true;
             } else if (targetType == 'segment' && segment != null) {
-              final appType = ref.read(appTypeProvider);
-              // إذا كان الإشعار للمتاجر والمستخدم تاجر
-              if (segment.contains('merchants') &&
-                  appType == AppType.merchant) {
-                shouldShow = true;
-              }
-              // إذا كان الإشعار للعملاء والمستخدم عميل
-              else if (segment.contains('users') &&
-                  appType == AppType.customer) {
+              // التطبيق للعملاء فقط: تُعرض إشعارات شريحة العملاء
+              if (segment.contains('users')) {
                 shouldShow = true;
               }
             }
@@ -93,12 +85,7 @@ class NotificationsObserver {
         onTap: () {
           entry.dismiss();
 
-          // ✅ التعديل الجوهري: التوجه للمسار الصحيح حسب نوع المستخدم
-          final appType = ref.read(appTypeProvider);
-
           ref.read(routerProvider).push(RoutePaths.notifications);
-
-          debugPrint("🚀 التوجه لصفحة إشعارات الـ ${appType.name}");
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
