@@ -1,4 +1,4 @@
-﻿name: red_market
+name: red_market
 description: A modern Flutter project for LOCAL app with Reels functionality.
 publish_to: 'none'
 version: 1.0.0+1
@@ -46,9 +46,9 @@ dependencies:
 
 
   # 🔔 Notifications & Timezone
-  flutter_local_notifications: ^17.2.1
+  flutter_local_notifications: 22.3.0
   overlay_support: ^2.1.0
-  timezone: ^0.9.4
+  timezone: 0.11.1
   timeago: ^3.7.1
 
 dev_dependencies:

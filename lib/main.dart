@@ -59,7 +59,8 @@ void main() async {
       AndroidInitializationSettings('@mipmap/ic_launcher');
   const InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(
+      settings: initializationSettings);
 
   await Supabase.initialize(
     url: 'https://ycuzwfsaxnfbdskerjfw.supabase.co',
