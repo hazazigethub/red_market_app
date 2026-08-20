@@ -320,11 +320,24 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     }
     setState(() => _isLoading = true);
     try {
+      final newName = _usernameController.text.trim();
+      final user = supabase.auth.currentUser;
+
       await supabase.auth.updateUser(UserAttributes(
-        data: {'full_name': _usernameController.text.trim()},
+        data: {'full_name': newName},
       ));
+
+      // ✅ تحديث الاسم في profiles أيضاً ليظهر في التعليقات وبقية الأماكن
+      if (user != null) {
+        await supabase.from('profiles').update({
+          'full_name': newName,
+          'name': newName,
+        }).eq('id', user.id);
+      }
+
       _showSnackBar("تم تحديث الاسم بنجاح ✅", Colors.green);
     } catch (e) {
+      debugPrint('Save profile error: $e');
       _showSnackBar("حدث خطأ أثناء الحفظ", Colors.red);
     }
     setState(() => _isLoading = false);

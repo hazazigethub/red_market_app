@@ -57,7 +57,8 @@ class _CustomerServicePageState extends State<CustomerServicePage> {
       await supabase.from('reports').insert({
         'reporter_id': user.id,
         'target_type': 'user_support', // لكي تظهر في قسم خدمة العملاء باللوحة
-        'reason': message, // تخزين نص الرسالة في عمود reason
+        'target_name': subject, // موضوع الرسالة
+        'reason': message, // نص الرسالة
         'status': 'pending',
       });
 
