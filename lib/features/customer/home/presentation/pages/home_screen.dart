@@ -53,6 +53,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   List<Map<String, dynamic>> _realCategories = [];
   List<MerchantModel> _merchantsList = [];
+  List<ProductModel> _followedProducts = [];
   List<ProductModel> _flashSaleProducts = [];
   List<ProductModel> _newArrivals = [];
   List<ProductModel> _infiniteProducts = [];
@@ -343,6 +344,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _fetchHomeData() async {
+    _fetchFollowedProducts();
     if (!mounted) return;
     setState(() => _isDataLoading = true);
     try {
@@ -702,6 +704,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  /// يجلب أحدث منتجات المتاجر التي يتابعها المستخدم
+  Future<void> _fetchFollowedProducts() async {
+    try {
+      final userId = supabase.auth.currentUser?.id;
+      if (userId == null) {
+        if (mounted) setState(() => _followedProducts = []);
+        return;
+      }
+
+      final follows = await supabase
+          .from('merchant_followers')
+          .select('merchant_id')
+          .eq('user_id', userId);
+
+      final ids = List<Map<String, dynamic>>.from(follows)
+          .map((f) => f['merchant_id']?.toString())
+          .whereType<String>()
+          .toList();
+
+      if (ids.isEmpty) {
+        if (mounted) setState(() => _followedProducts = []);
+        return;
+      }
+
+      final data = await supabase
+          .from('products')
+          .select()
+          .inFilter('merchant_id', ids)
+          .eq('is_available', true)
+          .order('created_at', ascending: false)
+          .limit(12);
+
+      final list = List<Map<String, dynamic>>.from(data)
+          .map((e) => ProductModel.fromJson(e))
+          .toList();
+
+      if (mounted) setState(() => _followedProducts = list);
+    } catch (e) {
+      debugPrint('Followed products error: $e');
+    }
+  }
+
   Widget _buildHomeContent(List<ProductModel> recentlyViewedItems) {
     return RefreshIndicator(
       color: const Color(0xFFC21815),
@@ -742,6 +786,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               MerchantCircleList(merchants: _merchantsList),
             if (_newArrivals.isNotEmpty)
               _buildSection("مضافة حديثاً", _newArrivals),
+            if (_followedProducts.isNotEmpty)
+              _buildSection("جديد متاجرك", _followedProducts),
             if (recentlyViewedItems.isNotEmpty)
               _buildSection("شاهدتهـا مؤخـراً", recentlyViewedItems),
             const Padding(
