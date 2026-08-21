@@ -23,6 +23,10 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
   MerchantModel? _merchant;
   int _selectedCategoryIndex = 0;
 
+  bool _isFollowing = false;
+  int _followersCount = 0;
+  bool _followBusy = false;
+
   String _storeDescription = "";
   String? _delayLabel;
   Color _delayColor = Colors.grey;
@@ -42,6 +46,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
   @override
   void initState() {
     super.initState();
+    _loadFollowState();
     _loadInitialData();
     _recordStoreVisit();
   }
@@ -320,6 +325,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                         child: Column(
                           children: [
                             _buildStoreHeader(isDark),
+                            _buildFollowRow(isDark),
                             const SizedBox(height: 20),
                             _buildCategoryTabs(isDark),
                           ],
@@ -329,6 +335,132 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                       const SliverToBoxAdapter(child: SizedBox(height: 40)),
                     ],
                   ),
+      ),
+    );
+  }
+
+  /// يجلب حالة المتابعة وعدد المتابعين
+  Future<void> _loadFollowState() async {
+    try {
+      final merchantRes = await supabase
+          .from('merchants')
+          .select('followers_count')
+          .eq('id', widget.merchantId)
+          .maybeSingle();
+
+      final userId = supabase.auth.currentUser?.id;
+      bool following = false;
+
+      if (userId != null) {
+        final row = await supabase
+            .from('merchant_followers')
+            .select('id')
+            .eq('merchant_id', widget.merchantId)
+            .eq('user_id', userId)
+            .maybeSingle();
+        following = row != null;
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _followersCount = (merchantRes?['followers_count'] as int?) ?? 0;
+        _isFollowing = following;
+      });
+    } catch (e) {
+      debugPrint('Follow state error: $e');
+    }
+  }
+
+  /// متابعة المتجر أو إلغاؤها
+  Future<void> _toggleFollow() async {
+    if (_followBusy) return;
+
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const LoginScreen(isBottomSheet: true),
+      ).then((_) => _loadFollowState());
+      return;
+    }
+
+    setState(() => _followBusy = true);
+    try {
+      if (_isFollowing) {
+        await supabase
+            .from('merchant_followers')
+            .delete()
+            .eq('merchant_id', widget.merchantId)
+            .eq('user_id', userId);
+        if (mounted) {
+          setState(() {
+            _isFollowing = false;
+            _followersCount = (_followersCount - 1).clamp(0, 1 << 30);
+          });
+        }
+      } else {
+        await supabase.from('merchant_followers').insert({
+          'merchant_id': widget.merchantId,
+          'user_id': userId,
+        });
+        if (mounted) {
+          setState(() {
+            _isFollowing = true;
+            _followersCount = _followersCount + 1;
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Toggle follow error: $e');
+    } finally {
+      if (mounted) setState(() => _followBusy = false);
+    }
+  }
+
+  /// زر المتابعة مع عدّاد المتابعين
+  Widget _buildFollowRow(bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: Row(
+        children: [
+          ElevatedButton.icon(
+            onPressed: _followBusy ? null : _toggleFollow,
+            icon: Icon(
+              _isFollowing ? Icons.how_to_reg : Icons.person_add_alt,
+              size: 18,
+            ),
+            label: Text(
+              _isFollowing ? "متابَع" : "متابعة",
+              style: const TextStyle(
+                  fontFamily: 'Cairo', fontWeight: FontWeight.bold),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  _isFollowing ? Colors.transparent : redMarketPrimary,
+              foregroundColor:
+                  _isFollowing ? redMarketPrimary : Colors.white,
+              elevation: 0,
+              side: _isFollowing
+                  ? BorderSide(color: redMarketPrimary.withValues(alpha: 0.5))
+                  : null,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            "$_followersCount متابع",
+            style: TextStyle(
+              fontSize: 13,
+              fontFamily: 'Cairo',
+              color: isDark ? Colors.white54 : Colors.grey,
+            ),
+          ),
+        ],
       ),
     );
   }

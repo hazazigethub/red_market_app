@@ -16,12 +16,15 @@ class FavouritesPage extends ConsumerStatefulWidget {
 class _FavouritesPageState extends ConsumerState<FavouritesPage> {
   final supabase = Supabase.instance.client;
   List<ProductModel> _favoriteProducts = [];
+  List<Map<String, dynamic>> _followedStores = [];
   bool _isLoading = true;
+  int _tabIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _fetchFavoriteProducts();
+    _fetchFollowedStores();
   }
 
   Future<void> _fetchFavoriteProducts() async {
@@ -70,6 +73,205 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
     }
   }
 
+  /// يجلب المتاجر التي يتابعها المستخدم
+  Future<void> _fetchFollowedStores() async {
+    try {
+      final userId = supabase.auth.currentUser?.id;
+      if (userId == null) return;
+
+      final data = await supabase
+          .from('merchant_followers')
+          .select('merchants(*)')
+          .eq('user_id', userId);
+
+      final list = List<Map<String, dynamic>>.from(data)
+          .map((item) => item['merchants'])
+          .whereType<Map<String, dynamic>>()
+          .toList();
+
+      if (mounted) setState(() => _followedStores = list);
+    } catch (e) {
+      debugPrint('Followed stores error: $e');
+    }
+  }
+
+  /// إلغاء متابعة متجر
+  Future<void> _unfollowStore(String merchantId) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return;
+
+    setState(() {
+      _followedStores.removeWhere((m) => m['id'] == merchantId);
+    });
+
+    try {
+      await supabase
+          .from('merchant_followers')
+          .delete()
+          .eq('user_id', userId)
+          .eq('merchant_id', merchantId);
+    } catch (e) {
+      _fetchFollowedStores();
+    }
+  }
+
+  /// شريط التبويبات
+  Widget _buildTabs() {
+    final tabs = [
+      "المنتجات (${_favoriteProducts.length})",
+      "المتاجر (${_followedStores.length})",
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+      child: Row(
+        children: List.generate(tabs.length, (i) {
+          final selected = _tabIndex == i;
+          return Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: GestureDetector(
+              onTap: () => setState(() => _tabIndex = i),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                decoration: BoxDecoration(
+                  color: selected
+                      ? const Color(0xFFC21815)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: selected
+                        ? const Color(0xFFC21815)
+                        : Colors.grey.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Text(
+                  tabs[i],
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 13,
+                    fontWeight:
+                        selected ? FontWeight.bold : FontWeight.normal,
+                    color: selected ? Colors.white : Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  /// شبكة المتاجر المتابَعة
+  Widget _buildStoresGrid() {
+    if (_followedStores.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.storefront_outlined,
+                size: 80, color: Colors.grey.withValues(alpha: 0.5)),
+            const SizedBox(height: 16),
+            const Text(
+              "لم تتابع أي متجر بعد",
+              style: TextStyle(
+                  fontFamily: 'Cairo', fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.95,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: _followedStores.length,
+      itemBuilder: (context, index) {
+        final m = _followedStores[index];
+        final logo = (m['logo_url'] ?? '').toString();
+        final name = (m['store_name'] ?? 'متجر').toString();
+        final followers = (m['followers_count'] as int?) ?? 0;
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+          ),
+          child: Stack(
+            children: [
+              InkWell(
+                onTap: () => context.push('/merchant-store/${m['id']}'),
+                borderRadius: BorderRadius.circular(14),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: const Color(0xFFC21815)
+                                .withValues(alpha: 0.35),
+                            width: 1.5),
+                      ),
+                      child: CircleAvatar(
+                        radius: 34,
+                        backgroundColor: const Color(0xFFF7F8FA),
+                        backgroundImage:
+                            logo.isNotEmpty ? NetworkImage(logo) : null,
+                        child: logo.isEmpty
+                            ? const Icon(Icons.store,
+                                color: Color(0xFFC21815), size: 28)
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "$followers متابع",
+                      style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 11,
+                          color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 4,
+                left: 4,
+                child: IconButton(
+                  icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                  onPressed: () => _unfollowStore(m['id'].toString()),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // ✅ إضافة Directionality لضمان محاذاة العناصر العربية بشكل صحيح
@@ -91,7 +293,14 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
           elevation: 0,
           foregroundColor: const Color(0xFFC21815),
         ),
-        body: _buildBody(),
+        body: Column(
+          children: [
+            _buildTabs(),
+            Expanded(
+              child: _tabIndex == 0 ? _buildBody() : _buildStoresGrid(),
+            ),
+          ],
+        ),
       ),
     );
   }
