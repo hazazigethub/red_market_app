@@ -51,6 +51,17 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
         .whereType<String>()
         .toSet();
 
+    // المتاجر التي يتابعها المستخدم
+    final follows = await supabase
+        .from('merchant_followers')
+        .select('merchant_id')
+        .eq('user_id', userId);
+
+    final followedIds = List<Map<String, dynamic>>.from(follows)
+        .map((f) => f['merchant_id']?.toString())
+        .whereType<String>()
+        .toSet();
+
     return List<Map<String, dynamic>>.from(data)
         .where((notif) {
           final type = notif['target_type'];
@@ -60,6 +71,9 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
           if (type == 'specific' && targetId == userId) return true;
           if (type == 'segment' && segment != null) {
             if (segment.toString().contains('users')) return true;
+          }
+          if (type == 'followers' && targetId != null) {
+            return followedIds.contains(targetId.toString());
           }
           return false;
         })

@@ -770,6 +770,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .whereType<String>()
           .toSet();
 
+      final follows = await supabase
+          .from('merchant_followers')
+          .select('merchant_id')
+          .eq('user_id', userId);
+
+      final followedIds = List<Map<String, dynamic>>.from(follows)
+          .map((f) => f['merchant_id']?.toString())
+          .whereType<String>()
+          .toSet();
+
       final mine = List<Map<String, dynamic>>.from(notifs).where((n) {
         final type = n['target_type'];
         final targetId = n['target_id'];
@@ -778,6 +788,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (type == 'specific' && targetId == userId) return true;
         if (type == 'segment' && segment != null) {
           return segment.toString().contains('users');
+        }
+        if (type == 'followers' && targetId != null) {
+          return followedIds.contains(targetId.toString());
         }
         return false;
       });
