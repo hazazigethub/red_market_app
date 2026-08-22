@@ -54,6 +54,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<Map<String, dynamic>> _realCategories = [];
   List<MerchantModel> _merchantsList = [];
   List<ProductModel> _followedProducts = [];
+  int _unreadCount = 0;
   List<ProductModel> _flashSaleProducts = [];
   List<ProductModel> _newArrivals = [];
   List<ProductModel> _infiniteProducts = [];
@@ -345,6 +346,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _fetchHomeData() async {
     _fetchFollowedProducts();
+    _fetchUnreadCount();
     if (!mounted) return;
     setState(() => _isDataLoading = true);
     try {
@@ -682,17 +684,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () {
-        if (index == 0)
+        if (index == 0) {
           setState(() => _bottomNavIndex = 0);
-        else
-          _protectedAction(() => setState(() => _bottomNavIndex = index));
+          _fetchUnreadCount();
+        } else {
+          _protectedAction(() {
+            setState(() => _bottomNavIndex = index);
+            if (index != 3) _fetchUnreadCount();
+          });
+        }
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon,
-              color: isSelected ? const Color(0xFFC21815) : Colors.grey,
-              size: 24),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Icon(icon,
+                  color: isSelected ? const Color(0xFFC21815) : Colors.grey,
+                  size: 24),
+              if (index == 3 && _unreadCount > 0)
+                Positioned(
+                  top: -4,
+                  left: -6,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    constraints: const BoxConstraints(minWidth: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC21815),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      _unreadCount > 99 ? '99+' : '$_unreadCount',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
           Text(label,
               style: TextStyle(
                   fontFamily: 'Cairo',
@@ -702,6 +738,58 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       ),
     );
+  }
+
+  /// يحسب عدد الإشعارات غير المقروءة لهذا المستخدم
+  Future<void> _fetchUnreadCount() async {
+    try {
+      final userId = supabase.auth.currentUser?.id;
+      if (userId == null) {
+        if (mounted) setState(() => _unreadCount = 0);
+        return;
+      }
+
+      // إطلاق الإشعارات المجدولة التي حان موعدها
+      try {
+        await supabase.rpc('release_due_notifications');
+      } catch (_) {}
+
+      final notifs = await supabase
+          .from('notifications_log')
+          .select('id, target_type, target_id, segment_filter')
+          .eq('status', 'sent')
+          .limit(200);
+
+      final reads = await supabase
+          .from('notification_reads')
+          .select('notification_id')
+          .eq('user_id', userId);
+
+      final readIds = List<Map<String, dynamic>>.from(reads)
+          .map((r) => r['notification_id']?.toString())
+          .whereType<String>()
+          .toSet();
+
+      final mine = List<Map<String, dynamic>>.from(notifs).where((n) {
+        final type = n['target_type'];
+        final targetId = n['target_id'];
+        final segment = n['segment_filter'];
+        if (type == 'all') return true;
+        if (type == 'specific' && targetId == userId) return true;
+        if (type == 'segment' && segment != null) {
+          return segment.toString().contains('users');
+        }
+        return false;
+      });
+
+      final count = mine
+          .where((n) => !readIds.contains(n['id']?.toString()))
+          .length;
+
+      if (mounted) setState(() => _unreadCount = count);
+    } catch (e) {
+      debugPrint('Unread count error: $e');
+    }
   }
 
   /// يجلب أحدث منتجات المتاجر التي يتابعها المستخدم

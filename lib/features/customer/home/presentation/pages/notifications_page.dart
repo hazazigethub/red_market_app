@@ -12,43 +12,94 @@ class NotificationsPage extends ConsumerStatefulWidget {
 
 class _NotificationsPageState extends ConsumerState<NotificationsPage> {
   final supabase = Supabase.instance.client;
-  late Stream<List<Map<String, dynamic>>> _notifStream; // ✅ مضاف
+  List<Map<String, dynamic>> _items = [];
+  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    // ✅ تعريف الـ Stream مرة واحدة فقط هنا
+    _refresh();
+  }
+
+  /// يطلق الإشعارات المجدولة ثم يجلب ما يخص المستخدم
+  Future<List<Map<String, dynamic>>> _loadNotifications() async {
     final userId = supabase.auth.currentUser?.id;
-    if (userId != null) {
-      _notifStream = supabase
-          .from('notifications_log')
-          .stream(primaryKey: ['id'])
-          .eq('status', 'sent')
-          .order('created_at', ascending: false)
-          .map((List<Map<String, dynamic>> data) {
-            return data.where((notif) {
-              final type = notif['target_type'];
-              final targetId = notif['target_id'];
-              final segment = notif['segment_filter'];
-              if (type == 'all') return true;
-              if (type == 'specific' && targetId == userId) return true;
-              if (type == 'segment' && segment != null) {
-                if (segment.contains('users')) return true;
-                if (segment.contains('merchants')) return true;
-              }
-              return false;
-            }).toList();
-          });
-    } else {
-      _notifStream = const Stream.empty();
+    if (userId == null) return [];
+
+    // إطلاق الإشعارات المجدولة التي حان موعدها
+    try {
+      await supabase.rpc('release_due_notifications');
+    } catch (e) {
+      debugPrint('Release notifications error: $e');
+    }
+
+    final data = await supabase
+        .from('notifications_log')
+        .select()
+        .eq('status', 'sent')
+        .order('created_at', ascending: false)
+        .limit(100);
+
+    // الإشعارات التي قرأها هذا المستخدم
+    final reads = await supabase
+        .from('notification_reads')
+        .select('notification_id')
+        .eq('user_id', userId);
+
+    final readIds = List<Map<String, dynamic>>.from(reads)
+        .map((r) => r['notification_id']?.toString())
+        .whereType<String>()
+        .toSet();
+
+    return List<Map<String, dynamic>>.from(data)
+        .where((notif) {
+          final type = notif['target_type'];
+          final targetId = notif['target_id'];
+          final segment = notif['segment_filter'];
+          if (type == 'all') return true;
+          if (type == 'specific' && targetId == userId) return true;
+          if (type == 'segment' && segment != null) {
+            if (segment.toString().contains('users')) return true;
+          }
+          return false;
+        })
+        .map((notif) => {
+              ...notif,
+              'is_read': readIds.contains(notif['id']?.toString()),
+            })
+        .toList();
+  }
+
+  Future<void> _refresh() async {
+    try {
+      final list = await _loadNotifications();
+      if (mounted) {
+        setState(() {
+          _items = list;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Load notifications error: $e');
+      if (mounted) setState(() => _loading = false);
     }
   }
 
   Future<void> _markAsRead(String id) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return;
+
+    // تحديث فوري في الواجهة
+    setState(() {
+      final i = _items.indexWhere((n) => n['id']?.toString() == id);
+      if (i != -1) _items[i] = {..._items[i], 'is_read': true};
+    });
+
     try {
-      await supabase
-          .from('notifications_log')
-          .update({'is_read': true}).eq('id', id);
+      await supabase.from('notification_reads').upsert({
+        'user_id': userId,
+        'notification_id': id,
+      }, onConflict: 'user_id,notification_id');
     } catch (e) {
       debugPrint("Error marking as read: $e");
     }
@@ -56,6 +107,8 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
 
   Future<void> _deleteNotification(String id) async {
     try {
+      setState(() =>
+          _items.removeWhere((n) => n['id']?.toString() == id));
       await supabase.from('notifications_log').delete().eq('id', id);
     } catch (e) {
       debugPrint("Error deleting notification: $e");
@@ -146,16 +199,14 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
           centerTitle: true,
           elevation: 0,
         ),
-        body: StreamBuilder<List<Map<String, dynamic>>>(
-          stream: _notifStream,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting &&
-                !snapshot.hasData) {
+        body: Builder(
+          builder: (context) {
+            if (_loading) {
               return const Center(
                   child: CircularProgressIndicator(color: Color(0xFFC21815)));
             }
 
-            final notifications = snapshot.data ?? [];
+            final notifications = _items;
 
             if (notifications.isEmpty) {
               return _buildEmptyState();
