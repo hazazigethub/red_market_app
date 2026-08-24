@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/main.dart';
+import 'package:go_router/go_router.dart';
 
 class NotificationsPage extends ConsumerStatefulWidget {
   const NotificationsPage({super.key});
@@ -178,7 +179,42 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
               ),
             ),
           ),
-          actions: const [],
+          actions: [
+            if (item['product_id'] != null)
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.push('/product-details/${item['product_id']}');
+                },
+                icon: const Icon(Icons.shopping_bag_rounded, size: 18),
+                label: const Text("عرض المنتج",
+                    style: TextStyle(
+                        fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFC21815),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              )
+            else if (item['reel_id'] != null)
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.push('/reels');
+                },
+                icon: const Icon(Icons.play_circle_fill_rounded, size: 18),
+                label: const Text("مشاهدة الريلز",
+                    style: TextStyle(
+                        fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFC21815),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+          ],
         ),
       ),
     );
