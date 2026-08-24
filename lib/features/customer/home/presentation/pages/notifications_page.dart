@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/main.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsPage extends ConsumerStatefulWidget {
   const NotificationsPage({super.key});
@@ -180,7 +181,29 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
             ),
           ),
           actions: [
-            if (item['product_id'] != null)
+            if (item['newsletter_id'] != null)
+              ElevatedButton.icon(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  final url = Uri.parse(
+                      'https://redmarket.sa/newsletter/${item['newsletter_id']}');
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url,
+                        mode: LaunchMode.externalApplication);
+                  }
+                },
+                icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                label: const Text("تصفّح النشرة",
+                    style: TextStyle(
+                        fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFC21815),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              )
+            else if (item['product_id'] != null)
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.pop(context);
