@@ -56,6 +56,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _unreadCount = 0;
   List<ProductModel> _flashSaleProducts = [];
   List<ProductModel> _newArrivals = [];
+
+  /// منتجات مختارة — أعلى منتج تفاعلاً لكل متجر احترافي
+  List<ProductModel> _curatedProducts = [];
+
+  /// خمسة تصنيفات عشوائية بمنتجاتها
+  List<Map<String, dynamic>> _categoryShowcase = [];
   List<ProductModel> _infiniteProducts = [];
 
   bool _isInfiniteLoading = false;
@@ -271,12 +277,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 borderRadius: BorderRadius.circular(10))),
                         onPressed: () {
                           Navigator.pop(context);
-                          context.push(
-                              RoutePaths.customerTerms,
-                              extra: {
-                                'content': latestTerms['content'],
-                                'version': serverVersion
-                              });
+                          context.push(RoutePaths.customerTerms, extra: {
+                            'content': latestTerms['content'],
+                            'version': serverVersion
+                          });
                         },
                         child: const Text("مراجعة وتحديث",
                             style: TextStyle(
@@ -389,6 +393,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               .order('created_at', ascending: false)
               .limit(10);
 
+      // منتجات مختارة وتصنيفات عشوائية — من دوال قاعدة البيانات
+      List curatedData = [];
+      List showcaseData = [];
+      try {
+        curatedData = await supabase.rpc('get_curated_products') as List;
+      } catch (e) {
+        debugPrint('curated error: $e');
+      }
+      try {
+        showcaseData = await supabase.rpc('get_category_showcase') as List;
+      } catch (e) {
+        debugPrint('showcase error: $e');
+      }
+
       if (mounted) {
         setState(() {
           _realCategories = List<Map<String, dynamic>>.from(catData);
@@ -414,6 +432,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               (flashData as List).map((p) => ProductModel.fromJson(p)).toList();
           _newArrivals =
               (newData as List).map((p) => ProductModel.fromJson(p)).toList();
+
+          _curatedProducts = curatedData
+              .map((p) => ProductModel.fromJson(p as Map<String, dynamic>))
+              .toList();
+
+          _categoryShowcase = List<Map<String, dynamic>>.from(showcaseData);
+
           _isDataLoading = false;
         });
         _loadInfiniteProducts();
@@ -794,9 +819,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return false;
       });
 
-      final count = mine
-          .where((n) => !readIds.contains(n['id']?.toString()))
-          .length;
+      final count =
+          mine.where((n) => !readIds.contains(n['id']?.toString())).length;
 
       if (mounted) setState(() => _unreadCount = count);
     } catch (e) {
@@ -877,6 +901,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 20),
             if (_flashSaleProducts.isNotEmpty)
               _buildSection("عروض الـ 24 ساعة", _flashSaleProducts),
+
+            // منتجات مختارة — من المتاجر الاحترافية
+            if (_curatedProducts.isNotEmpty)
+              _buildSection("منتجات مختارة", _curatedProducts),
+
             SmallBannersRow(smallBannerController: _smallBannerPageController),
             if (_merchantsList.isNotEmpty)
               MerchantCircleList(merchants: _merchantsList),
@@ -884,6 +913,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               _buildSection("مضافة حديثاً", _newArrivals),
             if (_followedProducts.isNotEmpty)
               _buildSection("جديد متاجرك", _followedProducts),
+
+            // خمسة تصنيفات عشوائية بمنتجاتها
+            ..._categoryShowcase.map((cat) {
+              final products = (cat['products'] as List?) ?? [];
+              if (products.isEmpty) return const SizedBox.shrink();
+              final list = products
+                  .map((p) => ProductModel.fromJson(p as Map<String, dynamic>))
+                  .toList();
+              return _buildSection((cat['name'] ?? 'تصنيف').toString(), list);
+            }),
             if (recentlyViewedItems.isNotEmpty)
               _buildSection("شاهدتهـا مؤخـراً", recentlyViewedItems),
             const Padding(
