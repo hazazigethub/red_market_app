@@ -9,7 +9,6 @@ class ProfilePage extends ConsumerWidget {
 
   static const Color brandRed = Color(0xFFC21815);
   static const Color oceanBlue = Color(0xFF2196F3);
-  static const Color leafGreen = Color(0xFF4CAF50);
   static const Color amberGold = Color(0xFFFFC107);
   static const Color purpleDeep = Color(0xFF673AB7);
   static const Color tealOcean = Color(0xFF009688);
@@ -122,7 +121,7 @@ class ProfilePage extends ConsumerWidget {
                         brandRed, () => context.push(RoutePaths.interests)),
 
                     _buildSquareTile(Icons.help_outline, "الأسئلة الشائعة",
-                        leafGreen, () => context.push(RoutePaths.faq)),
+                        brandRed, () => context.push(RoutePaths.faq)),
                     _buildSquareTile(
                         Icons.headset_mic_outlined,
                         "الدعم الفني",

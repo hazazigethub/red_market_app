@@ -117,7 +117,7 @@ class MyApp extends ConsumerWidget {
         brightness: Brightness.light,
         scaffoldBackgroundColor: Colors.white,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4CAF50),
+          seedColor: const Color(0xFFC21815),
           brightness: Brightness.light,
           surface: Colors.white,
         ),
@@ -145,7 +145,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         fontFamily: 'Cairo',
         brightness: Brightness.dark,
-        colorSchemeSeed: const Color(0xFF4CAF50),
+        colorSchemeSeed: const Color(0xFFC21815),
         scaffoldBackgroundColor: const Color(0xFF121212),
         cardTheme: CardThemeData(
           color: const Color(0xFF1E1E1E),

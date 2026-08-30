@@ -128,7 +128,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color brandGreen = Color(0xFF4CAF50);
+    const Color brandRed = Color(0xFFC21815);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -148,7 +148,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.lock_person_outlined,
-                  size: 80, color: brandGreen),
+                  size: 80, color: brandRed),
               const SizedBox(height: 20),
               const Text(
                 "التحقق التقني",
@@ -198,7 +198,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              const BorderSide(color: brandGreen, width: 2),
+                              const BorderSide(color: brandRed, width: 2),
                         ),
                       ),
                       onChanged: (value) {
@@ -226,7 +226,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _verifyOtp,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: brandGreen,
+                    backgroundColor: brandRed,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -253,7 +253,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       ? Text(
                           "إعادة إرسال خلال $_secondsRemaining ث",
                           style: const TextStyle(
-                              color: brandGreen,
+                              color: brandRed,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Cairo'),
                         )
@@ -262,7 +262,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           child: const Text("إعادة إرسال الآن",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: brandGreen,
+                                  color: brandRed,
                                   fontFamily: 'Cairo')),
                         ),
                 ],

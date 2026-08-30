@@ -46,7 +46,7 @@ class _FAQPageState extends State<FAQPage> {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    const Color brandGreen = Color(0xFF4CAF50);
+    const Color brandRed = Color(0xFFC21815);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -67,7 +67,7 @@ class _FAQPageState extends State<FAQPage> {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const Icon(Icons.quiz_outlined, size: 80, color: brandGreen),
+            const Icon(Icons.quiz_outlined, size: 80, color: brandRed),
             const SizedBox(height: 20),
             Text(
               "كيف يمكننا مساعدتك اليوم؟",
@@ -88,7 +88,7 @@ class _FAQPageState extends State<FAQPage> {
                         color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
                   ),
                   child: ExpansionTile(
-                    iconColor: brandGreen,
+                    iconColor: brandRed,
                     collapsedIconColor: Colors.grey,
                     shape: const Border(),
                     title: Text(faq['q']!,
