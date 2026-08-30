@@ -21,7 +21,7 @@ class HomeHeader extends StatelessWidget {
                       Icons.store_mall_directory,
                       color: Color(0xFFC21815))),
               const SizedBox(width: 8),
-              const Text("Red Ocean",
+              const Text("رد ماركت",
                   style: TextStyle(
                       fontFamily: 'Cairo',
                       fontWeight: FontWeight.bold,

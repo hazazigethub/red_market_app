@@ -78,12 +78,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               'assets/images/logo.png',
               width: 220,
               height: 220,
-              errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.waves, size: 100, color: brandColor),
+              errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.storefront_rounded,
+                  size: 100,
+                  color: brandColor),
             ),
             const SizedBox(height: 30),
             const Text(
-              "Red Ocean",
+              "رد ماركت",
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.w900,

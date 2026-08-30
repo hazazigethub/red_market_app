@@ -120,7 +120,7 @@ class MainWideBanner extends StatelessWidget {
           gradient: const LinearGradient(
               colors: [Color(0xFFC21815), Color(0xFFE62E04)])),
       child: const Center(
-          child: Text(" Red Ocean ",
+          child: Text(" رد ماركت ",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 25,

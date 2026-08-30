@@ -8,7 +8,6 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:red_market/features/customer/home/presentation/widgets/red_ocean_banner.dart';
 import 'package:red_market/app/app.dart';
 import 'package:red_market/main.dart';
 import 'package:red_market/core/routing/route_paths.dart';
@@ -875,10 +874,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 12),
             MainWideBanner(bannerController: _bannerPageController),
-            RedMarketBanner.compact(
-              imagePath: 'assets/images/whale.png',
-              onTap: () {},
-            ),
             const SizedBox(height: 20),
             if (_flashSaleProducts.isNotEmpty)
               _buildSection("عروض الـ 24 ساعة", _flashSaleProducts),
@@ -923,7 +918,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               errorBuilder: (c, e, s) =>
                   const Icon(Icons.store, color: Color(0xFFC21815))),
           const SizedBox(width: 8),
-          const Text("Red Ocean",
+          const Text("رد ماركت",
               style: TextStyle(
                   fontFamily: 'Cairo',
                   fontWeight: FontWeight.bold,
