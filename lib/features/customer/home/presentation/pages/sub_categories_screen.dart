@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:red_market/core/models/product_model.dart';
 import '../widgets/product_card.dart';
-import 'package:red_market/core/utils/category_icons.dart';
 
 class SubCategoriesScreen extends StatefulWidget {
   final String parentId;
@@ -68,19 +67,15 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
             return GridView.builder(
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 15,
-                crossAxisSpacing: 15,
-                childAspectRatio: 0.85,
+                crossAxisCount: 4,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 1.0,
               ),
               itemCount: data.length,
               itemBuilder: (context, index) {
                 final item = data[index];
                 final String subName = item['name'] ?? 'قسم غير مسمى';
-                // ✅ نستخدم اسم التصنيف الرئيسي للأيقونة
-                final String parentName =
-                    item['parent']?['name'] ?? widget.categoryName;
-
                 return InkWell(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
@@ -96,48 +91,31 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                       ),
                     );
                   },
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: () {
-                              final img = CategoryIcons.getImage(subName);
-                              return img != null
-                                  ? Image.asset(img,
-                                      width: 150,
-                                      height: 150,
-                                      fit: BoxFit.contain)
-                                  : Icon(
-                                      CategoryIcons.getSubIcon(
-                                          subName, parentName),
-                                      size: 28,
-                                      color: brandRed);
-                            }(),
-                          ),
-                        ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: brandRed.withValues(alpha: 0.5),
+                        width: 1,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
+                    ),
+                    child: Center(
+                      child: Text(
                         subName,
                         textAlign: TextAlign.center,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style:
-                            const TextStyle(fontFamily: 'Cairo', fontSize: 11),
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 13,
+                          height: 1.3,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 );
               },

@@ -364,7 +364,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .eq('is_subscription_active', true);
       final List<String> activeMerchantIds =
           (activeProfiles as List).map((p) => p['id'].toString()).toList();
-      final merchData = await supabase.from('merchants').select('*');
+      // المتاجر: الاحترافية إن بلغت خمسة، وإلا الجميع
+      List merchData;
+      try {
+        merchData = await supabase.rpc('get_featured_merchants') as List;
+      } catch (e) {
+        debugPrint('featured merchants error: $e');
+        merchData = await supabase.from('merchants').select('*') as List;
+      }
       final allProducts =
           await supabase.from('products').select('merchant_id, image_url');
 
@@ -410,7 +417,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (mounted) {
         setState(() {
           _realCategories = List<Map<String, dynamic>>.from(catData);
-          _merchantsList = (merchData as List)
+          _merchantsList = merchData
               .where((m) => activeMerchantIds.contains(m['id']?.toString()))
               .map((m) {
             final merchant = MerchantModel.fromJson(m);

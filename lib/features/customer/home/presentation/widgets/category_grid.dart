@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_market/core/routing/route_paths.dart';
-import 'package:red_market/core/utils/category_icons.dart';
 
 class CategoryGrid extends StatelessWidget {
   final List<Map<String, dynamic>> categories;
@@ -14,7 +13,7 @@ class CategoryGrid extends StatelessWidget {
     if (categories.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      height: 115,
+      height: 86,
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -42,57 +41,35 @@ class CategoryGrid extends StatelessWidget {
                   );
                 }
               },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: CategoryIcons.getImage(catName) != null
-                          ? Colors.transparent
-                          : Theme.of(context).brightness == Brightness.dark
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerHighest
-                              : Colors.white,
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(
-                        color: const Color(0xFFC21815).withOpacity(0.5),
-                        width: 1,
-                      ),
-                    ),
-                    child: Center(
-                      child: CategoryIcons.getImage(catName) != null
-                          ? Image.asset(
-                              CategoryIcons.getImage(catName)!,
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.contain,
-                            )
-                          : Icon(
-                              CategoryIcons.getIcon(catName),
-                              color: const Color(0xFFC21815),
-                            ),
+              child: Container(
+                width: 85,
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.surfaceContainerHighest
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: const Color(0xFFC21815).withValues(alpha: 0.5),
+                    width: 1,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    catName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.35,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Cairo',
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  SizedBox(
-                    width: 70,
-                    child: Text(
-                      catName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Cairo',
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           );
