@@ -1,5 +1,8 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform, debugPrint;
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 
 class CategoryGrid extends StatelessWidget {
@@ -7,6 +10,31 @@ class CategoryGrid extends StatelessWidget {
   final Function(Map<String, dynamic>)? onCategoryTap;
 
   const CategoryGrid({super.key, required this.categories, this.onCategoryTap});
+
+  /// اسم المنصة الفعلي
+  static String get _platformName {
+    if (kIsWeb) return 'web';
+    if (defaultTargetPlatform == TargetPlatform.android) return 'android';
+    if (defaultTargetPlatform == TargetPlatform.iOS) return 'ios';
+    return 'unknown';
+  }
+
+  /// يسجّل زيارة التصنيف الرئيسي عند فتحه
+  static Future<void> _logCategoryVisit(Map<String, dynamic> cat) async {
+    try {
+      final supabase = Supabase.instance.client;
+      await supabase.from('analytics_visits').insert({
+        'page_name': 'category',
+        'platform': _platformName,
+        'user_id': supabase.auth.currentUser?.id,
+        'category_id': cat['id'],
+        'category_name': cat['name'],
+        'visited_at': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      debugPrint('Category visit error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +57,7 @@ class CategoryGrid extends StatelessWidget {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
+                _logCategoryVisit(cat);
                 if (onCategoryTap != null) {
                   onCategoryTap!(cat);
                 } else {
