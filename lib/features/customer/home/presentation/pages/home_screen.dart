@@ -300,25 +300,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _sendLogVisit() async {
-    if (isAppVisitLogged) return;
-    try {
-      final user = supabase.auth.currentUser;
-      String platformName =
-          kIsWeb ? 'web' : (Platform.isAndroid ? 'android' : 'ios');
-      await supabase.from('analytics_visits').insert({
-        'page_name': 'app_launch',
-        'platform': platformName,
-        'user_id': user?.id,
-        'visited_at': DateTime.now().toIso8601String(),
-      });
-      if (user != null) {
+    final user = supabase.auth.currentUser;
+
+    // تسجيل الزيارة مرة واحدة لكل تشغيل
+    if (!isAppVisitLogged) {
+      try {
+        String platformName =
+            kIsWeb ? 'web' : (Platform.isAndroid ? 'android' : 'ios');
+        await supabase.from('analytics_visits').insert({
+          'page_name': 'app_launch',
+          'platform': platformName,
+          'user_id': user?.id,
+          'visited_at': DateTime.now().toIso8601String(),
+        });
+        isAppVisitLogged = true;
+      } catch (e) {
+        debugPrint("Analytics Error: $e");
+      }
+    }
+
+    // تحديث آخر دخول مستقل عن حارس الزيارة
+    if (user != null) {
+      try {
         await supabase.from('profiles').update({
           'last_sign_in_at': DateTime.now().toIso8601String(),
         }).eq('id', user.id);
+      } catch (e) {
+        debugPrint("Last sign-in update error: $e");
       }
-      isAppVisitLogged = true;
-    } catch (e) {
-      debugPrint("Analytics Error: $e");
     }
   }
 

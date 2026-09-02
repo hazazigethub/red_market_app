@@ -1,4 +1,6 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/models/merchant_model.dart';
@@ -51,6 +53,14 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
     _recordStoreVisit();
   }
 
+  /// اسم المنصة الفعلي بدل قيمة ثابتة
+  String get _platformName {
+    if (kIsWeb) return 'web';
+    if (defaultTargetPlatform == TargetPlatform.android) return 'android';
+    if (defaultTargetPlatform == TargetPlatform.iOS) return 'ios';
+    return 'unknown';
+  }
+
   Future<void> _recordStoreVisit() async {
     try {
       final userId = supabase.auth.currentUser?.id;
@@ -59,7 +69,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
         'user_id': userId,
         'page_name': 'store',
         'visited_at': DateTime.now().toIso8601String(),
-        'platform': 'mobile',
+        'platform': _platformName,
       });
     } catch (e) {
       debugPrint("خطأ في تسجيل الزيارة: $e");
@@ -439,14 +449,12 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor:
                   _isFollowing ? Colors.transparent : redMarketPrimary,
-              foregroundColor:
-                  _isFollowing ? redMarketPrimary : Colors.white,
+              foregroundColor: _isFollowing ? redMarketPrimary : Colors.white,
               elevation: 0,
               side: _isFollowing
                   ? BorderSide(color: redMarketPrimary.withValues(alpha: 0.5))
                   : null,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),
