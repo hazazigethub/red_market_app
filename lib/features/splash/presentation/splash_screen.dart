@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,7 +21,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   Future<void> _handleInitialFlow() async {
     // 1. انتظار بسيط لضمان استقرار استعادة الجلسة من الذاكرة المحلية
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(milliseconds: 2200));
 
     if (!mounted) return;
 
@@ -31,8 +31,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // حالة (أ): لا توجد جلسة مخزنة - نترك الروتر يوجه للـ Login تلقائياً
     if (session == null) {
       debugPrint("Auth Check: No Session Found");
+      ref.read(splashDoneProvider.notifier).state = true;
       if (mounted) {
-        context.go(RoutePaths.login); // ✅ يجب إضافة هذا السطر للانتقال فعلياً
+        context.go(RoutePaths.login);
       }
       return;
     }
@@ -50,9 +51,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       if (userData != null && userData['is_banned'] == true) {
         debugPrint("Auth Check: User is Banned");
         await supabase.auth.signOut();
-        // بعد الخروج، سيوجه الروتر تلقائياً للـ Login
       } else {
-        // ✅ المهمة الوحيدة: تحديث الـ Provider ليعلم الروتر أين يذهب بالمستخدم
         if (userData != null && userData['role'] != null) {
           ref.read(userRoleProvider.notifier).state = userData['role'];
           debugPrint("User Role Updated to: ${userData['role']}");
@@ -61,8 +60,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
     } catch (e) {
       debugPrint("Auth Check Error: $e");
-      // في حال الخطأ، الروتر سيتعامل مع الحالة الحالية للجلسة
     }
+
+    // رفع العلامة يسمح للراوتر بالانتقال
+    if (!mounted) return;
+    ref.read(splashDoneProvider.notifier).state = true;
+
+    final target = Supabase.instance.client.auth.currentSession == null
+        ? RoutePaths.login
+        : RoutePaths.home;
+    if (mounted) context.go(target);
   }
 
   @override
@@ -70,36 +77,58 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     const Color brandColor = Color(0xFFC21815);
 
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              width: 220,
-              height: 220,
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.storefront_rounded,
-                  size: 100,
-                  color: brandColor),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // الشعار المربّع
+                SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: Image.asset(
+                    'assets/images/applogo.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.storefront_rounded,
+                        size: 90,
+                        color: brandColor),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // الشعار العريض
+                SizedBox(
+                  width: 230,
+                  height: 80,
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Text(
+                      'RED MARKET',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w900,
+                        color: brandColor,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 50),
+
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(brandColor),
+                  strokeWidth: 3,
+                ),
+              ],
             ),
-            const SizedBox(height: 30),
-            const Text(
-              "رد ماركت",
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w900,
-                color: brandColor,
-                letterSpacing: 1.5,
-                fontFamily: 'Cairo',
-              ),
-            ),
-            const SizedBox(height: 60),
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(brandColor),
-              strokeWidth: 3,
-            ),
-          ],
+          ),
         ),
       ),
     );

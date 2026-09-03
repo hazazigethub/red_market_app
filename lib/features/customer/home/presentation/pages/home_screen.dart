@@ -972,13 +972,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               height: 35,
               errorBuilder: (c, e, s) =>
                   const Icon(Icons.store, color: Color(0xFFC21815))),
-          const SizedBox(width: 8),
-          const Text("رد ماركت",
-              style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Color(0xFFC21815))),
           const Spacer(),
           GestureDetector(
             onTap: () {

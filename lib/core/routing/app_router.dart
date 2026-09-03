@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -91,12 +91,16 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: notifier,
     redirect: (context, state) async {
       final userRole = ref.read(userRoleProvider);
+      final splashDone = ref.read(splashDoneProvider);
       final session = Supabase.instance.client.auth.currentSession;
       final bool isLoggedIn = session != null;
       final String loc = state.matchedLocation;
 
       // شاشة الصيانة نفسها مستثناة دائماً لتفادي حلقة إعادة توجيه
       if (loc == RoutePaths.maintenance) return null;
+
+      // شاشة البداية تبقى ظاهرة حتى تنتهي مدتها
+      if (loc == RoutePaths.splash && !splashDone) return null;
 
       // فحص وضع الصيانة (مع كاش) قبل أي شيء آخر
       final bool isMaintenance = await _isMaintenanceOn();

@@ -46,3 +46,7 @@ final userRoleProvider = StateProvider<String?>((ref) => null);
 
 // ✅ 5. مزود حالة لوحة التحكم
 final isAdminModeProvider = StateProvider<bool>((ref) => false);
+
+// ✅ 6. علامة انتهاء شاشة البداية
+// يبقى false حتى تنتهي مدة السبلاش، فيمنع الراوتر من تخطّيها
+final splashDoneProvider = StateProvider<bool>((ref) => false);
