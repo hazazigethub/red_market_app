@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,6 +11,9 @@ import 'package:red_market/core/routing/app_router.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:red_market/app/notifications_observer.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:red_market/core/services/push_service.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -62,6 +65,15 @@ void main() async {
   await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings);
 
+  // ===== Firebase والإشعارات المنبثقة =====
+  try {
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(firebaseBackgroundHandler);
+    await PushService.instance.init(flutterLocalNotificationsPlugin);
+  } catch (e) {
+    debugPrint("Firebase init error: $e");
+  }
+
   await Supabase.initialize(
     url: 'https://ycuzwfsaxnfbdskerjfw.supabase.co',
     anonKey:
@@ -71,6 +83,20 @@ void main() async {
       autoRefreshToken: true,
     ),
   );
+
+  // تسجيل رمز الجهاز إن كان المستخدم مسجّلاً
+  if (Supabase.instance.client.auth.currentUser != null) {
+    PushService.instance.registerDevice();
+  }
+
+  // ومتابعة تغيّر الجلسة
+  Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    if (data.event == AuthChangeEvent.signedIn) {
+      PushService.instance.registerDevice();
+    } else if (data.event == AuthChangeEvent.signedOut) {
+      PushService.instance.unregisterDevice();
+    }
+  });
 
   String? savedRole;
   try {
