@@ -22,6 +22,7 @@ class ProductModel {
   final String? productUrl;
   final bool isFlashSale;
   final DateTime? flashSaleExpiry;
+  final DateTime? flashSaleStart;
 
   ProductModel({
     required this.id,
@@ -44,11 +45,15 @@ class ProductModel {
     this.productUrl,
     this.isFlashSale = false,
     this.flashSaleExpiry,
+    this.flashSaleStart,
   });
 
   bool get isFlashSaleActive {
     if (!isFlashSale || flashSaleExpiry == null) return false;
-    return flashSaleExpiry!.isAfter(DateTime.now());
+    final now = DateTime.now();
+    // المجدول لا يُعدّ نشطاً قبل موعده
+    if (flashSaleStart != null && flashSaleStart!.isAfter(now)) return false;
+    return flashSaleExpiry!.isAfter(now);
   }
 
   Duration get remainingTime {
@@ -114,7 +119,10 @@ class ProductModel {
       productUrl: json['product_url']?.toString(),
       isFlashSale: (json['is_flash_sale'] as bool?) ?? false,
       flashSaleExpiry: json['flash_sale_expiry'] != null
-          ? DateTime.parse(json['flash_sale_expiry'])
+          ? DateTime.parse(json['flash_sale_expiry']).toLocal()
+          : null,
+      flashSaleStart: json['flash_sale_start'] != null
+          ? DateTime.parse(json['flash_sale_start']).toLocal()
           : null,
     );
   }
@@ -138,7 +146,8 @@ class ProductModel {
       'created_at': createdAt.toIso8601String(),
       'product_url': productUrl,
       'is_flash_sale': isFlashSale,
-      'flash_sale_expiry': flashSaleExpiry?.toIso8601String(),
+      'flash_sale_expiry': flashSaleExpiry?.toUtc().toIso8601String(),
+      'flash_sale_start': flashSaleStart?.toUtc().toIso8601String(),
     };
   }
 
@@ -163,6 +172,7 @@ class ProductModel {
     String? productUrl,
     bool? isFlashSale,
     DateTime? flashSaleExpiry,
+    DateTime? flashSaleStart,
   }) {
     return ProductModel(
       id: id ?? this.id,
@@ -185,6 +195,7 @@ class ProductModel {
       productUrl: productUrl ?? this.productUrl,
       isFlashSale: isFlashSale ?? this.isFlashSale,
       flashSaleExpiry: flashSaleExpiry ?? this.flashSaleExpiry,
+      flashSaleStart: flashSaleStart ?? this.flashSaleStart,
     );
   }
 }
