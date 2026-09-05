@@ -251,7 +251,10 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
           .select('*, product_categories(id, name)')
           .eq('merchant_id', widget.merchantId)
           .eq('is_available', true)
-          .or('is_banned.eq.false,is_banned.is.null');
+          .or('is_banned.eq.false,is_banned.is.null')
+          // العروض المجدولة تُخفى حتى موعدها
+          .or('flash_sale_start.is.null,flash_sale_start.lte.'
+              '${DateTime.now().toIso8601String()}');
 
       if (mounted) {
         setState(() {

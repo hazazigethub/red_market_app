@@ -384,6 +384,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final allProducts =
           await supabase.from('products').select('merchant_id, image_url');
 
+      final nowIso = DateTime.now().toIso8601String();
+
       final flashData = activeMerchantIds.isEmpty
           ? []
           : await supabase
@@ -391,7 +393,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               .select()
               .eq('is_flash_sale', true)
               .or('is_banned.eq.false,is_banned.is.null')
-              .gt('flash_sale_expiry', DateTime.now().toIso8601String())
+              // العروض المجدولة تُخفى حتى موعدها
+              .or('flash_sale_start.is.null,flash_sale_start.lte.$nowIso')
+              .gt('flash_sale_expiry', nowIso)
               .inFilter('merchant_id', activeMerchantIds)
               .limit(10);
 
@@ -404,6 +408,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               .select()
               .eq('is_available', true)
               .or('is_banned.eq.false,is_banned.is.null')
+              .or('flash_sale_start.is.null,flash_sale_start.lte.$nowIso')
               .gte('created_at', fiveDaysAgo)
               .inFilter('merchant_id', activeMerchantIds)
               .order('created_at', ascending: false)
@@ -471,6 +476,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final randomProducts = await supabase
           .from('products')
           .select()
+          .or('flash_sale_start.is.null,flash_sale_start.lte.'
+              '${DateTime.now().toIso8601String()}')
           .range(_currentOffset, _currentOffset + _pageSize - 1);
       if (mounted) {
         setState(() {
