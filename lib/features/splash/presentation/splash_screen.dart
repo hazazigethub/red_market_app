@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/core/services/splash_ad_service.dart';
 import 'package:red_market/app/app_providers.dart';
+
+import 'splash_ad_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -13,6 +16,10 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  /// إعلان الافتتاح إن توفّر
+  SplashAdData? _ad;
+  bool _showingAd = false;
+
   @override
   void initState() {
     super.initState();
@@ -20,6 +27,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _handleInitialFlow() async {
+    // عدّاد فتحات التطبيق — الإعلان لا يظهر للمستخدم الجديد
+    await SplashAdService.instance.bumpOpenCount();
+
+    // فحص إعلان اليوم أثناء انتظار السبلاش — بلا تأخير إضافي
+    final adFuture = SplashAdService.instance.getTodayAd();
+
     // 1. انتظار بسيط لضمان استقرار استعادة الجلسة من الذاكرة المحلية
     await Future.delayed(const Duration(milliseconds: 2200));
 
@@ -31,6 +44,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // حالة (أ): لا توجد جلسة مخزنة - نترك الروتر يوجه للـ Login تلقائياً
     if (session == null) {
       debugPrint("Auth Check: No Session Found");
+      SplashAdService.instance.preloadTomorrow();
+
+      final guestAd = await adFuture;
+      if (guestAd != null && mounted) {
+        setState(() {
+          _ad = guestAd;
+          _showingAd = true;
+        });
+        return;
+      }
+
       ref.read(splashDoneProvider.notifier).state = true;
       if (mounted) {
         context.go(RoutePaths.login);
@@ -62,19 +86,65 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       debugPrint("Auth Check Error: $e");
     }
 
-    // رفع العلامة يسمح للراوتر بالانتقال
     if (!mounted) return;
+
+    // تحميل إعلان الغد في الخلفية — لا ننتظره
+    SplashAdService.instance.preloadTomorrow();
+
+    // عرض إعلان اليوم إن توفّر
+    final ad = await adFuture;
+    if (ad != null && mounted) {
+      setState(() {
+        _ad = ad;
+        _showingAd = true;
+      });
+      return;
+    }
+
+    _goNext();
+  }
+
+  /// ينتقل للوجهة الصحيحة بعد الإعلان أو بدونه
+  void _goNext() {
+    if (!mounted) return;
+
     ref.read(splashDoneProvider.notifier).state = true;
 
     final target = Supabase.instance.client.auth.currentSession == null
         ? RoutePaths.login
         : RoutePaths.home;
-    if (mounted) context.go(target);
+    context.go(target);
+  }
+
+  /// عند الضغط على الإعلان
+  void _openAdTarget(SplashAdData ad) {
+    if (!mounted) return;
+
+    ref.read(splashDoneProvider.notifier).state = true;
+
+    if (ad.targetType == 'product' &&
+        ad.productId != null &&
+        ad.productId!.isNotEmpty) {
+      context.go('/product-details/${ad.productId}');
+    } else if (ad.merchantId != null && ad.merchantId!.isNotEmpty) {
+      context.go('/merchant-store/${ad.merchantId}');
+    } else {
+      _goNext();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     const Color brandColor = Color(0xFFC21815);
+
+    // ===== إعلان الافتتاح =====
+    if (_showingAd && _ad != null) {
+      return SplashAdScreen(
+        ad: _ad!,
+        onFinish: _goNext,
+        onTap: _openAdTarget,
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
