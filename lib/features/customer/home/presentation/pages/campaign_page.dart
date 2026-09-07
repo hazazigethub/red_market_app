@@ -158,7 +158,6 @@ class _CampaignPageState extends State<CampaignPage> {
   Widget _content() {
     final c = _campaign!;
     final banner = (c['banner_image'] ?? '').toString();
-    final daysLeft = (c['days_left'] as num?)?.toInt() ?? 0;
 
     return RefreshIndicator(
       onRefresh: () => _loadProducts(reset: true),
@@ -180,47 +179,11 @@ class _CampaignPageState extends State<CampaignPage> {
               ),
             ),
 
-          // ===== العدّاد =====
-          SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(14, 12, 14, 0),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 14, vertical: 11),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.local_fire_department_rounded,
-                      size: 17, color: brandRed),
-                  const SizedBox(width: 8),
-                  Text(
-                    daysLeft > 0 ? 'باقٍ $daysLeft يوم' : 'آخر يوم',
-                    style: const TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.bold,
-                        color: brandRed),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${c['product_count'] ?? 0} منتج',
-                    style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 11.5,
-                        color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
           // ===== التصنيفات =====
           if (_categories.isNotEmpty)
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 42,
+                height: 52,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
@@ -245,32 +208,45 @@ class _CampaignPageState extends State<CampaignPage> {
 
           // ===== الفلاتر =====
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: 42,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+              child: Row(
                 children: [
-                  ...[null, 20.0, 30.0, 50.0, 75.0].map((d) => _chip(
-                        d == null ? 'كل الخصومات' : '${d.toInt()}%+',
-                        _minDiscount == d,
-                        () {
-                          setState(() => _minDiscount = d);
-                          _applyFilter();
-                        },
-                        small: true,
-                      )),
+                  Expanded(
+                    child: _dropdown<double?>(
+                      icon: Icons.percent_rounded,
+                      value: _minDiscount,
+                      hint: 'نسبة الخصم',
+                      items: const [
+                        (value: null, label: 'نسبة الخصم'),
+                        (value: 20.0, label: 'خصم 20% فأكثر'),
+                        (value: 30.0, label: 'خصم 30% فأكثر'),
+                        (value: 50.0, label: 'خصم 50% فأكثر'),
+                        (value: 75.0, label: 'خصم 75% فأكثر'),
+                      ],
+                      onChanged: (v) {
+                        setState(() => _minDiscount = v);
+                        _applyFilter();
+                      },
+                    ),
+                  ),
                   const SizedBox(width: 10),
-                  _chip('الأقل سعراً', _sort == 'price_asc', () {
-                    setState(() => _sort =
-                        _sort == 'price_asc' ? 'random' : 'price_asc');
-                    _applyFilter();
-                  }, small: true),
-                  _chip('الأعلى سعراً', _sort == 'price_desc', () {
-                    setState(() => _sort =
-                        _sort == 'price_desc' ? 'random' : 'price_desc');
-                    _applyFilter();
-                  }, small: true),
+                  Expanded(
+                    child: _dropdown<String>(
+                      icon: Icons.swap_vert_rounded,
+                      value: _sort,
+                      hint: 'ترتيب السعر',
+                      items: const [
+                        (value: 'random', label: 'ترتيب السعر'),
+                        (value: 'price_asc', label: 'الأقل سعراً'),
+                        (value: 'price_desc', label: 'الأعلى سعراً'),
+                      ],
+                      onChanged: (v) {
+                        setState(() => _sort = v ?? 'random');
+                        _applyFilter();
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -325,6 +301,63 @@ class _CampaignPageState extends State<CampaignPage> {
     );
   }
 
+  /// قائمة منسدلة موحّدة
+  Widget _dropdown<T>({
+    required IconData icon,
+    required T value,
+    required String hint,
+    required List<({T value, String label})> items,
+    required ValueChanged<T?> onChanged,
+  }) {
+    return Container(
+      height: 44,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(11),
+        border: Border.all(color: const Color(0xFFEDEFF3)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: Colors.grey.shade500),
+          const SizedBox(width: 8),
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<T>(
+                value: value,
+                isExpanded: true,
+                isDense: true,
+                hint: Text(hint,
+                    style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 12,
+                        color: Colors.grey.shade500)),
+                icon: Icon(Icons.keyboard_arrow_down_rounded,
+                    size: 18, color: Colors.grey.shade500),
+                style: const TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 12.5,
+                    color: Color(0xFF1F2937)),
+                items: items
+                    .map((e) => DropdownMenuItem<T>(
+                          value: e.value,
+                          child: Text(
+                            e.label,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontFamily: 'Cairo', fontSize: 12.5),
+                          ),
+                        ))
+                    .toList(),
+                onChanged: onChanged,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _chip(String label, bool active, VoidCallback onTap,
       {bool small = false}) {
     return Padding(
@@ -332,8 +365,9 @@ class _CampaignPageState extends State<CampaignPage> {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
+          alignment: Alignment.center,
           padding: EdgeInsets.symmetric(
-              horizontal: small ? 13 : 16, vertical: 9),
+              horizontal: small ? 13 : 16, vertical: 10),
           decoration: BoxDecoration(
             color: active ? brandRed : Colors.white,
             borderRadius: BorderRadius.circular(10),

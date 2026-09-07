@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -236,8 +236,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           path: RoutePaths.customerService,
           builder: (context, state) => const CustomerServicePage()),
       GoRoute(
-          path: '/campaign',
-          builder: (context, state) => const CampaignPage()),
+          path: '/campaign', builder: (context, state) => const CampaignPage()),
       GoRoute(
         path: RoutePaths.customerTerms,
         builder: (context, state) {
