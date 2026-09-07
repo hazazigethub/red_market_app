@@ -12,6 +12,7 @@ import 'package:red_market/app/app_providers.dart';
 import 'package:red_market/features/customer/home/presentation/pages/home_screen.dart'
     as customer;
 
+import 'package:red_market/features/customer/home/presentation/pages/campaign_page.dart';
 import 'package:red_market/features/splash/presentation/splash_screen.dart';
 import 'package:red_market/features/customer/customer_terms_page.dart';
 import 'package:red_market/core/models/merchant_model.dart';
@@ -117,6 +118,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             loc == RoutePaths.splash ||
             loc == RoutePaths.customerTerms ||
             loc == RoutePaths.subCategories ||
+            loc == '/campaign' ||
             loc.contains('/product-details') ||
             loc.contains('/merchant-store/') ||
             loc.startsWith(RoutePaths.storeDetails);
@@ -233,6 +235,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: RoutePaths.customerService,
           builder: (context, state) => const CustomerServicePage()),
+      GoRoute(
+          path: '/campaign',
+          builder: (context, state) => const CampaignPage()),
       GoRoute(
         path: RoutePaths.customerTerms,
         builder: (context, state) {

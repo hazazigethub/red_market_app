@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:red_market/app/app.dart';
 import 'package:red_market/main.dart';
 import 'package:red_market/core/routing/route_paths.dart';
+import 'package:red_market/core/services/campaign_service.dart';
 import 'package:red_market/core/models/merchant_model.dart';
 import 'package:red_market/core/models/product_model.dart';
 import 'package:red_market/features/customer/home/presentation/providers/recently_viewed_provider.dart';
@@ -51,6 +52,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
 
   List<Map<String, dynamic>> _realCategories = [];
+
+
+  /// الحملة الموسمية النشطة
+
+  Map<String, dynamic>? _campaign;
   List<MerchantModel> _merchantsList = [];
   List<ProductModel> _followedProducts = [];
   int _unreadCount = 0;
@@ -356,7 +362,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  /// يجلب الحملة الموسمية النشطة
+  Future<void> _loadCampaign() async {
+    final c = await CampaignService.instance.getActive();
+    if (!mounted) return;
+    setState(() => _campaign = c);
+  }
+
   Future<void> _fetchHomeData() async {
+    _loadCampaign();
+
     _fetchFollowedProducts();
     _fetchUnreadCount();
     if (!mounted) return;
@@ -921,6 +936,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 12),
             MainWideBanner(bannerController: _bannerPageController),
+
+            // ===== بنر الحملة الموسمية =====
+            if (_campaign != null &&
+                (_campaign!['banner_image'] ?? '').toString().isNotEmpty) ...[
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () => context.push('/campaign'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: AspectRatio(
+                      aspectRatio: 30 / 7,
+                      child: Image.network(
+                        _campaign!['banner_image'].toString(),
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) =>
+                            const SizedBox.shrink(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+
             const SizedBox(height: 20),
             if (_flashSaleProducts.isNotEmpty)
               _buildSection("عروض الـ 24 ساعة", _flashSaleProducts),
