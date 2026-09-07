@@ -93,14 +93,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _checkAndShowAnnouncements() async {
     final user = supabase.auth.currentUser;
-    if (user == null) return;
+
     try {
-      final userProfile = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .maybeSingle();
-      final String role = userProfile?['role']?.toString() ?? 'customer';
+      String role = 'customer';
+
+      if (user != null) {
+        final userProfile = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .maybeSingle();
+        role = userProfile?['role']?.toString() ?? 'customer';
+      }
 
       final announcements = await supabase
           .from('announcements')
@@ -109,7 +113,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .or('target_role.eq.all,target_role.eq.$role')
           .order('created_at', ascending: true);
 
+      // الزائر: عدّاد محلي على الجهاز
+      final prefs =
+          user == null ? await SharedPreferences.getInstance() : null;
+
       for (final ann in (announcements as List)) {
+        final int maxViews = ann['max_views'] ?? 1;
+        final String annId = ann['id'].toString();
+
+        // ===== زائر =====
+        if (user == null) {
+          final key = 'ann_views_$annId';
+          final int seen = prefs?.getInt(key) ?? 0;
+
+          if (seen < maxViews) {
+            await prefs?.setInt(key, seen + 1);
+            if (mounted) {
+              _showAnnouncementDialog(ann);
+              break;
+            }
+          }
+          continue;
+        }
+
+        // ===== مسجّل =====
         final viewRes = await supabase
             .from('announcement_views')
             .select()
@@ -118,7 +145,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             .maybeSingle();
 
         final int viewsCount = viewRes?['views_count'] ?? 0;
-        final int maxViews = ann['max_views'] ?? 1;
 
         if (viewsCount < maxViews) {
           if (viewRes == null) {
