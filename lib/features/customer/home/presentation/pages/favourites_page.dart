@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/models/product_model.dart';
@@ -96,25 +96,6 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
   }
 
   /// إلغاء متابعة متجر
-  Future<void> _unfollowStore(String merchantId) async {
-    final userId = supabase.auth.currentUser?.id;
-    if (userId == null) return;
-
-    setState(() {
-      _followedStores.removeWhere((m) => m['id'] == merchantId);
-    });
-
-    try {
-      await supabase
-          .from('merchant_followers')
-          .delete()
-          .eq('user_id', userId)
-          .eq('merchant_id', merchantId);
-    } catch (e) {
-      _fetchFollowedStores();
-    }
-  }
-
   /// شريط التبويبات
   Widget _buildTabs() {
     final tabs = [
@@ -186,17 +167,16 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.95,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisCount: 3,
+        childAspectRatio: 0.82,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
       ),
       itemCount: _followedStores.length,
       itemBuilder: (context, index) {
         final m = _followedStores[index];
         final logo = (m['logo_url'] ?? '').toString();
         final name = (m['store_name'] ?? 'متجر').toString();
-        final followers = (m['followers_count'] as int?) ?? 0;
 
         return Container(
           decoration: BoxDecoration(
@@ -204,9 +184,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
           ),
-          child: Stack(
-            children: [
-              InkWell(
+          child: InkWell(
                 onTap: () => context.push('/merchant-store/${m['id']}'),
                 borderRadius: BorderRadius.circular(14),
                 child: Column(
@@ -246,27 +224,9 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
                             fontSize: 13),
                       ),
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      "$followers متابع",
-                      style: const TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 11,
-                          color: Colors.grey),
-                    ),
                   ],
                 ),
               ),
-              Positioned(
-                top: 4,
-                left: 4,
-                child: IconButton(
-                  icon: const Icon(Icons.close, size: 18, color: Colors.grey),
-                  onPressed: () => _unfollowStore(m['id'].toString()),
-                ),
-              ),
-            ],
-          ),
         );
       },
     );
@@ -332,10 +292,10 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.72, // ✅ تم تعديله ليتناسب مع زيادة النصوص بالأسفل
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisCount: 3,
+        childAspectRatio: 0.58,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
       ),
       itemCount: _favoriteProducts.length,
       itemBuilder: (context, index) =>
