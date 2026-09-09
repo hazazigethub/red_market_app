@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,34 +13,15 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:red_market/core/services/push_service.dart';
+import 'package:red_market/core/services/visit_logger.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> logVisit() async {
   if (isAppVisitLogged) return;
-  try {
-    final supabase = Supabase.instance.client;
-    final user = supabase.auth.currentUser;
-    String platformName = 'unknown';
-    if (kIsWeb) {
-      platformName = 'web';
-    } else if (defaultTargetPlatform == TargetPlatform.android) {
-      platformName = 'android';
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      platformName = 'ios';
-    }
-    await supabase.from('analytics_visits').insert({
-      'page_name': 'app_launch',
-      'platform': platformName,
-      'user_id': user?.id,
-      'visited_at': DateTime.now().toIso8601String(),
-    });
-    isAppVisitLogged = true;
-    debugPrint("🚀 Analytics: New Visit Logged Successfully");
-  } catch (e) {
-    debugPrint("Analytics Error: $e");
-  }
+  await VisitLogger.log(pageName: 'app_launch');
+  isAppVisitLogged = true;
 }
 
 void main() async {

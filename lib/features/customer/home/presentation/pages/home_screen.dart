@@ -12,6 +12,7 @@ import 'package:red_market/app/app.dart';
 import 'package:red_market/main.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:red_market/core/services/campaign_service.dart';
+import 'package:red_market/core/services/visit_logger.dart';
 import 'package:red_market/core/models/merchant_model.dart';
 import 'package:red_market/core/models/product_model.dart';
 import 'package:red_market/features/customer/home/presentation/providers/recently_viewed_provider.dart';
@@ -336,19 +337,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // تسجيل الزيارة مرة واحدة لكل تشغيل
     if (!isAppVisitLogged) {
-      try {
-        String platformName =
-            kIsWeb ? 'web' : (Platform.isAndroid ? 'android' : 'ios');
-        await supabase.from('analytics_visits').insert({
-          'page_name': 'app_launch',
-          'platform': platformName,
-          'user_id': user?.id,
-          'visited_at': DateTime.now().toIso8601String(),
-        });
-        isAppVisitLogged = true;
-      } catch (e) {
-        debugPrint("Analytics Error: $e");
-      }
+      await VisitLogger.log(pageName: 'app_launch');
+      isAppVisitLogged = true;
     }
 
     // تحديث آخر دخول مستقل عن حارس الزيارة

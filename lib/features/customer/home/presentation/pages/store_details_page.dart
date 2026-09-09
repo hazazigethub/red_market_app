@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/models/merchant_model.dart';
@@ -10,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:red_market/features/auth/presentation/login_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:red_market/core/widgets/price_widget.dart';
+import 'package:red_market/core/services/visit_logger.dart';
 import 'package:red_market/features/customer/home/presentation/pages/merchant_reels_page.dart';
 
 class StoreDetailsPage extends ConsumerStatefulWidget {
@@ -53,28 +52,11 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
     _recordStoreVisit();
   }
 
-  /// اسم المنصة الفعلي بدل قيمة ثابتة
-  String get _platformName {
-    if (kIsWeb) return 'web';
-    if (defaultTargetPlatform == TargetPlatform.android) return 'android';
-    if (defaultTargetPlatform == TargetPlatform.iOS) return 'ios';
-    return 'unknown';
-  }
-
-  Future<void> _recordStoreVisit() async {
-    try {
-      final userId = supabase.auth.currentUser?.id;
-      await supabase.from('analytics_visits').insert({
-        'merchant_id': widget.merchantId,
-        'user_id': userId,
-        'page_name': 'store',
-        'visited_at': DateTime.now().toIso8601String(),
-        'platform': _platformName,
-      });
-    } catch (e) {
-      debugPrint("خطأ في تسجيل الزيارة: $e");
-    }
-  }
+  Future<void> _recordStoreVisit() =>
+      VisitLogger.log(
+        pageName: 'store',
+        merchantId: widget.merchantId,
+      );
 
   Future<void> _loadInitialData() async {
     await _loadStoreData();
