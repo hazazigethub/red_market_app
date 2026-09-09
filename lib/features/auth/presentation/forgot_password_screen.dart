@@ -12,13 +12,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
-  final _newPasswordController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
     _phoneController.dispose();
-    _newPasswordController.dispose();
     super.dispose();
   }
 
@@ -28,20 +26,38 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     setState(() => _isLoading = true);
     try {
       final phone = _phoneController.text.trim().replaceAll(RegExp(r'\D'), '');
-      // ✅ نستخدم نفس صيغة الإيميل التقني المعتمدة في مشروعك
-      final techEmail = 'u$phone@RedOcean-official.com';
-      final newPassword = _newPasswordController.text.trim();
+      final supabase = Supabase.instance.client;
 
-      // ملاحظة: استعادة كلمة المرور بدون كود OTP تتطلب صلاحيات إدارية أو
-      // استخدام رابط استعادة حقيقي، ولكن للتجربة الحالية سنحاول تحديث الجلسة
-      await Supabase.instance.client.auth.resetPasswordForEmail(techEmail);
+      // يجلب بريد المصادقة المرتبط بالجوال
+      String? authEmail;
+      try {
+        final res =
+            await supabase.rpc('get_login_email', params: {'p_phone': phone});
+        authEmail = res?.toString();
+      } catch (e) {
+        debugPrint('get_login_email error: $e');
+      }
+
+      if (authEmail == null || authEmail.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('لا يوجد حساب بهذا الرقم'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      await supabase.auth.resetPasswordForEmail(authEmail);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-                '✅ إذا كان الحساب موجوداً، فستتم معالجة الطلب (راجع إعدادات السيرفر)'),
+          SnackBar(
+            content: Text('أُرسل رابط الاستعادة إلى $authEmail'),
             backgroundColor: Colors.green,
+            duration: const Duration(seconds: 5),
           ),
         );
         context.pop();

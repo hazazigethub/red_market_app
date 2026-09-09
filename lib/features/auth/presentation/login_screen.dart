@@ -92,11 +92,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       final String phone =
           _phoneController.text.trim().replaceAll(RegExp(r'\D'), '');
-      final String techEmail = 'u$phone@RedOcean-official.com';
       final String password = _passwordController.text.trim();
 
+      // يجلب بريد المصادقة المرتبط بالجوال — حقيقياً كان أو مولّداً
+      String? authEmail;
+      try {
+        final res = await supabase.rpc('get_login_email',
+            params: {'p_phone': phone});
+        authEmail = res?.toString();
+      } catch (e) {
+        debugPrint('get_login_email error: $e');
+      }
+
+      if (authEmail == null || authEmail.isEmpty) {
+        if (mounted) {
+          setState(() => _isLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('لا يوجد حساب بهذا الرقم'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
       final response = await supabase.auth.signInWithPassword(
-        email: techEmail,
+        email: authEmail,
         password: password,
       );
 

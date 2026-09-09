@@ -22,6 +22,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -35,6 +36,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -61,13 +63,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       final String rawPhone = _phoneController.text.trim();
       final String cleanPhone = rawPhone.replaceAll(RegExp(r'\D'), '');
 
-      final String techEmail = 'u$cleanPhone@RedOcean-official.com';
+      final String email = _emailController.text.trim().toLowerCase();
       final String password = _passwordController.text.trim();
 
       ref.read(userRoleProvider.notifier).state = 'customer';
 
       final response = await supabase.auth.signUp(
-        email: techEmail,
+        email: email,
         password: password,
         data: {
           'role': 'customer',
@@ -93,7 +95,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           'id': user.id,
           'full_name': _nameController.text.trim(),
           'phone_number': cleanPhone,
-          'email_contact': techEmail,
+          'email_contact': email,
           'gender': _selectedGender,
           'is_banned': false,
           'is_subscription_active': false,
@@ -201,6 +203,33 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   validator: (val) => (val == null || val.length < 9)
                       ? "رقم الهاتف مطلوب بشكل صحيح"
                       : null,
+                ),
+                const SizedBox(height: 15),
+                _buildLabel("البريد الإلكتروني"),
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textDirection: TextDirection.ltr,
+                  style: const TextStyle(fontFamily: 'Cairo'),
+                  decoration: _inputDecoration(
+                      hint: "name@example.com",
+                      icon: Icons.alternate_email_rounded),
+                  validator: (val) {
+                    final v = (val ?? '').trim();
+                    if (v.isEmpty) return "البريد الإلكتروني مطلوب";
+                    final ok = RegExp(
+                            r'^[\w.\-+]+@[\w\-]+(\.[\w\-]+)+$')
+                        .hasMatch(v);
+                    return ok ? null : "بريد إلكتروني غير صحيح";
+                  },
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "يُستخدم لاستعادة كلمة السر — تأكد من صحته",
+                  style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 11.5,
+                      color: Colors.grey.shade600),
                 ),
                 const SizedBox(height: 15),
                 _buildLabel("كلمة السر"),
