@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,7 +43,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
   List<ProductModel> _filteredProducts = [];
   bool _isLoading = true;
 
-  final Color redMarketPrimary = const Color(0xFFC21815);
+  final Color redMarketPrimary = const Color(0xFFD32027);
 
   @override
   void initState() {
@@ -298,7 +298,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
       child: Scaffold(
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFFC21815)))
+                child: CircularProgressIndicator(color: Color(0xFFD32027)))
             : _merchant == null
                 ? const Center(child: Text("المتجر غير موجود"))
                 : CustomScrollView(
@@ -320,7 +320,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                         actions: [
                           IconButton(
                             icon: const Icon(Icons.reply_rounded,
-                                color: Color(0xFFC21815), size: 30),
+                                color: Color(0xFFD32027), size: 30),
                             onPressed: () async {
                               await Share.share(
                                   '${_merchant?.storeName ?? ''}\n${_merchant?.description ?? ''}');

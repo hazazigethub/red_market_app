@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_market/core/providers/favorites_provider.dart';
@@ -183,7 +183,7 @@ class UnifiedProductCard extends ConsumerWidget {
                             SnackBar(
                               content:
                                   Text("تم إضافة ${product.name} إلى السلة"),
-                              backgroundColor: const Color(0xFFC21815),
+                              backgroundColor: const Color(0xFFD32027),
                               duration: const Duration(milliseconds: 800),
                             ),
                           );
@@ -192,14 +192,14 @@ class UnifiedProductCard extends ConsumerWidget {
                             ? Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFC21815),
+                                  color: const Color(0xFFD32027),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Icon(Icons.shopping_cart_outlined,
                                     color: Colors.white, size: 16),
                               )
                             : const Icon(Icons.add_circle,
-                                color: Color(0xFFC21815), size: 24),
+                                color: Color(0xFFD32027), size: 24),
                       ),
                     ],
                   ),

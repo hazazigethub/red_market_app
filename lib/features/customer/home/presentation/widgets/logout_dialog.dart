@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/app/app.dart';
@@ -13,7 +13,7 @@ Future<void> showLogoutDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: Color(0xFFC21815), width: 1.5),
+          side: const BorderSide(color: Color(0xFFD32027), width: 1.5),
         ),
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -25,7 +25,7 @@ Future<void> showLogoutDialog(
                 decoration: BoxDecoration(
                     color: Colors.red.shade50, shape: BoxShape.circle),
                 child: const Icon(Icons.logout_rounded,
-                    color: Color(0xFFC21815), size: 40),
+                    color: Color(0xFFD32027), size: 40),
               ),
               const SizedBox(height: 20),
               const Text("تسجيل الخروج",
@@ -56,7 +56,7 @@ Future<void> showLogoutDialog(
                     child: ElevatedButton(
                       onPressed: () => Navigator.pop(context, true),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFC21815),
+                          backgroundColor: const Color(0xFFD32027),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12))),

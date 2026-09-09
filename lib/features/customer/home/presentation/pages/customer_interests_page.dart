@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:go_router/go_router.dart';
@@ -91,7 +91,7 @@ class _CustomerInterestsPageState extends State<CustomerInterestsPage> {
         ),
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFFC21815)))
+                child: CircularProgressIndicator(color: Color(0xFFD32027)))
             : GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -124,7 +124,7 @@ class _CustomerInterestsPageState extends State<CustomerInterestsPage> {
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
                         color:
-                            isSelected ? const Color(0xFFC21815) : Colors.white,
+                            isSelected ? const Color(0xFFD32027) : Colors.white,
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
@@ -135,7 +135,7 @@ class _CustomerInterestsPageState extends State<CustomerInterestsPage> {
                         ],
                         border: Border.all(
                             color: isSelected
-                                ? const Color(0xFFC21815)
+                                ? const Color(0xFFD32027)
                                 : Colors.grey.shade200,
                             width: 1.5),
                       ),

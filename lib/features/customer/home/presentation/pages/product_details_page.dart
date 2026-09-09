@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -313,7 +313,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFC21815),
+                        backgroundColor: const Color(0xFFD32027),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12))),
                     onPressed: () async {
@@ -354,7 +354,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
           style: const TextStyle(fontSize: 11, fontFamily: 'Cairo')),
       trailing: Icon(
           isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-          color: isSelected ? const Color(0xFFC21815) : Colors.grey.shade300),
+          color: isSelected ? const Color(0xFFD32027) : Colors.grey.shade300),
     );
   }
 
@@ -467,7 +467,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
     if (_isLoading) {
       return const Scaffold(
         body:
-            Center(child: CircularProgressIndicator(color: Color(0xFFC21815))),
+            Center(child: CircularProgressIndicator(color: Color(0xFFD32027))),
       );
     }
 
@@ -506,7 +506,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                         Icon(Icons.storefront_rounded,
                             color: isDark
                                 ? Colors.white70
-                                : const Color(0xFFC21815),
+                                : const Color(0xFFD32027),
                             size: 18),
                         const SizedBox(width: 8),
                         Flexible(
@@ -579,7 +579,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                                     horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
                                   color:
-                                      const Color(0xFFC21815).withOpacity(0.9),
+                                      const Color(0xFFD32027).withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Row(
@@ -724,18 +724,18 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                 child: Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                      color: const Color(0xFFC21815).withOpacity(0.1),
+                      color: const Color(0xFFD32027).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                          color: const Color(0xFFC21815).withOpacity(0.3))),
+                          color: const Color(0xFFD32027).withOpacity(0.3))),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.open_in_new_rounded, color: Color(0xFFC21815)),
+                      Icon(Icons.open_in_new_rounded, color: Color(0xFFD32027)),
                       SizedBox(width: 10),
                       Text("زيارة رابط المنتج",
                           style: TextStyle(
-                              color: Color(0xFFC21815),
+                              color: Color(0xFFD32027),
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Cairo')),
                     ],

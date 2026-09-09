@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -45,7 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.error_outline,
-                  color: Color(0xFFC21815), size: 60),
+                  color: Color(0xFFD32027), size: 60),
               const SizedBox(height: 20),
               const Text(
                 "تنبيه: الحساب محظور",
@@ -66,7 +66,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFC21815),
+                    backgroundColor: const Color(0xFFD32027),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -192,7 +192,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color mainColor = Color(0xFFC21815);
+    const Color mainColor = Color(0xFFD32027);
 
     return Container(
       padding: EdgeInsets.only(
@@ -332,7 +332,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300)),
       focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFFC21815))),
+          borderSide: BorderSide(color: Color(0xFFD32027))),
     );
   }
 }

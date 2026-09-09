@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
@@ -591,7 +591,7 @@ class _ReelsPageState extends State<ReelsPage>
           backgroundColor: Colors.black,
           body: _isLoadingInitial
               ? const Center(
-                  child: CircularProgressIndicator(color: Color(0xFFC21815)))
+                  child: CircularProgressIndicator(color: Color(0xFFD32027)))
               : _reelsList.isEmpty
                   ? _buildEmptyState()
                   : Stack(
@@ -655,7 +655,7 @@ class _ReelsPageState extends State<ReelsPage>
                   color: Colors.black.withValues(alpha: 0.45),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: const Color(0xFFC21815).withValues(alpha: 0.6)),
+                      color: const Color(0xFFD32027).withValues(alpha: 0.6)),
                 ),
                 child: Row(
                   children: [
@@ -679,7 +679,7 @@ class _ReelsPageState extends State<ReelsPage>
               height: 38,
               decoration: BoxDecoration(
                 color: !_isGridView
-                    ? const Color(0xFFC21815)
+                    ? const Color(0xFFD32027)
                     : Colors.black.withValues(alpha: 0.45),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
@@ -696,7 +696,7 @@ class _ReelsPageState extends State<ReelsPage>
               height: 38,
               decoration: BoxDecoration(
                 color: _isGridView
-                    ? const Color(0xFFC21815)
+                    ? const Color(0xFFD32027)
                     : Colors.black.withValues(alpha: 0.45),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
@@ -828,7 +828,7 @@ class _ReelsPageState extends State<ReelsPage>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               decoration: BoxDecoration(
-                  color: const Color(0xFFC21815),
+                  color: const Color(0xFFD32027),
                   borderRadius: BorderRadius.circular(20)),
               child: Text("تحديث",
                   style: GoogleFonts.cairo(
@@ -909,7 +909,7 @@ class _ReelsPageState extends State<ReelsPage>
                       Border.all(color: Colors.white.withValues(alpha: 0.08))),
               child: Icon(
                   _isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-                  color: _isMuted ? const Color(0xFFC21815) : Colors.white,
+                  color: _isMuted ? const Color(0xFFD32027) : Colors.white,
                   size: 22),
             ),
           ),
@@ -926,7 +926,7 @@ class _ReelsPageState extends State<ReelsPage>
                   ? Icons.favorite_rounded
                   : Icons.favorite_border_rounded,
               count: likesCount,
-              color: liked ? const Color(0xFFC21815) : Colors.white,
+              color: liked ? const Color(0xFFD32027) : Colors.white,
               onTap: () => _toggleReelLike(reel)),
           const SizedBox(height: 4),
           _buildActionItemWithLabel(
@@ -997,10 +997,10 @@ class _ReelsPageState extends State<ReelsPage>
         height: 48,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFFC21815), width: 2),
+          border: Border.all(color: const Color(0xFFD32027), width: 2),
           boxShadow: [
             BoxShadow(
-                color: const Color(0xFFC21815).withValues(alpha: 0.3),
+                color: const Color(0xFFD32027).withValues(alpha: 0.3),
                 blurRadius: 8,
                 spreadRadius: 1)
           ],
@@ -1064,11 +1064,11 @@ class _ReelsPageState extends State<ReelsPage>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
-                    color: const Color(0xFFC21815),
+                    color: const Color(0xFFD32027),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                          color: const Color(0xFFC21815).withValues(alpha: 0.4),
+                          color: const Color(0xFFD32027).withValues(alpha: 0.4),
                           blurRadius: 8,
                           offset: const Offset(0, 3))
                     ]),
@@ -1177,7 +1177,7 @@ class _ReelsPageState extends State<ReelsPage>
               child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: const BoxDecoration(
-                      color: Color(0xFFC21815), shape: BoxShape.circle),
+                      color: Color(0xFFD32027), shape: BoxShape.circle),
                   child: const Icon(Icons.send_rounded,
                       color: Colors.white, size: 18)),
             ),

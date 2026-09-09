@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/models/reel_model.dart';
@@ -319,7 +319,7 @@ class _ReelsSearchPageState extends State<ReelsSearchPage> {
                     const Padding(
                       padding: EdgeInsets.all(30),
                       child: CircularProgressIndicator(
-                          color: Color(0xFFC21815), strokeWidth: 2),
+                          color: Color(0xFFD32027), strokeWidth: 2),
                     )
                   // ✅ لا توجد نتائج
                   else if (_hasSearched && _results.isEmpty)
@@ -525,12 +525,12 @@ class _ReelsSearchPageState extends State<ReelsSearchPage> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFFC21815)
+              ? const Color(0xFFD32027)
               : Colors.white.withOpacity(0.08),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFFC21815)
+                ? const Color(0xFFD32027)
                 : Colors.white.withOpacity(0.15),
           ),
         ),

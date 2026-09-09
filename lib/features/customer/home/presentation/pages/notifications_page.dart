@@ -97,7 +97,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
           titlePadding: EdgeInsets.zero,
           title: Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(color: Color(0xFFC21815)),
+            decoration: const BoxDecoration(color: Color(0xFFD32027)),
             child: Row(
               children: [
                 const Icon(Icons.notifications_active,
@@ -150,7 +150,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                     style: TextStyle(
                         fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFC21815),
+                  backgroundColor: const Color(0xFFD32027),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -167,7 +167,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                     style: TextStyle(
                         fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFC21815),
+                  backgroundColor: const Color(0xFFD32027),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -184,7 +184,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                     style: TextStyle(
                         fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFC21815),
+                  backgroundColor: const Color(0xFFD32027),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -227,12 +227,12 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
         ),
         body: RefreshIndicator(
           onRefresh: _refresh,
-          color: const Color(0xFFC21815),
+          color: const Color(0xFFD32027),
           child: Builder(
             builder: (context) {
               if (_loading) {
                 return const Center(
-                    child: CircularProgressIndicator(color: Color(0xFFC21815)));
+                    child: CircularProgressIndicator(color: Color(0xFFD32027)));
               }
 
               final notifications = _items;
@@ -279,11 +279,11 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                         margin: const EdgeInsets.only(bottom: 12),
                         color: isRead
                             ? null
-                            : const Color(0xFFC21815).withValues(alpha: 0.03),
+                            : const Color(0xFFD32027).withValues(alpha: 0.03),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                           side: const BorderSide(
-                            color: Color(0xFFC21815),
+                            color: Color(0xFFD32027),
                             width: 1.2,
                           ),
                         ),
@@ -295,7 +295,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                                 CircleAvatar(
                                   backgroundColor: isRead
                                       ? Colors.grey.shade100
-                                      : const Color(0xFFC21815)
+                                      : const Color(0xFFD32027)
                                           .withValues(alpha: 0.1),
                                   child: Icon(
                                     isRead
@@ -303,7 +303,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                                         : Icons.notifications_active_rounded,
                                     color: isRead
                                         ? Colors.grey
-                                        : const Color(0xFFC21815),
+                                        : const Color(0xFFD32027),
                                     size: 22,
                                   ),
                                 ),
@@ -315,7 +315,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                                       width: 10,
                                       height: 10,
                                       decoration: const BoxDecoration(
-                                        color: Color(0xFFC21815),
+                                        color: Color(0xFFD32027),
                                         shape: BoxShape.circle,
                                       ),
                                     ),

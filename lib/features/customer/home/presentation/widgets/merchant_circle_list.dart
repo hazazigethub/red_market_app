@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:red_market/core/models/merchant_model.dart';
 import 'package:red_market/features/customer/home/presentation/pages/store_details_page.dart';
 
@@ -61,7 +61,7 @@ class MerchantCircleList extends StatelessWidget {
               ? Theme.of(context).colorScheme.surfaceContainerHighest
               : Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFC21815).withOpacity(0.5)),
+          border: Border.all(color: const Color(0xFFD32027).withOpacity(0.5)),
           boxShadow: [
             BoxShadow(
                 color: Colors.black.withOpacity(0.03),
@@ -77,7 +77,7 @@ class MerchantCircleList extends StatelessWidget {
               height: 45,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFC21815), width: 1.5),
+                border: Border.all(color: const Color(0xFFD32027), width: 1.5),
                 image: DecorationImage(
                     image: NetworkImage(merchant.logoUrl), fit: BoxFit.cover),
               ),

@@ -99,7 +99,7 @@ class HomeBanners extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           gradient: const LinearGradient(
-              colors: [Color(0xFFC21815), Color(0xFFE62E04)])),
+              colors: [Color(0xFFD32027), Color(0xFFE62E04)])),
       child: const Center(
           child: Text(" رد ماركت ",
               style: TextStyle(

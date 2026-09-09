@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -228,7 +228,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC21815).withOpacity(0.9),
+                        color: const Color(0xFFD32027).withOpacity(0.9),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Row(
@@ -258,7 +258,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 5, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC21815),
+                        color: const Color(0xFFD32027),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -345,7 +345,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                                     '$_likesCount',
                                     style: const TextStyle(
                                       fontSize: 11,
-                                      color: Color(0xFFC21815),
+                                      color: Color(0xFFD32027),
                                       fontFamily: 'Cairo',
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -355,7 +355,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                                   _isLiked
                                       ? Icons.favorite
                                       : Icons.favorite_border,
-                                  color: const Color(0xFFC21815),
+                                  color: const Color(0xFFD32027),
                                   size: 20,
                                 ),
                               ],

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:red_market/core/models/product_model.dart';
@@ -122,7 +122,7 @@ class _InfiniteProductsGridState extends State<InfiniteProductsGrid> {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 40),
         child:
-            Center(child: CircularProgressIndicator(color: Color(0xFFC21815))),
+            Center(child: CircularProgressIndicator(color: Color(0xFFD32027))),
       );
     }
 
@@ -149,7 +149,7 @@ class _InfiniteProductsGridState extends State<InfiniteProductsGrid> {
         if (_isLoading)
           const Padding(
             padding: EdgeInsets.all(20.0),
-            child: CircularProgressIndicator(color: Color(0xFFC21815)),
+            child: CircularProgressIndicator(color: Color(0xFFD32027)),
           ),
       ],
     );

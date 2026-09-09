@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/app/app.dart';
@@ -187,7 +187,7 @@ class _CustomerTermsPageState extends ConsumerState<CustomerTermsPage> {
                           onPressed: _acceptTerms,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(
-                                0xFFC21815), // اللون الأحمر الخاص بك
+                                0xFFD32027), // اللون الأحمر الخاص بك
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
                           ),

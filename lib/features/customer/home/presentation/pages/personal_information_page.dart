@@ -24,7 +24,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   String? _avatarUrl;
   bool _isLoading = true;
 
-  static const Color brandRed = Color(0xFFC21815);
+  static const Color brandRed = Color(0xFFD32027);
 
   @override
   void initState() {

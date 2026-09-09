@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:go_router/go_router.dart';
@@ -87,7 +87,7 @@ class _InterestsSelectionScreenState extends State<InterestsSelectionScreen> {
       ),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFFC21815)))
+              child: CircularProgressIndicator(color: Color(0xFFD32027)))
           : Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -123,8 +123,8 @@ class _InterestsSelectionScreenState extends State<InterestsSelectionScreen> {
                               });
                             },
                             selectedColor:
-                                const Color(0xFFC21815).withOpacity(0.2),
-                            checkmarkColor: const Color(0xFFC21815),
+                                const Color(0xFFD32027).withOpacity(0.2),
+                            checkmarkColor: const Color(0xFFD32027),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           );
@@ -138,7 +138,7 @@ class _InterestsSelectionScreenState extends State<InterestsSelectionScreen> {
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFC21815),
+                        backgroundColor: const Color(0xFFD32027),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),

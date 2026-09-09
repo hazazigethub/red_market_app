@@ -135,7 +135,7 @@ class _SmallBannersRowState extends State<SmallBannersRow> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFFC21815)),
+                                Color(0xFFD32027)),
                           ),
                         ),
                       );

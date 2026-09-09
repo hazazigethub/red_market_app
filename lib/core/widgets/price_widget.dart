@@ -13,7 +13,7 @@ class PriceWidget extends StatelessWidget {
     super.key,
     required this.price,
     this.fontSize = 14,
-    this.color = const Color(0xFFC21815),
+    this.color = const Color(0xFFD32027),
     this.fontWeight = FontWeight.bold,
     this.decoration,
   });

@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -95,7 +95,7 @@ class _RecentlyViewedPageState extends State<RecentlyViewedPage> {
         ),
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFFC21815)))
+                child: CircularProgressIndicator(color: Color(0xFFD32027)))
             : _recentProducts.isEmpty
                 ? const Center(
                     child: Text("لم تقم بزيارة أي منتجات بعد",

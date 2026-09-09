@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // تأكد من استخدام اسم المشروع الخاص بك (RedOcean)
 import 'package:red_market/core/models/product_model.dart';
@@ -67,7 +67,7 @@ class _NewArrivalsPageState extends State<NewArrivalsPage> {
         ),
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFFC21815)))
+                child: CircularProgressIndicator(color: Color(0xFFD32027)))
             : _allNewProducts.isEmpty
                 ? const Center(
                     child: Text("لا توجد منتجات جديدة حالياً",

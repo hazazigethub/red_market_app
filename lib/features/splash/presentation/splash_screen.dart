@@ -135,7 +135,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color brandColor = Color(0xFFC21815);
+    const Color brandColor = Color(0xFFD32027);
 
     // ===== إعلان الافتتاح =====
     if (_showingAd && _ad != null) {

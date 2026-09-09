@@ -10,7 +10,7 @@ class MaintenanceScreen extends StatefulWidget {
 }
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
-  static const Color brandRed = Color(0xFFC21815);
+  static const Color brandRed = Color(0xFFD32027);
 
   String _message = 'نقوم حالياً بأعمال صيانة لتحسين التجربة.';
   bool _checking = false;

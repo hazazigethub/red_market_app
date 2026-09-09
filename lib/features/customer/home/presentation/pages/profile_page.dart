@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,7 +7,7 @@ import 'package:red_market/core/routing/route_paths.dart';
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
-  static const Color brandRed = Color(0xFFC21815);
+  static const Color brandRed = Color(0xFFD32027);
   static const Color oceanBlue = Color(0xFF2196F3);
   static const Color amberGold = Color(0xFFFFC107);
   static const Color purpleDeep = Color(0xFF673AB7);

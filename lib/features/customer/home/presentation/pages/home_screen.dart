@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -184,7 +184,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-            side: const BorderSide(color: Color(0xFFC21815), width: 2),
+            side: const BorderSide(color: Color(0xFFD32027), width: 2),
           ),
           insetPadding:
               const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
@@ -244,7 +244,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: const BoxDecoration(
-                      color: Color(0xFFC21815),
+                      color: Color(0xFFD32027),
                       shape: BoxShape.circle,
                     ),
                     child:
@@ -304,7 +304,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     actions: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFC21815),
+                            backgroundColor: const Color(0xFFD32027),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10))),
                         onPressed: () {
@@ -691,9 +691,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Image.asset('assets/images/logo.png',
                     height: 60,
                     errorBuilder: (c, e, s) => const Icon(Icons.store,
-                        color: Color(0xFFC21815), size: 60)),
+                        color: Color(0xFFD32027), size: 60)),
                 const SizedBox(height: 20),
-                const CircularProgressIndicator(color: Color(0xFFC21815)),
+                const CircularProgressIndicator(color: Color(0xFFD32027)),
               ],
             ),
           ),
@@ -710,7 +710,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: SafeArea(
           child: _isDataLoading
               ? const Center(
-                  child: CircularProgressIndicator(color: Color(0xFFC21815)))
+                  child: CircularProgressIndicator(color: Color(0xFFD32027)))
               : _buildCurrentPage(isAdmin, isMerchant, recentlyViewedItems),
         ),
         floatingActionButton: (isAdmin || isMerchant) ? null : null,
@@ -789,7 +789,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             clipBehavior: Clip.none,
             children: [
               Icon(icon,
-                  color: isSelected ? const Color(0xFFC21815) : Colors.grey,
+                  color: isSelected ? const Color(0xFFD32027) : Colors.grey,
                   size: 24),
               if (index == 3 && _unreadCount > 0)
                 Positioned(
@@ -800,7 +800,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                     constraints: const BoxConstraints(minWidth: 16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC21815),
+                      color: const Color(0xFFD32027),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -822,7 +822,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   fontFamily: 'Cairo',
                   fontSize: 9,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? const Color(0xFFC21815) : Colors.grey)),
+                  color: isSelected ? const Color(0xFFD32027) : Colors.grey)),
         ],
       ),
     );
@@ -936,7 +936,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildHomeContent(List<ProductModel> recentlyViewedItems) {
     return RefreshIndicator(
-      color: const Color(0xFFC21815),
+      color: const Color(0xFFD32027),
       onRefresh: _fetchHomeData,
       child: SingleChildScrollView(
         controller: _scrollController,
@@ -1044,7 +1044,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Image.asset('assets/images/logo.png',
               height: 35,
               errorBuilder: (c, e, s) =>
-                  const Icon(Icons.store, color: Color(0xFFC21815))),
+                  const Icon(Icons.store, color: Color(0xFFD32027))),
           const Spacer(),
           GestureDetector(
             onTap: () {
@@ -1055,14 +1055,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: const Color(0xFFC21815).withValues(alpha: 0.08),
+                color: const Color(0xFFD32027).withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 ref.watch(appThemeModeProvider) == ThemeMode.dark
                     ? Icons.light_mode_rounded
                     : Icons.dark_mode_rounded,
-                color: const Color(0xFFC21815),
+                color: const Color(0xFFD32027),
                 size: 22,
               ),
             ),
@@ -1099,7 +1099,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 const SizedBox(width: 8),
                 Icon(isLoggedIn ? Icons.logout_rounded : Icons.person_outline,
-                    color: const Color(0xFFC21815), size: 28),
+                    color: const Color(0xFFD32027), size: 28),
               ],
             ),
           ),

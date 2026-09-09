@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_market/core/models/product_model.dart';
@@ -36,7 +36,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   : Colors.white,
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
-                  color: const Color(0xFFC21815).withValues(alpha: 0.5),
+                  color: const Color(0xFFD32027).withValues(alpha: 0.5),
                   width: 1.2),
               boxShadow: [
                 BoxShadow(
@@ -54,7 +54,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 hintStyle: const TextStyle(
                     color: Colors.grey, fontSize: 14, fontFamily: 'Cairo'),
                 prefixIcon: const Icon(Icons.search_rounded,
-                    color: Color(0xFFC21815), size: 24),
+                    color: Color(0xFFD32027), size: 24),
                 suffixIcon: _controller.text.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear,
@@ -147,11 +147,11 @@ class _FilterButtonState extends State<_FilterButton> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFC21815) : Colors.white,
+            color: isSelected ? const Color(0xFFD32027) : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color:
-                  isSelected ? const Color(0xFFC21815) : Colors.grey.shade300,
+                  isSelected ? const Color(0xFFD32027) : Colors.grey.shade300,
             ),
           ),
           alignment: Alignment.center,
@@ -191,7 +191,7 @@ class _FilterButtonState extends State<_FilterButton> {
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(25)),
               border: const Border(
-                top: BorderSide(color: Color(0xFFC21815), width: 1.5),
+                top: BorderSide(color: Color(0xFFD32027), width: 1.5),
               ),
             ),
             child: Column(
@@ -265,7 +265,7 @@ class _FilterButtonState extends State<_FilterButton> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                const BorderSide(color: Color(0xFFC21815)),
+                                const BorderSide(color: Color(0xFFD32027)),
                           ),
                         ),
                       ),
@@ -300,7 +300,7 @@ class _FilterButtonState extends State<_FilterButton> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                const BorderSide(color: Color(0xFFC21815)),
+                                const BorderSide(color: Color(0xFFD32027)),
                           ),
                         ),
                       ),
@@ -349,7 +349,7 @@ class _FilterButtonState extends State<_FilterButton> {
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFC21815),
+                          backgroundColor: const Color(0xFFD32027),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -378,7 +378,7 @@ class _FilterButtonState extends State<_FilterButton> {
       children: [
         IconButton(
           icon: const Icon(Icons.tune_rounded,
-              color: Color(0xFFC21815), size: 20),
+              color: Color(0xFFD32027), size: 20),
           onPressed: _showFilterSheet,
         ),
         if (_hasFilter)
@@ -389,7 +389,7 @@ class _FilterButtonState extends State<_FilterButton> {
               width: 8,
               height: 8,
               decoration: const BoxDecoration(
-                color: Color(0xFFC21815),
+                color: Color(0xFFD32027),
                 shape: BoxShape.circle,
               ),
             ),
@@ -475,7 +475,7 @@ class _SearchResultsDropdownState extends State<_SearchResultsDropdown> {
         if (snapshot.hasError) return const SizedBox();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LinearProgressIndicator(
-              minHeight: 2, color: Color(0xFFC21815));
+              minHeight: 2, color: Color(0xFFD32027));
         }
         final results = snapshot.data ?? const [];
 
@@ -583,7 +583,7 @@ class _NoResultsSuggestionsState extends State<_NoResultsSuggestions> {
             padding: EdgeInsets.all(16),
             child: Center(
                 child: CircularProgressIndicator(
-                    color: Color(0xFFC21815), strokeWidth: 2)),
+                    color: Color(0xFFD32027), strokeWidth: 2)),
           );
         }
 
@@ -623,7 +623,7 @@ class _NoResultsSuggestionsState extends State<_NoResultsSuggestions> {
                   children: categories
                       .map((cat) => ActionChip(
                             avatar: const Icon(Icons.category_rounded,
-                                size: 16, color: Color(0xFFC21815)),
+                                size: 16, color: Color(0xFFD32027)),
                             label: Text(cat['name'] ?? '',
                                 style: const TextStyle(
                                     fontFamily: 'Cairo', fontSize: 12)),

@@ -139,7 +139,7 @@ class _MainWideBannerState extends State<MainWideBanner> {
                         color: Colors.grey[100],
                         child: const Center(
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Color(0xFFC21815)),
+                              strokeWidth: 2, color: Color(0xFFD32027)),
                         ),
                       );
                     },
@@ -163,7 +163,7 @@ class _MainWideBannerState extends State<MainWideBanner> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           gradient: const LinearGradient(
-            colors: [Color(0xFFC21815), Color(0xFFE62E04)],
+            colors: [Color(0xFFD32027), Color(0xFFE62E04)],
           ),
         ),
         child: const Center(

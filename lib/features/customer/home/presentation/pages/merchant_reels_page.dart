@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/features/customer/home/presentation/pages/reels_page.dart';
 import 'package:red_market/core/models/reel_model.dart';
@@ -13,7 +13,7 @@ class MerchantReelsPage extends StatefulWidget {
 
 class _MerchantReelsPageState extends State<MerchantReelsPage> {
   final supabase = Supabase.instance.client;
-  static const Color brandRed = Color(0xFFC21815);
+  static const Color brandRed = Color(0xFFD32027);
   List<Map<String, dynamic>> _reels = [];
   bool _isLoading = true;
 

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart'
+import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform, debugPrint;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -80,7 +80,7 @@ class CategoryGrid extends StatelessWidget {
                       : Colors.white,
                   borderRadius: BorderRadius.circular(18),
                   border: Border.all(
-                    color: const Color(0xFFC21815).withValues(alpha: 0.5),
+                    color: const Color(0xFFD32027).withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),

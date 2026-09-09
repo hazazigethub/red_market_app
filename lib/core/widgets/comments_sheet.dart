@@ -34,7 +34,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
   final Map<String, int> _replyLikeCounts = {};
   final Set<String> _expandedComments = {};
 
-  static const Color brandRed = Color(0xFFC21815);
+  static const Color brandRed = Color(0xFFD32027);
 
   @override
   void initState() {

@@ -1,4 +1,4 @@
-﻿import 'package:overlay_support/overlay_support.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -108,7 +108,7 @@ class NotificationsObserver {
         ),
       ),
       leading: const Icon(Icons.notifications_active, color: Colors.white),
-      background: const Color(0xFFC21815),
+      background: const Color(0xFFD32027),
       duration: const Duration(seconds: 5),
     );
   }

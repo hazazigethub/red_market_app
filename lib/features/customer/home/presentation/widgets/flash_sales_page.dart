@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/models/product_model.dart';
 import '../widgets/product_card.dart';
@@ -54,12 +54,12 @@ class _FlashSalesPageState extends State<FlashSalesPage> {
               style:
                   TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
           centerTitle: true,
-          backgroundColor: const Color(0xFFC21815),
+          backgroundColor: const Color(0xFFD32027),
           foregroundColor: Colors.white,
         ),
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFFC21815)))
+                child: CircularProgressIndicator(color: Color(0xFFD32027)))
             : _flashProducts.isEmpty
                 ? _buildEmptyState()
                 : GridView.builder(

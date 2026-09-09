@@ -117,12 +117,12 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
                     const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                 decoration: BoxDecoration(
                   color: selected
-                      ? const Color(0xFFC21815)
+                      ? const Color(0xFFD32027)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: selected
-                        ? const Color(0xFFC21815)
+                        ? const Color(0xFFD32027)
                         : Colors.grey.withValues(alpha: 0.35),
                   ),
                 ),
@@ -195,7 +195,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: const Color(0xFFC21815)
+                            color: const Color(0xFFD32027)
                                 .withValues(alpha: 0.35),
                             width: 1.5),
                       ),
@@ -206,7 +206,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
                             logo.isNotEmpty ? NetworkImage(logo) : null,
                         child: logo.isEmpty
                             ? const Icon(Icons.store,
-                                color: Color(0xFFC21815), size: 28)
+                                color: Color(0xFFD32027), size: 28)
                             : null,
                       ),
                     ),
@@ -251,7 +251,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
           ),
           centerTitle: true,
           elevation: 0,
-          foregroundColor: const Color(0xFFC21815),
+          foregroundColor: const Color(0xFFD32027),
         ),
         body: Column(
           children: [
@@ -268,7 +268,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
   Widget _buildBody() {
     if (_isLoading) {
       return const Center(
-          child: CircularProgressIndicator(color: Color(0xFFC21815)));
+          child: CircularProgressIndicator(color: Color(0xFFD32027)));
     }
 
     if (_favoriteProducts.isEmpty) {
@@ -356,7 +356,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.bookmark_rounded,
-                            color: Color(0xFFC21815), size: 18),
+                            color: Color(0xFFD32027), size: 18),
                       ),
                     ),
                   ),
@@ -393,7 +393,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
                                   fontFamily: 'Cairo')),
                           const SizedBox(width: 4),
                           const Icon(Icons.favorite_rounded,
-                              color: Color(0xFFC21815), size: 14),
+                              color: Color(0xFFD32027), size: 14),
                         ],
                       ),
                     ],

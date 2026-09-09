@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 
@@ -19,14 +19,14 @@ class HomeHeader extends StatelessWidget {
                   height: 35,
                   errorBuilder: (context, error, stackTrace) => const Icon(
                       Icons.store_mall_directory,
-                      color: Color(0xFFC21815))),
+                      color: Color(0xFFD32027))),
               const SizedBox(width: 8),
               const Text("رد ماركت",
                   style: TextStyle(
                       fontFamily: 'Cairo',
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Color(0xFFC21815))),
+                      color: Color(0xFFD32027))),
             ],
           ),
         ),
@@ -54,7 +54,7 @@ class HomeHeader extends StatelessWidget {
                 hintStyle: TextStyle(
                     color: Colors.grey, fontSize: 14, fontFamily: 'Cairo'),
                 prefixIcon: Icon(Icons.search_rounded,
-                    color: Color(0xFFC21815), size: 24),
+                    color: Color(0xFFD32027), size: 24),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(vertical: 15),
               ),
