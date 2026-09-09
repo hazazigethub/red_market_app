@@ -16,7 +16,6 @@ class ProductModel {
   final String? categoryName;
   final String? storeCategory;
   final String? region;
-  final int stock;
   final bool isAvailable;
   final DateTime createdAt;
   final String? productUrl;
@@ -39,7 +38,6 @@ class ProductModel {
     this.categoryName,
     this.storeCategory,
     this.region,
-    this.stock = 0,
     this.isAvailable = true,
     required this.createdAt,
     this.productUrl,
@@ -111,7 +109,6 @@ class ProductModel {
       categoryName: categoryName,
       storeCategory: json['store_category']?.toString(),
       region: json['region'] as String?,
-      stock: (json['stock'] as num?)?.toInt() ?? 0,
       isAvailable: (json['is_available'] as bool?) ?? true,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -141,7 +138,6 @@ class ProductModel {
       'images_url': imagesUrl,
       'category': category,
       'region': region,
-      'stock': stock,
       'is_available': isAvailable,
       'created_at': createdAt.toIso8601String(),
       'product_url': productUrl,
@@ -166,7 +162,6 @@ class ProductModel {
     String? categoryName,
     String? storeCategory,
     String? region,
-    int? stock,
     bool? isAvailable,
     DateTime? createdAt,
     String? productUrl,
@@ -189,7 +184,6 @@ class ProductModel {
       categoryName: categoryName ?? this.categoryName,
       storeCategory: storeCategory ?? this.storeCategory,
       region: region ?? this.region,
-      stock: stock ?? this.stock,
       isAvailable: isAvailable ?? this.isAvailable,
       createdAt: createdAt ?? this.createdAt,
       productUrl: productUrl ?? this.productUrl,

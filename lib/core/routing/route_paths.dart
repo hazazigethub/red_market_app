@@ -33,9 +33,6 @@ class RoutePaths {
   static const String termsConditions = '/terms-conditions';
 
   // 5. مسارات التسوّق والعمليات للعميل (Commerce)
-  static const String cart = '/cart';
-  static const String checkout = '/checkout';
-  static const String reservations = '/reservations';
   static const String favourites = '/favourites';
   static const String profile = '/profile';
   static const String interests = '/interests';
@@ -56,7 +53,6 @@ class RoutePaths {
 
   // 9. روابط إضافية
   static const String usefulLinks = '/useful-links';
-  static const String shippingAddresses = '/shipping-addresses';
   static const String mapPicker = '/map-picker';
 
   // 🔑 10. مسارات الإدارة (Admin Dashboard)
