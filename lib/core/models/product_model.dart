@@ -66,7 +66,7 @@ class ProductModel {
     final url = imagesUrl.first;
     if (url.startsWith('http')) return url;
     return Supabase.instance.client.storage
-        .from('products-images')
+        .from('product-images')
         .getPublicUrl(url.trim());
   }
 

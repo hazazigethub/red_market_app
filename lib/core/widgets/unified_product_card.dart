@@ -28,10 +28,10 @@ class UnifiedProductCard extends ConsumerWidget {
     // تنظيف المسار وجلبه من مخزن سوبابيس (Storage)
     final supabase = Supabase.instance.client;
     String cleanPath = url.trim();
-    if (cleanPath.contains('products-images/')) {
-      cleanPath = cleanPath.split('products-images/').last;
+    if (cleanPath.contains('product-images/')) {
+      cleanPath = cleanPath.split('product-images/').last;
     }
-    return supabase.storage.from('products-images').getPublicUrl(cleanPath);
+    return supabase.storage.from('product-images').getPublicUrl(cleanPath);
   }
 
   @override

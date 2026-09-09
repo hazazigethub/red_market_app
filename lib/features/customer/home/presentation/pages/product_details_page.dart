@@ -449,8 +449,8 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
     if (url == null || url.isEmpty) return '';
     if (url.startsWith('http')) return url;
     return supabase.storage
-        .from('products-images')
-        .getPublicUrl(url.replaceAll('products-images/', ''));
+        .from('product-images')
+        .getPublicUrl(url.replaceAll('product-images/', ''));
   }
 
   @override
