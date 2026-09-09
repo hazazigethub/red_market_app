@@ -79,7 +79,7 @@ class _MerchantReelsPageState extends State<MerchantReelsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.play_circle_outline,
-                    size: 60, color: Colors.grey.withOpacity(0.4)),
+                    size: 60, color: Colors.grey.withValues(alpha: 0.4)),
                 const SizedBox(height: 12),
                 const Text("لا توجد ريلز لهذا المتجر",
                     style: TextStyle(fontFamily: 'Cairo', color: Colors.grey)),

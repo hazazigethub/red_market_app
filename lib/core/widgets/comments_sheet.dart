@@ -365,7 +365,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                       fontSize: 16,
                       color: textColor)),
               const SizedBox(height: 8),
-              Divider(color: Colors.grey.withOpacity(0.2), height: 1),
+              Divider(color: Colors.grey.withValues(alpha: 0.2), height: 1),
               Expanded(
                 child: _isLoading
                     ? const Center(
@@ -587,7 +587,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                                                       width: 24,
                                                       height: 1,
                                                       color: Colors.grey
-                                                          .withOpacity(0.4)),
+                                                          .withValues(alpha: 0.4)),
                                                   const SizedBox(width: 8),
                                                   Text(
                                                     isExpanded
@@ -736,7 +736,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  color: brandRed.withOpacity(0.05),
+                  color: brandRed.withValues(alpha: 0.05),
                   child: Row(children: [
                     Text("رد على $_replyingToUserName",
                         style: const TextStyle(
@@ -773,8 +773,8 @@ class _CommentsSheetState extends State<CommentsSheet> {
                             TextStyle(fontFamily: 'Cairo', color: subTextColor),
                         filled: true,
                         fillColor: widget.isDark
-                            ? Colors.white.withOpacity(0.07)
-                            : Colors.grey.withOpacity(0.08),
+                            ? Colors.white.withValues(alpha: 0.07)
+                            : Colors.grey.withValues(alpha: 0.08),
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 18, vertical: 12),
                         border: OutlineInputBorder(

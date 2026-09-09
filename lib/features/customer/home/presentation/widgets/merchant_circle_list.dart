@@ -61,10 +61,10 @@ class MerchantCircleList extends StatelessWidget {
               ? Theme.of(context).colorScheme.surfaceContainerHighest
               : Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFD32027).withOpacity(0.5)),
+          border: Border.all(color: const Color(0xFFD32027).withValues(alpha: 0.5)),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: 0.03),
                 blurRadius: 8,
                 offset: const Offset(0, 2)),
           ],

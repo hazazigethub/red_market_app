@@ -52,7 +52,7 @@ class UnifiedProductCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 5),
             )
@@ -94,7 +94,7 @@ class UnifiedProductCard extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: isDark
                             ? Colors.black54
-                            : Colors.white.withOpacity(0.9),
+                            : Colors.white.withValues(alpha: 0.9),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

@@ -133,7 +133,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: Colors.grey.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(10)),
               ),
               const SizedBox(height: 20),
@@ -249,7 +249,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           Container(
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: brandRed.withOpacity(0.4), width: 3)),
+                border: Border.all(color: brandRed.withValues(alpha: 0.4), width: 3)),
             child: CircleAvatar(
               radius: 60,
               backgroundColor: Colors.grey[200],
@@ -373,7 +373,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         prefixIcon: Icon(icon, color: Colors.grey, size: 22),
         suffixIcon: suffix,
         filled: true,
-        fillColor: Colors.grey.withOpacity(0.05),
+        fillColor: Colors.grey.withValues(alpha: 0.05),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none),
@@ -392,7 +392,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         prefixIcon:
             const Icon(Icons.phone_android, color: Colors.grey, size: 22),
         filled: true,
-        fillColor: Colors.grey.withOpacity(0.05),
+        fillColor: Colors.grey.withValues(alpha: 0.05),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none),

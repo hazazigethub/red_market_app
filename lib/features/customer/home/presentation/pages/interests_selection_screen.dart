@@ -123,7 +123,7 @@ class _InterestsSelectionScreenState extends State<InterestsSelectionScreen> {
                               });
                             },
                             selectedColor:
-                                const Color(0xFFD32027).withOpacity(0.2),
+                                const Color(0xFFD32027).withValues(alpha: 0.2),
                             checkmarkColor: const Color(0xFFD32027),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),

@@ -333,7 +333,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
           border: Border.all(
               color: isSelected ? color : Colors.grey.shade300, width: 2),
           borderRadius: BorderRadius.circular(12),

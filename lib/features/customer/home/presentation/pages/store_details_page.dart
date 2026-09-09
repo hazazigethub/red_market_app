@@ -182,7 +182,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
       leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12)),
           child: Icon(icon, color: color)),
       title: Text(title,
@@ -469,7 +469,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                    color: redMarketPrimary.withOpacity(0.4), width: 1.5)),
+                    color: redMarketPrimary.withValues(alpha: 0.4), width: 1.5)),
             child: CircleAvatar(
               radius: 32,
               backgroundColor: const Color(0xFFF7F8FA),
@@ -504,7 +504,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                        color: _delayColor.withOpacity(0.1),
+                        color: _delayColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(5)),
                     child: Text(_delayLabel!,
                         style: TextStyle(
@@ -544,7 +544,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: redMarketPrimary.withOpacity(0.3)),
+                border: Border.all(color: redMarketPrimary.withValues(alpha: 0.3)),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(9),
@@ -654,10 +654,10 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: redMarketPrimary.withOpacity(0.5)),
+                  border: Border.all(color: redMarketPrimary.withValues(alpha: 0.5)),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(alpha: 0.04),
                         blurRadius: 10,
                         offset: const Offset(0, 4))
                   ],
@@ -720,7 +720,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 4, vertical: 1),
                                 decoration: BoxDecoration(
-                                    color: Colors.green.withOpacity(0.1),
+                                    color: Colors.green.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4)),
                                 child: Text(
                                   "${(((product.oldPrice! - product.price) / product.oldPrice!) * 100).round()}%",

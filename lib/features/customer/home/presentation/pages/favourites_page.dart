@@ -277,7 +277,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.bookmark_border_rounded,
-                size: 80, color: Colors.grey.withOpacity(0.5)),
+                size: 80, color: Colors.grey.withValues(alpha: 0.5)),
             const SizedBox(height: 16),
             const Text(
               "لا توجد عناصر محفوظة",
@@ -310,7 +310,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

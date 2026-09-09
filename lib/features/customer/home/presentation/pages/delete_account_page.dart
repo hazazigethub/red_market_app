@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
@@ -138,7 +138,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
               : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
-            disabledBackgroundColor: Colors.red.withOpacity(0.3),
+            disabledBackgroundColor: Colors.red.withValues(alpha: 0.3),
             minimumSize: const Size(double.infinity, 55),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

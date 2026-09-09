@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart'; // ✅ إضافة سوبابيس
 import 'package:red_market/core/routing/route_paths.dart';
@@ -175,7 +175,7 @@ class _CustomerServicePageState extends State<CustomerServicePage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration:
-          BoxDecoration(color: color.withOpacity(0.1), shape: BoxShape.circle),
+          BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
       child: Icon(Icons.headset_mic_rounded, size: 60, color: color),
     );
   }
@@ -227,7 +227,7 @@ class _CustomerServicePageState extends State<CustomerServicePage> {
         prefixIcon: Icon(icon, color: Colors.grey),
         filled: true,
         fillColor:
-            isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade100,
+            isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade100,
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none),

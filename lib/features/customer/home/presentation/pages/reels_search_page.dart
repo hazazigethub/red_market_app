@@ -248,10 +248,10 @@ class _ReelsSearchPageState extends State<ReelsSearchPage> {
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: Colors.white.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(22),
                               border: Border.all(
-                                  color: Colors.white.withOpacity(0.15)),
+                                  color: Colors.white.withValues(alpha: 0.15)),
                             ),
                             child: TextField(
                               controller: _searchController,
@@ -397,7 +397,7 @@ class _ReelsSearchPageState extends State<ReelsSearchPage> {
                                               end: Alignment.bottomCenter,
                                               colors: [
                                                 Colors.transparent,
-                                                Colors.black.withOpacity(0.75),
+                                                Colors.black.withValues(alpha: 0.75),
                                               ],
                                             ),
                                           ),
@@ -526,12 +526,12 @@ class _ReelsSearchPageState extends State<ReelsSearchPage> {
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFFD32027)
-              : Colors.white.withOpacity(0.08),
+              : Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
                 ? const Color(0xFFD32027)
-                : Colors.white.withOpacity(0.15),
+                : Colors.white.withValues(alpha: 0.15),
           ),
         ),
         child: Text(

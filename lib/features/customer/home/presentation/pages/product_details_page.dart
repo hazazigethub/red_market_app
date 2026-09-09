@@ -305,7 +305,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15)),
                     filled: true,
-                    fillColor: Colors.grey.withOpacity(0.05)),
+                    fillColor: Colors.grey.withValues(alpha: 0.05)),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -344,7 +344,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
       leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12)),
           child: Icon(icon, color: color)),
       title: Text(title,
@@ -548,7 +548,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                                 borderRadius: BorderRadius.circular(25),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
+                                      color: Colors.black.withValues(alpha: 0.1),
                                       blurRadius: 20,
                                       offset: const Offset(0, 10))
                                 ]),
@@ -579,7 +579,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                                     horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
                                   color:
-                                      const Color(0xFFD32027).withOpacity(0.9),
+                                      const Color(0xFFD32027).withValues(alpha: 0.9),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Row(
@@ -724,10 +724,10 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                 child: Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                      color: const Color(0xFFD32027).withOpacity(0.1),
+                      color: const Color(0xFFD32027).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                          color: const Color(0xFFD32027).withOpacity(0.3))),
+                          color: const Color(0xFFD32027).withValues(alpha: 0.3))),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

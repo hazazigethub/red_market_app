@@ -191,7 +191,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 5,
               offset: const Offset(0, 2),
             ),
@@ -228,7 +228,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFD32027).withOpacity(0.9),
+                        color: const Color(0xFFD32027).withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Row(

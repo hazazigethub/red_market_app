@@ -202,7 +202,7 @@ class _SubCategoryItemsPageState extends State<SubCategoryItemsPage> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black.withOpacity(0.05), blurRadius: 5)
+                        color: Colors.black.withValues(alpha: 0.05), blurRadius: 5)
                   ],
                 ),
                 child: TextField(
