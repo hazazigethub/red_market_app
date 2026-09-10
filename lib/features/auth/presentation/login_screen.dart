@@ -97,23 +97,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       // يجلب بريد المصادقة المرتبط بالجوال — حقيقياً كان أو مولّداً
       String? authEmail;
       try {
-        final res = await supabase.rpc('get_login_email',
-            params: {'p_phone': phone});
+        final res =
+            await supabase.rpc('get_login_email', params: {'p_phone': phone});
         authEmail = res?.toString();
       } catch (e) {
         debugPrint('get_login_email error: $e');
       }
 
       if (authEmail == null || authEmail.isEmpty) {
-        if (mounted) {
-          setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('لا يوجد حساب بهذا الرقم'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        if (mounted) _showErrorSnackBar('لا يوجد حساب بهذا الرقم');
         return;
       }
 
@@ -266,7 +258,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 20),
             ] else ...[
-              Image.asset('assets/images/logo.png', width: 100, height: 100),
+              Image.asset('assets/images/logo.png', width: 200, height: 200),
               const SizedBox(height: 20),
             ],
             _buildLabel("رقم الهاتف"),
@@ -315,6 +307,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
             const SizedBox(height: 15),
+            TextButton(
+              onPressed: () {
+                if (widget.isBottomSheet) Navigator.pop(context);
+                context.push(RoutePaths.forgotPassword);
+              },
+              child: const Text("نسيت كلمة المرور؟",
+                  style: TextStyle(fontFamily: 'Cairo', color: Colors.grey)),
+            ),
             TextButton(
               onPressed: () {
                 if (widget.isBottomSheet) Navigator.pop(context);

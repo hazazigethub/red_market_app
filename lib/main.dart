@@ -59,7 +59,9 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljdXp3ZnNheG5mYmRza2VyamZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1Mjc2ODAsImV4cCI6MjA4NzEwMzY4MH0.Eh88kUtJGYaRyeYCunpKVteVARIP1i2V1mJCQYLgDtY',
     authOptions: const FlutterAuthClientOptions(
-      authFlowType: AuthFlowType.pkce,
+      // implicit: يجعل رابط الاستعادة يعمل في المتصفح
+      // (pkce يتطلب code_verifier مخزَّناً في نفس العميل)
+      authFlowType: AuthFlowType.implicit,
       autoRefreshToken: true,
     ),
   );

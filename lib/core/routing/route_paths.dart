@@ -7,6 +7,7 @@ class RoutePaths {
   static const String login = '/login';
   static const String register = '/register';
   static const String otp = '/otp';
+  static const String forgotPassword = '/forgot-password';
   static const String interestsSelection = '/interests-selection';
   static const String merchantRegister = '/merchant-register';
 

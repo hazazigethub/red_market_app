@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +20,7 @@ import 'package:red_market/core/models/product_model.dart';
 
 import 'package:red_market/features/auth/presentation/login_screen.dart';
 import 'package:red_market/features/auth/presentation/register_screen.dart';
+import 'package:red_market/features/auth/presentation/forgot_password_screen.dart';
 import 'package:red_market/features/auth/presentation/otp_screen.dart';
 
 import 'package:red_market/features/customer/home/presentation/pages/interests_selection_screen.dart';
@@ -115,6 +116,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             loc == RoutePaths.login ||
             loc == RoutePaths.register ||
             loc == RoutePaths.otp ||
+            loc == RoutePaths.forgotPassword ||
             loc == RoutePaths.splash ||
             loc == RoutePaths.customerTerms ||
             loc == RoutePaths.subCategories ||
@@ -153,6 +155,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: RoutePaths.register,
           builder: (context, state) => const RegisterScreen()),
+      GoRoute(
+          path: RoutePaths.forgotPassword,
+          builder: (context, state) => const ForgotPasswordScreen()),
       GoRoute(
         path: RoutePaths.otp,
         builder: (context, state) {
