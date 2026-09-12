@@ -8,7 +8,7 @@ class CampaignService {
 
   final supabase = Supabase.instance.client;
 
-  /// بذرة ثابتة للجلسة — فلا يتكرر المنتج عند التمرير
+  /// بذرة ثابتة للجلسة — فلا يتكرر العرض عند التمرير
   final String seed =
       DateTime.now().millisecondsSinceEpoch.toRadixString(36);
 
@@ -39,7 +39,7 @@ class CampaignService {
     }
   }
 
-  /// منتجات الحملة
+  /// عروض الحملة
   Future<List<Map<String, dynamic>>> getProducts({
     required String campaignId,
     String? categoryId,
@@ -67,7 +67,7 @@ class CampaignService {
     }
   }
 
-  /// يحتسب المشاهدة مرة واحدة لكل منتج
+  /// يحتسب المشاهدة مرة واحدة لكل عرض
   Future<void> trackView(String campaignId, String productId) async {
     final key = '$campaignId-$productId';
     if (_seen.contains(key)) return;

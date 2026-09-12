@@ -24,7 +24,7 @@ class _FlashSalesPageState extends State<FlashSalesPage> {
   Future<void> _fetchFlashProducts() async {
     try {
       final now = DateTime.now().toIso8601String();
-      // جلب المنتجات التي لم تنتهِ صلاحيتها وموسومة كعرض 24 ساعة
+      // جلب العروض التي لم تنتهِ صلاحيتها وموسومة كعرض 24 ساعة
       final data = await supabase
           .from('products')
           .select()

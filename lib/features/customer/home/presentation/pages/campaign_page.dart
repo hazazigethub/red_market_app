@@ -260,7 +260,7 @@ class _CampaignPageState extends State<CampaignPage> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 60),
                 child: Center(
-                  child: Text('لا منتجات مطابقة',
+                  child: Text('لا عروض مطابقة',
                       style: TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 14,

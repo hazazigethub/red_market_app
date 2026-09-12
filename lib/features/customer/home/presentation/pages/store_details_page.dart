@@ -632,7 +632,7 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
   Widget _buildProductsGrid() {
     if (_filteredProducts.isEmpty)
       return const SliverFillRemaining(
-          child: Center(child: Text("لا توجد منتجات")));
+          child: Center(child: Text("لا توجد عروض")));
 
     return SliverPadding(
       padding: const EdgeInsets.all(16),

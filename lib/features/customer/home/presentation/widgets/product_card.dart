@@ -201,7 +201,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ✅ صورة المنتج
+            // ✅ صورة العرض
             Stack(
               children: [
                 ClipRRect(
@@ -282,7 +282,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ✅ اسم المنتج
+                  // ✅ اسم العرض
                   Text(
                     widget.product.name,
                     maxLines: 1,

@@ -70,7 +70,7 @@ class _NewArrivalsPageState extends State<NewArrivalsPage> {
                 child: CircularProgressIndicator(color: Color(0xFFD32027)))
             : _allNewProducts.isEmpty
                 ? const Center(
-                    child: Text("لا توجد منتجات جديدة حالياً",
+                    child: Text("لا توجد عروض جديدة حالياً",
                         style: TextStyle(fontFamily: 'Cairo')))
                 : GridView.builder(
                     padding: const EdgeInsets.all(16),

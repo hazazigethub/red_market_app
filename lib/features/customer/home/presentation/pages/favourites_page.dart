@@ -99,7 +99,7 @@ class _FavouritesPageState extends ConsumerState<FavouritesPage> {
   /// شريط التبويبات
   Widget _buildTabs() {
     final tabs = [
-      "المنتجات (${_favoriteProducts.length})",
+      "العروض (${_favoriteProducts.length})",
       "المتاجر (${_followedStores.length})",
     ];
 

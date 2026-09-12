@@ -64,10 +64,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<ProductModel> _flashSaleProducts = [];
   List<ProductModel> _newArrivals = [];
 
-  /// منتجات مختارة — أعلى منتج تفاعلاً لكل متجر احترافي
+  /// عروض مختارة — أعلى عرض تفاعلاً لكل متجر احترافي
   List<ProductModel> _curatedProducts = [];
 
-  /// خمسة تصنيفات عشوائية بمنتجاتها
+  /// خمسة تصنيفات عشوائية بعروضها
   List<Map<String, dynamic>> _categoryShowcase = [];
   List<ProductModel> _infiniteProducts = [];
 
@@ -445,7 +445,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               .order('created_at', ascending: false)
               .limit(10);
 
-      // منتجات مختارة وتصنيفات عشوائية — من دوال قاعدة البيانات
+      // عروض مختارة وتصنيفات عشوائية — من دوال قاعدة البيانات
       List curatedData = [];
       List showcaseData = [];
       try {
@@ -882,7 +882,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
-  /// يجلب أحدث منتجات المتاجر التي يتابعها المستخدم
+  /// يجلب أحدث عروض المتاجر التي يتابعها المستخدم
   Future<void> _fetchFollowedProducts() async {
     try {
       final userId = supabase.auth.currentUser?.id;
@@ -981,9 +981,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             if (_flashSaleProducts.isNotEmpty)
               _buildSection("عروض الـ 24 ساعة", _flashSaleProducts),
 
-            // منتجات مختارة — من المتاجر الاحترافية
+            // عروض مختارة — من المتاجر الاحترافية
             if (_curatedProducts.isNotEmpty)
-              _buildSection("منتجات مختارة", _curatedProducts),
+              _buildSection("عروض مختارة", _curatedProducts),
 
             SmallBannersRow(smallBannerController: _smallBannerPageController),
             if (_merchantsList.isNotEmpty)
@@ -993,7 +993,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             if (_followedProducts.isNotEmpty)
               _buildSection("جديد متاجرك", _followedProducts),
 
-            // خمسة تصنيفات عشوائية بمنتجاتها
+            // خمسة تصنيفات عشوائية بعروضها
             ..._categoryShowcase.map((cat) {
               final products = (cat['products'] as List?) ?? [];
               if (products.isEmpty) return const SizedBox.shrink();

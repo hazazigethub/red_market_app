@@ -26,7 +26,7 @@ class CategoryIcons {
       'عناية المرأة': Icons.face_retouching_natural_rounded,
       'مكملات غذائية': Icons.medication_liquid_rounded,
       'ملحقات رقمية': Icons.cable_rounded,
-      'منتجات طبية': Icons.medical_services_rounded,
+      'عروض طبية': Icons.medical_services_rounded,
       'منظفات منزلية': Icons.cleaning_services_rounded,
       'مواليد': Icons.child_friendly_rounded,
     };
@@ -379,7 +379,7 @@ class CategoryIcons {
       'مكملات طبيعية': Icons.eco_rounded,
       'مكملات كيتو': Icons.restaurant_menu_rounded,
 
-      // منتجات طبية
+      // عروض طبية
       'أجهزة ضغط': Icons.monitor_heart_rounded,
       'أجهزة سكري': Icons.bloodtype_rounded,
       'أجهزة تنفس': Icons.air_rounded,

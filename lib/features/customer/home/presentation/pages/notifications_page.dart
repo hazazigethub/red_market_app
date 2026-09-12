@@ -163,7 +163,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                   context.push('/product-details/${item['product_id']}');
                 },
                 icon: const Icon(Icons.shopping_bag_rounded, size: 18),
-                label: const Text("عرض المنتج",
+                label: const Text("فتح العرض",
                     style: TextStyle(
                         fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(

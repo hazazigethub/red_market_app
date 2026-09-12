@@ -222,7 +222,7 @@ class _SubCategoryItemsPageState extends State<SubCategoryItemsPage> {
                       child: CircularProgressIndicator(color: brandRed))
                   : _products.isEmpty
                       ? const Center(
-                          child: Text("لا توجد منتجات حالياً",
+                          child: Text("لا توجد عروض حالياً",
                               style: TextStyle(fontFamily: 'Cairo')))
                       : GridView.builder(
                           padding: const EdgeInsets.symmetric(horizontal: 16),

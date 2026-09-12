@@ -41,7 +41,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
   final TextEditingController _otherReasonController = TextEditingController();
   String? _selectedReason;
 
-  // ✅ تعليقات المنتج
+  // ✅ تعليقات العرض
   int _commentsCount = 0;
 
   @override
@@ -290,10 +290,10 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
               _buildReportItem(
                   setModalState,
                   Icons.link_off_rounded,
-                  "رابط منتج مختلف",
+                  "رابط عرض مختلف",
                   Colors.blue,
-                  "الرابط يوجه لمنتج أو صفحة أخرى"),
-              _buildReportItem(setModalState, Icons.gavel_rounded, "منتج مخالف",
+                  "الرابط يوجه لعرض أو صفحة أخرى"),
+              _buildReportItem(setModalState, Icons.gavel_rounded, "عرض مخالف",
                   Colors.red, "محتوى ينتهك سياسة المنصة"),
               const SizedBox(height: 15),
               TextField(
@@ -475,7 +475,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(
-            child: Text("المنتج غير موجود",
+            child: Text("العرض غير موجود",
                 style: TextStyle(fontFamily: 'Cairo'))),
       );
     }
@@ -635,7 +635,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("وصف المنتج",
+                        const Text("وصف العرض",
                             style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontWeight: FontWeight.bold,
@@ -733,7 +733,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                     children: [
                       Icon(Icons.open_in_new_rounded, color: Color(0xFFD32027)),
                       SizedBox(width: 10),
-                      Text("زيارة رابط المنتج",
+                      Text("زيارة رابط العرض",
                           style: TextStyle(
                               color: Color(0xFFD32027),
                               fontWeight: FontWeight.bold,

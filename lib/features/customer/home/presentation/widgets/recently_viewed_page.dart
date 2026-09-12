@@ -33,7 +33,7 @@ class _RecentlyViewedPageState extends State<RecentlyViewedPage> {
 
       final now = DateTime.now();
 
-      // ✅ فلترة المنتجات التي مضى عليها أكثر من 5 أيام
+      // ✅ فلترة العروض التي مضى عليها أكثر من 5 أيام
       items = items.where((e) {
         final visitedAt = DateTime.tryParse(e['visited_at'] ?? '');
         return visitedAt != null && now.difference(visitedAt).inDays < 5;
@@ -58,7 +58,7 @@ class _RecentlyViewedPageState extends State<RecentlyViewedPage> {
 
       if (mounted) {
         setState(() {
-          // ✅ ترتيب المنتجات حسب ترتيب الزيارة (الأحدث أولاً)
+          // ✅ ترتيب العروض حسب ترتيب الزيارة (الأحدث أولاً)
           final List<ProductModel> products =
               (data as List).map((p) => ProductModel.fromJson(p)).toList();
           final byId = {for (final p in products) p.id: p};
@@ -98,7 +98,7 @@ class _RecentlyViewedPageState extends State<RecentlyViewedPage> {
                 child: CircularProgressIndicator(color: Color(0xFFD32027)))
             : _recentProducts.isEmpty
                 ? const Center(
-                    child: Text("لم تقم بزيارة أي منتجات بعد",
+                    child: Text("لم تقم بزيارة أي عروض بعد",
                         style: TextStyle(fontFamily: 'Cairo')))
                 : GridView.builder(
                     padding: const EdgeInsets.all(16),

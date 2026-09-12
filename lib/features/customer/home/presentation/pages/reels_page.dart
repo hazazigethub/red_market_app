@@ -1078,7 +1078,7 @@ class _ReelsPageState extends State<ReelsPage>
                     const Icon(Icons.shopping_bag_rounded,
                         color: Colors.white, size: 13),
                     const SizedBox(width: 6),
-                    Text("عرض المنتج",
+                    Text("فتح العرض",
                         style: GoogleFonts.cairo(
                             color: Colors.white,
                             fontSize: 12,

@@ -50,7 +50,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               textInputAction: TextInputAction.search,
               onChanged: (value) => setState(() {}),
               decoration: InputDecoration(
-                hintText: "ابحث عن منتجك...",
+                hintText: "ابحث عن عرضك...",
                 hintStyle: const TextStyle(
                     color: Colors.grey, fontSize: 14, fontFamily: 'Cairo'),
                 prefixIcon: const Icon(Icons.search_rounded,
@@ -591,7 +591,7 @@ class _NoResultsSuggestionsState extends State<_NoResultsSuggestions> {
         final List categories = (data['categories'] as List?) ?? const [];
         final List products = (data['products'] as List?) ?? const [];
 
-        // ✅ إذا ما فيه تصنيفات ولا منتجات — لا تعرض شيء
+        // ✅ إذا ما فيه تصنيفات ولا عروض — لا تعرض شيء
         if (categories.isEmpty && products.isEmpty) {
           return const Padding(
             padding: EdgeInsets.all(16),
@@ -639,7 +639,7 @@ class _NoResultsSuggestionsState extends State<_NoResultsSuggestions> {
                                   },
                                 );
                               } else {
-                                // ✅ تصنيف فرعي — اذهب مباشرة للمنتجات
+                                // ✅ تصنيف فرعي — اذهب مباشرة للعروض
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -655,10 +655,10 @@ class _NoResultsSuggestionsState extends State<_NoResultsSuggestions> {
                       .toList(),
                 ),
 
-                // ✅ منتجات من نفس التصنيف فقط — بدون fallback
+                // ✅ عروض من نفس التصنيف فقط — بدون fallback
                 if (products.isNotEmpty) ...[
                   if (categories.isNotEmpty) const Divider(),
-                  const Text("منتجات قد تنال إعجابك:",
+                  const Text("عروض قد تنال إعجابك:",
                       style: TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 12,

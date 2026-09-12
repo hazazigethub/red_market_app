@@ -1,4 +1,4 @@
-﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:red_market/core/models/product_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -34,7 +34,7 @@ class RecentlyViewedNotifier {
     }
   }
 
-  /// ✅ إضافة منتج — يحفظ في السوبابيس إذا مسجل دخول وفي SharedPreferences إذا لا
+  /// ✅ إضافة عرض — يحفظ في السوبابيس إذا مسجل دخول وفي SharedPreferences إذا لا
   static Future<void> addProduct(WidgetRef ref, ProductModel product) async {
     final supabase = Supabase.instance.client;
     final userId = supabase.auth.currentUser?.id;
@@ -48,7 +48,7 @@ class RecentlyViewedNotifier {
           'visited_at': DateTime.now().toIso8601String(),
         }, onConflict: 'user_id,product_id');
 
-        // ✅ حذف القديم إذا تجاوز 20 منتج
+        // ✅ حذف القديم إذا تجاوز 20 عرض
         final all = await supabase
             .from('user_recently_viewed')
             .select('id, visited_at')
