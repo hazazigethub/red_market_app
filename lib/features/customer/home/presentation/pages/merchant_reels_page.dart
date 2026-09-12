@@ -63,7 +63,7 @@ class _MerchantReelsPageState extends State<MerchantReelsPage> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: brandRed,
-            title: const Text("ريلز المتجر",
+            title: const Text("فيديوهات المتجر",
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontWeight: FontWeight.bold,
