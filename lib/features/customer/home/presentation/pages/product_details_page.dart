@@ -36,6 +36,21 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
   bool _isLoading = true;
 
   ProductModel? _currentProduct;
+  /// الصورة المعروضة حالياً في الإطار الكبير
+  int _activeImage = 0;
+
+  /// الصورة الرئيسية ثم الإضافية — بلا تكرار ولا فراغ
+  List<String> get _images {
+    final p = _currentProduct;
+    if (p == null) return const [];
+    final list = <String>[];
+    final main = p.imageUrl ?? '';
+    if (main.trim().length > 10) list.add(main);
+    for (final u in p.imagesUrl) {
+      if (u.trim().length > 10 && !list.contains(u)) list.add(u);
+    }
+    return list;
+  }
   String? _realStoreName;
   String? _merchantId;
   final TextEditingController _otherReasonController = TextEditingController();
@@ -555,8 +570,10 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(25),
                                 child: Image.network(
-                                    _getValidImageUrl(
-                                        _currentProduct!.imageUrl),
+                                    _getValidImageUrl(_images.isNotEmpty
+                                        ? _images[_activeImage.clamp(
+                                            0, _images.length - 1)]
+                                        : (_currentProduct!.imageUrl ?? '')),
                                     fit: BoxFit.cover)),
                           ),
                           Positioned(
@@ -600,6 +617,54 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                         ],
                       ),
                     ),
+                    // ===== مصغّرات الصور — تظهر عند وجود أكثر من صورة =====
+                    if (_images.length > 1) ...[
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.85,
+                        child: Row(
+                          children: List.generate(_images.length, (i) {
+                            final selected = i == _activeImage;
+                            return Expanded(
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: i < _images.length - 1
+                                        ? 8
+                                        : 0),
+                                child: GestureDetector(
+                                  onTap: () =>
+                                      setState(() => _activeImage = i),
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: selected
+                                              ? const Color(0xFFD32027)
+                                              : Colors.grey.shade300,
+                                          width: selected ? 2 : 1,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(11),
+                                        child: Image.network(
+                                          _getValidImageUrl(_images[i]),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+
                     const SizedBox(height: 25),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
