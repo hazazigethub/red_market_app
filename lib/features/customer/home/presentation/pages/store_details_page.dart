@@ -301,6 +301,14 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                         centerTitle: true,
                         actions: [
                           IconButton(
+                            icon: const Icon(Icons.reply_rounded,
+                                color: Color(0xFFD32027), size: 30),
+                            onPressed: () async {
+                              await Share.share(
+                                  '${_merchant?.storeName ?? ''}\n${_merchant?.description ?? ''}');
+                            },
+                          ),
+                          IconButton(
                             icon: const Icon(Icons.report_gmailerrorred_rounded,
                                 color: Colors.orange, size: 30),
                             onPressed: () => _protectedAction(
@@ -492,18 +500,6 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
             ),
           ),
 
-          const Spacer(),
-
-          // 4) المشاركة — بلون النصّ
-          IconButton(
-            onPressed: () async {
-              await Share.share(
-                  '${_merchant?.storeName ?? ''}\n${_merchant?.description ?? ''}');
-            },
-            tooltip: "مشاركة المتجر",
-            icon: Icon(Icons.reply_rounded,
-                size: 30, color: isDark ? Colors.white70 : Colors.black87),
-          ),
         ],
       ),
     );
