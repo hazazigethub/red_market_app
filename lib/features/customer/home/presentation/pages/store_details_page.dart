@@ -301,14 +301,6 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
                         centerTitle: true,
                         actions: [
                           IconButton(
-                            icon: const Icon(Icons.reply_rounded,
-                                color: Color(0xFFD32027), size: 30),
-                            onPressed: () async {
-                              await Share.share(
-                                  '${_merchant?.storeName ?? ''}\n${_merchant?.description ?? ''}');
-                            },
-                          ),
-                          IconButton(
                             icon: const Icon(Icons.report_gmailerrorred_rounded,
                                 color: Colors.orange, size: 30),
                             onPressed: () => _protectedAction(
@@ -414,44 +406,103 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
     }
   }
 
-  /// زر المتابعة مع عدّاد المتابعين
+  /// صفّ الإحصاءات — العدّاد نفسه هو الزر، والأيقونتان بجانبه
   Widget _buildFollowRow(bool isDark) {
+    final muted = isDark ? Colors.white54 : Colors.grey;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       child: Row(
         children: [
-          ElevatedButton.icon(
-            onPressed: _followBusy ? null : _toggleFollow,
-            icon: Icon(
-              _isFollowing ? Icons.how_to_reg : Icons.person_add_alt,
-              size: 18,
-            ),
-            label: Text(
-              _isFollowing ? "متابَع" : "متابعة",
-              style: const TextStyle(
-                  fontFamily: 'Cairo', fontWeight: FontWeight.bold),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  _isFollowing ? Colors.transparent : redMarketPrimary,
-              foregroundColor: _isFollowing ? redMarketPrimary : Colors.white,
-              elevation: 0,
-              side: _isFollowing
-                  ? BorderSide(color: redMarketPrimary.withValues(alpha: 0.5))
-                  : null,
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+          // 1) الفيديوهات — بلون الهوية
+          IconButton(
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        MerchantReelsPage(merchantId: widget.merchantId))),
+            tooltip: "فيديوهات المتجر",
+            icon: Image.asset(
+              'assets/images/film_icon.png',
+              width: 34,
+              height: 32,
+              fit: BoxFit.contain,
             ),
           ),
-          const SizedBox(width: 12),
-          Text(
-            "$_followersCount متابع",
-            style: TextStyle(
-              fontSize: 13,
-              fontFamily: 'Cairo',
-              color: isDark ? Colors.white54 : Colors.grey,
+
+          const SizedBox(width: 16),
+
+          // 2) عدد العروض
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "${_filteredProducts.length}",
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Cairo',
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+              Text("عرض",
+                  style: TextStyle(
+                      fontSize: 12, fontFamily: 'Cairo', color: muted)),
+            ],
+          ),
+
+          const SizedBox(width: 28),
+
+          // 3) المتابعة — الرقم زرّ
+          GestureDetector(
+            onTap: _followBusy ? null : _toggleFollow,
+            behavior: HitTestBehavior.opaque,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "$_followersCount",
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Cairo',
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _isFollowing ? Icons.how_to_reg : Icons.person_add_alt,
+                      size: 13,
+                      color: _isFollowing ? redMarketPrimary : muted,
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      _isFollowing ? "تمت المتابعة" : "متابعة",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'Cairo',
+                        color: _isFollowing ? redMarketPrimary : muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
+          ),
+
+          const Spacer(),
+
+          // 4) المشاركة — بلون النصّ
+          IconButton(
+            onPressed: () async {
+              await Share.share(
+                  '${_merchant?.storeName ?? ''}\n${_merchant?.description ?? ''}');
+            },
+            tooltip: "مشاركة المتجر",
+            icon: Icon(Icons.reply_rounded,
+                size: 30, color: isDark ? Colors.white70 : Colors.black87),
           ),
         ],
       ),
@@ -530,62 +581,11 @@ class _StoreDetailsPageState extends ConsumerState<StoreDetailsPage> {
       height: 40,
       child: Row(
         children: [
-          // ✅ أيقونة الريلز — خلفيتها تتوافق مع لون الصفحة
-          GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) =>
-                        MerchantReelsPage(merchantId: widget.merchantId))),
-            child: Container(
-              width: 48,
-              height: 40,
-              margin: const EdgeInsets.only(right: 8, left: 8),
-              decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: redMarketPrimary.withValues(alpha: 0.3)),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(9),
-                child: ColorFiltered(
-                  colorFilter: ColorFilter.matrix([
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                  ]),
-                  child: Image.asset(
-                    'assets/images/film_icon.png',
-                    width: 48,
-                    height: 44,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
-          ),
           // ✅ تابات الأقسام
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(left: 4),
+              padding: const EdgeInsets.only(left: 4, right: 16),
               itemCount: _categories.length,
               itemBuilder: (context, index) {
                 bool isSelected = _selectedCategoryIndex == index;
