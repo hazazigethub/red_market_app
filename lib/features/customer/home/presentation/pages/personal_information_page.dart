@@ -108,6 +108,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     final newPwdController = TextEditingController();
     final confirmPwdController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    // الخانتان تتشاركان الحالة — فالغرض مقارنة ما كُتب
+    final obscure = ValueNotifier<bool>(true);
 
     showModalBottomSheet(
       context: context,
@@ -144,10 +146,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                       fontSize: 18)),
               const SizedBox(height: 20),
               _buildSheetTextField(
-                  newPwdController, "كلمة المرور الجديدة", true),
+                  newPwdController, "كلمة المرور الجديدة", true,
+                  obscure: obscure),
               const SizedBox(height: 15),
               _buildSheetTextField(
-                  confirmPwdController, "تأكيد كلمة المرور الجديدة", true),
+                  confirmPwdController, "تأكيد كلمة المرور الجديدة", true,
+                  obscure: obscure),
               const SizedBox(height: 25),
               SizedBox(
                 width: double.infinity,
@@ -344,22 +348,43 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   }
 
   Widget _buildSheetTextField(
-      TextEditingController controller, String label, bool isPwd) {
-    return TextFormField(
-      controller: controller,
-      obscureText: isPwd,
-      textAlign: TextAlign.right,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(fontFamily: 'Cairo', fontSize: 13),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: brandRed)),
+      TextEditingController controller, String label, bool isPwd,
+      {ValueNotifier<bool>? obscure}) {
+    final notifier = obscure ?? ValueNotifier<bool>(isPwd);
+
+    return ValueListenableBuilder<bool>(
+      valueListenable: notifier,
+      builder: (context, hidden, _) => TextFormField(
+        controller: controller,
+        obscureText: isPwd && hidden,
+        textAlign: TextAlign.right,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(fontFamily: 'Cairo', fontSize: 13),
+          // مخفي ⇒ عين مشطوبة · ظاهر ⇒ عين
+          suffixIcon: isPwd
+              ? IconButton(
+                  onPressed: () => notifier.value = !hidden,
+                  tooltip:
+                      hidden ? 'إظهار كلمة المرور' : 'إخفاء كلمة المرور',
+                  icon: Icon(
+                    hidden
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    size: 19,
+                    color: Colors.grey,
+                  ),
+                )
+              : null,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: brandRed)),
+        ),
+        validator: (val) => val == null || val.length < 6
+            ? "يجب أن تكون كلمة المرور 6 خانات على الأقل"
+            : null,
       ),
-      validator: (val) => val == null || val.length < 6
-          ? "يجب أن تكون كلمة المرور 6 خانات على الأقل"
-          : null,
     );
   }
 

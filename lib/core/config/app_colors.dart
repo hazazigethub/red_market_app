@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  // لون هوية رد ماركت
+  static const Color brand = Color(0xFFD32027);
+
   // اللون الأساسي (حسب طلبك)
   static const Color primary = Color(0xFFD32027);
 

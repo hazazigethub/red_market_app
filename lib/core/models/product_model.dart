@@ -16,12 +16,12 @@ class ProductModel {
   final String? categoryName;
   final String? storeCategory;
   final String? region;
+  final int stock;
   final bool isAvailable;
   final DateTime createdAt;
   final String? productUrl;
   final bool isFlashSale;
   final DateTime? flashSaleExpiry;
-  final DateTime? flashSaleStart;
 
   ProductModel({
     required this.id,
@@ -38,20 +38,17 @@ class ProductModel {
     this.categoryName,
     this.storeCategory,
     this.region,
+    this.stock = 0,
     this.isAvailable = true,
     required this.createdAt,
     this.productUrl,
     this.isFlashSale = false,
     this.flashSaleExpiry,
-    this.flashSaleStart,
   });
 
   bool get isFlashSaleActive {
     if (!isFlashSale || flashSaleExpiry == null) return false;
-    final now = DateTime.now();
-    // المجدول لا يُعدّ نشطاً قبل موعده
-    if (flashSaleStart != null && flashSaleStart!.isAfter(now)) return false;
-    return flashSaleExpiry!.isAfter(now);
+    return flashSaleExpiry!.isAfter(DateTime.now());
   }
 
   Duration get remainingTime {
@@ -64,7 +61,7 @@ class ProductModel {
     final url = imagesUrl.first;
     if (url.startsWith('http')) return url;
     return Supabase.instance.client.storage
-        .from('product-images')
+        .from('products-images')
         .getPublicUrl(url.trim());
   }
 
@@ -109,6 +106,7 @@ class ProductModel {
       categoryName: categoryName,
       storeCategory: json['store_category']?.toString(),
       region: json['region'] as String?,
+      stock: (json['stock'] as num?)?.toInt() ?? 0,
       isAvailable: (json['is_available'] as bool?) ?? true,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -116,10 +114,7 @@ class ProductModel {
       productUrl: json['product_url']?.toString(),
       isFlashSale: (json['is_flash_sale'] as bool?) ?? false,
       flashSaleExpiry: json['flash_sale_expiry'] != null
-          ? DateTime.parse(json['flash_sale_expiry']).toLocal()
-          : null,
-      flashSaleStart: json['flash_sale_start'] != null
-          ? DateTime.parse(json['flash_sale_start']).toLocal()
+          ? DateTime.parse(json['flash_sale_expiry'])
           : null,
     );
   }
@@ -138,12 +133,12 @@ class ProductModel {
       'images_url': imagesUrl,
       'category': category,
       'region': region,
+      'stock': stock,
       'is_available': isAvailable,
       'created_at': createdAt.toIso8601String(),
       'product_url': productUrl,
       'is_flash_sale': isFlashSale,
-      'flash_sale_expiry': flashSaleExpiry?.toUtc().toIso8601String(),
-      'flash_sale_start': flashSaleStart?.toUtc().toIso8601String(),
+      'flash_sale_expiry': flashSaleExpiry?.toIso8601String(),
     };
   }
 
@@ -162,12 +157,12 @@ class ProductModel {
     String? categoryName,
     String? storeCategory,
     String? region,
+    int? stock,
     bool? isAvailable,
     DateTime? createdAt,
     String? productUrl,
     bool? isFlashSale,
     DateTime? flashSaleExpiry,
-    DateTime? flashSaleStart,
   }) {
     return ProductModel(
       id: id ?? this.id,
@@ -184,12 +179,12 @@ class ProductModel {
       categoryName: categoryName ?? this.categoryName,
       storeCategory: storeCategory ?? this.storeCategory,
       region: region ?? this.region,
+      stock: stock ?? this.stock,
       isAvailable: isAvailable ?? this.isAvailable,
       createdAt: createdAt ?? this.createdAt,
       productUrl: productUrl ?? this.productUrl,
       isFlashSale: isFlashSale ?? this.isFlashSale,
       flashSaleExpiry: flashSaleExpiry ?? this.flashSaleExpiry,
-      flashSaleStart: flashSaleStart ?? this.flashSaleStart,
     );
   }
 }
