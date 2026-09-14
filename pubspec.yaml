@@ -80,6 +80,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/applogo.png
     - assets/icons/
+    - assets/avatars/
     - assets/images/sar_symbol.png
     - assets/images/film_icon.png
     - assets/images/whale.png

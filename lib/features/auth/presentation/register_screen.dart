@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:red_market/features/customer/home/presentation/pages/interests_selection_screen.dart';
 import 'package:red_market/app/app_providers.dart';
+import 'package:red_market/features/auth/presentation/verify_otp_screen.dart';
 
 bool isRegisteringInProgress = false;
 
@@ -68,12 +70,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       ref.read(userRoleProvider.notifier).state = 'customer';
 
-      final response = await supabase.auth.signUp(
+      // فحص مسبق — فالتسجيل المكرّر يفشل صامتاً في Supabase
+      final avail = await supabase.rpc(
+        'check_signup_availability',
+        params: {'p_email': email, 'p_phone': cleanPhone},
+      ) as Map<String, dynamic>;
+
+      if (avail['email_taken'] == true) {
+        _showError("هذا البريد مسجّل مسبقاً — سجّل دخولك أو استعد كلمة المرور");
+        return;
+      }
+      if (avail['phone_taken'] == true) {
+        _showError("رقم الجوال مسجّل بحساب آخر — سجّل دخولك أو استخدم رقماً غيره");
+        return;
+      }
+
+      // البيانات تُمرَّر للمشغّل — فلا جلسة قبل التأكيد
+      await supabase.auth.signUp(
         email: email,
         password: password,
         data: {
           'role': 'customer',
           'full_name': _nameController.text.trim(),
+          'phone_number': cleanPhone,
+          'gender': _selectedGender,
         },
       );
 
@@ -89,40 +109,25 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             int.tryParse(termsData?['version']?.toString() ?? '0') ?? 0;
       } catch (_) {}
 
-      final user = response.user;
-      if (user != null) {
-        final Map<String, dynamic> profileData = {
-          'id': user.id,
-          'full_name': _nameController.text.trim(),
-          'phone_number': cleanPhone,
-          'email_contact': email,
-          'gender': _selectedGender,
-          'is_banned': false,
-          'is_subscription_active': false,
-          'is_permanent_ban': false,
-          'created_at': DateTime.now().toIso8601String(),
-          'accepted_terms_version': latestTermsVersion,
-        };
+      if (!mounted) return;
 
-        await supabase.from('profiles').upsert(profileData);
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('✅ تم إنشاء حساب العميل بنجاح!'),
-              backgroundColor: Color(0xFF4CAF50),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const InterestsSelectionScreen()),
-            (route) => false,
-          );
-        }
-      }
+      // بقية البيانات تُكتب بعد نجاح التحقّق
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => VerifyOtpScreen(
+            email: email,
+            profileData: {
+              'full_name': _nameController.text.trim(),
+              'phone_number': cleanPhone,
+              'email_contact': email,
+              'gender': _selectedGender,
+              'accepted_terms_version': latestTermsVersion,
+            },
+            onSuccess: () => const InterestsSelectionScreen(),
+          ),
+        ),
+      );
     } on AuthException catch (e) {
       _showError("خطأ في التسجيل: ${e.message}");
     } catch (e) {
@@ -184,12 +189,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 Row(
                   children: [
                     Expanded(
-                        child: _buildGenderOption(
-                            "ذكر", Icons.male, 'male', Colors.blue)),
+                        child: _buildGenderOption("ذكر",
+                            'assets/avatars/man.svg', 'male', Colors.blue)),
                     const SizedBox(width: 15),
                     Expanded(
-                        child: _buildGenderOption(
-                            "أنثى", Icons.female, 'female', Colors.pink)),
+                        child: _buildGenderOption("أنثى",
+                            'assets/avatars/woman.svg', 'female',
+                            Colors.pink)),
                   ],
                 ),
                 const SizedBox(height: 15),
@@ -351,7 +357,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Widget _buildGenderOption(
-      String label, IconData icon, String value, Color color) {
+      String label, String asset, String value, Color color) {
     final isSelected = _selectedGender == value;
     return InkWell(
       splashColor: Colors.transparent,
@@ -369,7 +375,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         ),
         child: Column(
           children: [
-            Icon(icon, color: isSelected ? color : Colors.grey, size: 28),
+            SvgPicture.asset(asset, width: 44, height: 44),
+            const SizedBox(height: 4),
             Text(label,
                 style: TextStyle(
                     fontFamily: 'Cairo',
