@@ -3,12 +3,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market_core/red_market_core.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:red_market/features/auth/presentation/login_screen.dart';
 import 'package:red_market/core/widgets/comments_sheet.dart';
-import 'package:red_market/core/widgets/price_widget.dart';
+import 'package:red_market_core/red_market_core.dart';
 import 'dart:async';
 
 class ProductDetailsPage extends ConsumerStatefulWidget {

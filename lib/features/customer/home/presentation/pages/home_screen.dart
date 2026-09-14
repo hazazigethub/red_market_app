@@ -13,8 +13,8 @@ import 'package:red_market/main.dart';
 import 'package:red_market/core/routing/route_paths.dart';
 import 'package:red_market/core/services/campaign_service.dart';
 import 'package:red_market/core/services/visit_logger.dart';
-import 'package:red_market/core/models/merchant_model.dart';
-import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market_core/red_market_core.dart';
+import 'package:red_market_core/red_market_core.dart';
 import 'package:red_market/features/customer/home/presentation/providers/recently_viewed_provider.dart';
 
 import 'package:red_market/features/customer/home/presentation/pages/reels_page.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_market/core/routing/route_paths.dart';
-import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market_core/red_market_core.dart';
 import '../widgets/product_card.dart';
 
 class SubCategoriesScreen extends StatefulWidget {

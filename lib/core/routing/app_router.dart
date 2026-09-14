@@ -15,8 +15,8 @@ import 'package:red_market/features/customer/home/presentation/pages/home_screen
 import 'package:red_market/features/customer/home/presentation/pages/campaign_page.dart';
 import 'package:red_market/features/splash/presentation/splash_screen.dart';
 import 'package:red_market/features/customer/customer_terms_page.dart';
-import 'package:red_market/core/models/merchant_model.dart';
-import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market_core/red_market_core.dart';
+import 'package:red_market_core/red_market_core.dart';
 
 import 'package:red_market/features/auth/presentation/login_screen.dart';
 import 'package:red_market/features/auth/presentation/register_screen.dart';

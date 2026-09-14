@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:red_market/core/models/merchant_model.dart';
+import 'package:red_market_core/red_market_core.dart';
 import 'package:red_market/features/customer/home/presentation/pages/store_details_page.dart';
 
 class MerchantCircleList extends StatelessWidget {

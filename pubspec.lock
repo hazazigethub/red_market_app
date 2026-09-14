@@ -925,6 +925,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
+  red_market_core:
+    dependency: "direct main"
+    description:
+      path: "../red_market_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   riverpod:
     dependency: transitive
     description:

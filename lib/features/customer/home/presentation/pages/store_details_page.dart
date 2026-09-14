@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:red_market/core/models/merchant_model.dart';
-import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market_core/red_market_core.dart';
+import 'package:red_market_core/red_market_core.dart';
 import 'package:red_market/features/customer/home/presentation/pages/product_details_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:red_market/features/auth/presentation/login_screen.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:red_market/core/widgets/price_widget.dart';
+import 'package:red_market_core/red_market_core.dart';
 import 'package:red_market/core/services/visit_logger.dart';
 import 'package:red_market/features/customer/home/presentation/pages/merchant_reels_page.dart';
 

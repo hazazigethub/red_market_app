@@ -12,6 +12,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   font_awesome_flutter: 11.0.0
+  red_market_core:
+    path: ../red_market_core
   
 
   # 🧠 State Management & Navigation

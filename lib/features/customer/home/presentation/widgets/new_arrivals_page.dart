@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // تأكد من استخدام اسم المشروع الخاص بك (RedOcean)
-import 'package:red_market/core/models/product_model.dart';
+import 'package:red_market_core/red_market_core.dart';
 import '../widgets/product_card.dart';
 
 class NewArrivalsPage extends StatefulWidget {
